@@ -1,0 +1,39 @@
+EESchema-LIBRARY Version 2.4
+#encoding utf-8
+#
+# Perenquen-motor-block-RESCUE-perenquen
+#
+DEF Perenquen-motor-block-RESCUE-perenquen M 0 40 Y Y 4 L N
+F0 "M" 0 300 60 H V C CNN
+F1 "Perenquen-motor-block-RESCUE-perenquen" 50 -300 60 H V C CNN
+F2 "" -50 -300 60 H I C CNN
+F3 "" -50 -300 60 H I C CNN
+DRAW
+T 0 50 50 60 0 1 1 LEFT Normal 0 C C
+T 0 50 -50 60 0 1 1 MOTOR Normal 0 C C
+T 0 50 -50 60 0 2 1 MOTOR Normal 0 C C
+T 0 50 50 60 0 2 1 RIGHT Normal 0 C C
+T 0 250 -50 60 0 3 1 ENCODER Normal 0 C C
+T 0 250 50 60 0 3 1 LEFT Normal 0 C C
+T 0 250 -50 60 0 4 1 ENCODER Normal 0 C C
+T 0 250 50 60 0 4 1 RIGHT Normal 0 C C
+S -250 150 250 -150 1 1 0 f
+S -250 150 250 -150 2 1 0 f
+S -300 250 550 -250 3 1 0 f
+S -300 250 550 -250 4 1 0 f
+X - 1 -350 50 100 R 50 50 1 1 P
+X + 2 -350 -50 100 R 50 50 1 1 P
+X - 3 -350 50 100 R 50 50 2 1 P
+X + 4 -350 -50 100 R 50 50 2 1 P
+X GND 5 -400 150 100 R 50 50 3 1 W
+X VCC3V3 6 -400 50 100 R 50 50 3 1 W
+X CHA 7 -400 -50 100 R 50 50 3 1 O
+X CHB 8 -400 -150 100 R 50 50 3 1 O
+X VCC3V3 10 -400 50 100 R 50 50 4 1 W
+X CHA 11 -400 -50 100 R 50 50 4 1 O
+X CHB 12 -400 -150 100 R 50 50 4 1 O
+X GND 9 -400 150 100 R 50 50 4 1 W
+ENDDRAW
+ENDDEF
+#
+#End Library
