@@ -3,7 +3,7 @@ G04 Gerber job file with board parameters*
 %TF.Part,SinglePCB*%
 G04 Single PCB fabrication instructions*
 %TF.GenerationSoftware,KiCad,Pcbnew,no-vcs-found-0b1eb56~60~ubuntu17.04.1*%
-%TF.CreationDate,2017-11-05T23:15:27+01:00*%
+%TF.CreationDate,2017-11-06T00:21:04+01:00*%
 %TF.ProjectId,perenquen,706572656E7175656E2E6B696361645F,rev?*%
 %MOMM*%
 G04 Overall board parameters*
@@ -23,4 +23,5 @@ G04 board design rules*
 G04 Layer Structure*
 %TJ.L_"Copper,L1,Top",Positive,perenquen-F.Cu.gbr*%
 %TJ.L_"Copper,L2,Bot",Positive,perenquen-B.Cu.gbr*%
+%TJ.L_"Profile",Positive,perenquen-Edge.Cuts.gbr*%
 M02*
