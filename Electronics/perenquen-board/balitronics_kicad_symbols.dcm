@@ -1,0 +1,27 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP AS5040
+D 10-Bit Programmable Magnetic Position Sensor
+K Magnetic, Position, Sensor
+F http://ams.com/eng/content/download/1285/7214/494
+$ENDCMP
+#
+$CMP AS5045B
+D 12-Bit Programmable Magnetic Position Sensor
+K Magnetic, Position, Sensor
+F http://ams.com/eng/content/download/438063/1340357/246195
+$ENDCMP
+#
+$CMP LY3200ALH
+D MEMS motion sensor: high performance ±2000 dps analog yaw-rate gyroscope
+K MEMS, sensor, gyroscope
+F http://datasheet.octopart.com/LY3200ALH-STMicroelectronics-datasheet-10028973.pdf
+$ENDCMP
+#
+$CMP ZXMHC3A01T8
+D COMPLEMENTARY 30V ENHANCEMENT MODE MOSFET H-BRIDGE
+K H-Bridge MOSFET
+F http://datasheet.octopart.com/ZXMHC3A01T8TA-Diodes-Inc.-datasheet-10413288.pdf
+$ENDCMP
+#
+#End Doc Library

@@ -1,0 +1,70 @@
+Title,Perenquen,,,
+Revision,OSHWDem17,,,
+Date,2017-11-01,,,
+Generated,jue 09 nov 2017 10:52:51 CET,,,
+Company,Balitronics,,,
+Comment 1,Author: Javier Baliñas Santos,,,
+Comment 2,,,,
+Comment 3,,,,
+Comment 4,,,,
+Total Parts,90,,,
+Total Unique Parts,49,,,
+,,,,
+,,,,
+,,,,
+Ref,Qty,Value,Footprint,MPN
+C12 C1 C13 C4 C14 ,5,1u,Capacitors_SMD:C_0805,08053G105ZAT2A
+C19 ,1,10u 6V LowESR,Capacitors_Tantalum_SMD:CP_Tantalum_Case-U_EIA-6032-15_Reflow,T491C106M016AT
+C2 C9 C8 ,3,220u 10V,Capacitors_Tantalum_SMD:CP_Tantalum_Case-X_EIA-7343-43_Reflow,T491D227K010AT
+C3 C11 C10 C23 C20 C21 C17 C18 C22 C15 C16 ,11,100n,Capacitors_SMD:C_0603,0603YC104KAT2A
+C5 ,1,470n,Capacitors_SMD:C_0603,0603YD474KAT2A
+C6 ,1,10u,Capacitors_SMD:C_0603,T491C106M016AT
+C7 ,1,10n,Capacitors_SMD:C_0603,06035C103KAT2A
+D1 ,1,LED1,Diodes_SMD:D_0603,SML-D12P8WT86
+D2 ,1,PWR-ON,Diodes_SMD:D_0603,SML-D12V1WT86
+D3 ,1,LED2,Diodes_SMD:D_0603,SML-D12P8WT86
+D4 ,1,LED3,Diodes_SMD:D_0603,SML-D12P8WT86
+D5 ,1,LED4,Diodes_SMD:D_0603,SML-D12P8WT86
+D6 ,1,TX-L,LEDs:LED_D5.0mm_Horizontal_O1.27mm_Z3.0mm,SFH4545
+D7 ,1,TX-RD,LEDs:LED_D5.0mm_Horizontal_O1.27mm_Z3.0mm,SFH4545
+D8 ,1,TX-LD,LEDs:LED_D5.0mm_Horizontal_O1.27mm_Z3.0mm,SFH4545
+D9 ,1,TX-R,LEDs:LED_D5.0mm_Horizontal_O1.27mm_Z3.0mm,SFH4545
+J1 ,1,PWR1,Connectors_JST:JST_PH_B3B-PH-K_03x2.00mm_Straight,B3B-PH-K-S(LF)(SN)
+J2 ,1,ICD,Pin_Headers:Pin_Header_Angled_1x05_Pitch2.54mm,68016-410HLF
+J3 ,1,BT,Socket_Strips:Socket_Strip_Straight_1x06_Pitch2.54mm,801-87-006-20-001101
+J4 ,1,ENC-L,Pin_Headers:Pin_Header_Angled_1x04_Pitch2.54mm,68016-410HLF
+J5 ,1,ENC-R,Pin_Headers:Pin_Header_Angled_1x04_Pitch2.54mm,68016-410HLF
+M1 ,1,Motor-block,balitronics_kicad_footprint_lib:Perenquen-motor-block, 
+Q1 Q2 ,2,RX-LD,LEDs:LED_D3.0mm_Horizontal_O1.27mm_Z2.0mm,TEFT4300
+Q3 ,1,RX-L,LEDs:LED_D3.0mm_Horizontal_O1.27mm_Z2.0mm,TEFT4300
+Q4 ,1,RX-R,LEDs:LED_D3.0mm_Horizontal_O1.27mm_Z2.0mm,TEFT4300
+Q5 ,1,FLASH,LEDs:LED_D3.0mm,TEFT4300
+R1 ,1,2R2 1%,Resistors_SMD:R_0603,RC0603FR-072R2L
+R10 R20 ,2,10k 1%,Resistors_SMD:R_0603,RC0603FR-0710KL
+R15 R17 R18 R21 R16 ,5,1k,Resistors_SMD:R_0603,RC0603JR-071KL
+R19 ,1,20k 1%,Resistors_SMD:R_0603,RC0603FR-0720KL
+R24 R29 R22 R23 R30 ,5,1k8 1%,Resistors_SMD:R_0603,RC0603FR-071K8L
+R25 R28 ,2,12R 1%,Resistors_SMD:R_0805,RC0805FR-0712RL
+R26 R27 ,2,5.6R 1%,Resistors_SMD:R_0805,RMCF0805FT5R60
+R5 R8 R4 R7 ,4,47k,Resistors_SMD:R_0603,RC0603JR-0747KL
+R6 R13 R12 ,3,0R,Resistors_SMD:R_0805,RC0805JR-070RL
+R9 R3 R2 R11 R14 ,5,10k,Resistors_SMD:R_0603,RC0603FR-0710KL
+SW1 ,1,450301014042,Pin_Headers:Pin_Header_Straight_1x03_Pitch2.54mm,450301014042
+SW2 ,1,RST,Buttons_Switches_SMD:SW_SPST_B3U-1000P,B3U-1000P
+SW3 ,1,USR1,Buttons_Switches_SMD:SW_SPST_B3U-1000P,B3U-1000P
+SW4 ,1,USR2,Buttons_Switches_SMD:SW_SPST_B3U-1000P,B3U-1000P
+U11 ,1,DSPIC33EP512MC806,Housings_QFP:TQFP-64_10x10mm_Pitch0.5mm,DSPIC33EP512MC806-I/PT
+U12 ,1,ULN2003A,Housings_SSOP:SSOP-16_4.4x5.2mm_Pitch0.65mm,ULN2003APW
+U2 ,1,M2940IMPX-5.0,TO_SOT_Packages_SMD:SOT-223-3_TabPin2,LM2940IMPX-5.0/NOPB
+U4 U3 ,2,TC4427COA,SMD_Packages:SOIC-8-N,TC4427COA
+U5 ,1,LY3200ALH,balitronics_kicad_footprint_lib:Gyro_ST_LGA10,LY3200ALHTR
+U6 U1 ,2,MCP1700,TO_SOT_Packages_SMD:SOT-23,MCP1700T-3302E/TT
+U8 U7 ,2,ZXMHC3A01T8,Housings_SOIC:Zetex_SM8,ZXMHC3A01T8TA
+U9 U10 ,2,AS5045B,Housings_SSOP:SSOP-16_5.3x6.2mm_Pitch0.65mm,AS5045B
+Y1 ,1,10Mhz,balitronics_kicad_footprint_lib:Resonator_Murata_CSTCE_3pin,CSTCE10M0G55-R0
+,,,,
+,,,,
+,,,,
+,,,,
+BOM made with KICAD_BOM_WIZARD (https://github.com/HashDefineElectronics/KiCad_BOM_Wizard.git),,,,
+Generated jue 09 nov 2017 10:52:51 CET,,,,
