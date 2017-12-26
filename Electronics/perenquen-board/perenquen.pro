@@ -1,4 +1,4 @@
-update=mié 01 nov 2017 08:12:33 CET
+update=sáb 02 dic 2017 20:25:06 CET
 version=1
 last_client=kicad
 [general]
@@ -132,3 +132,13 @@ LibName98=xilinx
 LibName99=zetex
 LibName100=Zilog
 LibName101=balitronics_kicad_symbols
+[schematic_editor]
+version=1
+PageLayoutDescrFile=
+PlotDirectoryName=
+SubpartIdSeparator=0
+SubpartFirstId=65
+NetFmtName=
+SpiceAjustPassiveValues=0
+LabSize=60
+ERC_TestSimilarLabels=1
