@@ -1,0 +1,11 @@
+gen	/media/datos/Proyectos/Perenquen/Software/perenquen/main.c	/^struct genboard gen;$/;"	variable	line:76	typeref:struct:genboard
+mainboard	/media/datos/Proyectos/Perenquen/Software/perenquen/main.c	/^struct mainboard mainboard;$/;"	variable	line:77	typeref:struct:mainboard
+slavedspic	/media/datos/Proyectos/Perenquen/Software/perenquen/main.c	/^struct slavedspic slavedspic;$/;"	variable	line:78	typeref:struct:slavedspic
+beaconboard	/media/datos/Proyectos/Perenquen/Software/perenquen/main.c	/^struct beaconboard beaconboard;$/;"	variable	line:79	typeref:struct:beaconboard
+robot_2nd	/media/datos/Proyectos/Perenquen/Software/perenquen/main.c	/^struct robot_2nd robot_2nd;$/;"	variable	line:80	typeref:struct:robot_2nd
+do_led_blink	/media/datos/Proyectos/Perenquen/Software/perenquen/main.c	/^void do_led_blink(void *dummy)$/;"	function	line:85	signature:(void *dummy)
+main_timer_interrupt	/media/datos/Proyectos/Perenquen/Software/perenquen/main.c	/^static void main_timer_interrupt(void)$/;"	function	line:91	file:	signature:(void)
+main_timer_init	/media/datos/Proyectos/Perenquen/Software/perenquen/main.c	/^void main_timer_init(void)$/;"	function	line:99	signature:(void)
+_T1Interrupt	/media/datos/Proyectos/Perenquen/Software/perenquen/main.c	/^void __attribute__((__interrupt__, no_auto_psv)) _T1Interrupt(void)$/;"	function	line:111	signature:(void)
+io_pins_init	/media/datos/Proyectos/Perenquen/Software/perenquen/main.c	/^void io_pins_init(void)$/;"	function	line:117	signature:(void)
+main	/media/datos/Proyectos/Perenquen/Software/perenquen/main.c	/^int main(void)$/;"	function	line:183	signature:(void)
