@@ -21,7 +21,7 @@
  */
 
 /*  
- *  Copyright Robotics Association of Coslada, Eurobotics Engineering (2011)
+ *  Copyright Javier Baliñas Santos (2018)
  *  Javier Balias Santos <javier@arc-robots.org>
  *
  *  Code ported to family of microcontrollers dsPIC from
@@ -36,8 +36,8 @@
 #include <aversive/error.h>
 
 #include <uart.h>
-#include <dac_mc.h>
-#include <pwm_servo.h>
+
+
 #include <clock_time.h>
 
 #include <pid.h>
@@ -47,7 +47,7 @@
 #include <vect_base.h>
 #include <lines.h>
 #include <polygon.h>
-#include <obstacle_avoidance.h>
+
 #include <blocking_detection_manager.h>
 #include <robot_system.h>
 #include <position_manager.h>

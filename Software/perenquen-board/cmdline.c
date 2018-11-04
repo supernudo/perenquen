@@ -1,7 +1,7 @@
-/*  
- *  Copyright Droids Corporation, 
+/*
+ *  Copyright Droids Corporation,
  *  Olivier Matz <zer0@droids-corp.org>
- * 
+ *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation; either version 2 of the License, or
@@ -20,9 +20,9 @@
  *
  */
 
-/*  
- *  Copyright Robotics Association of Coslada, Eurobotics Engineering (2011)
- *  Javier Bali�as Santos <javier@arc-robots.org>
+/*
+ *  Copyright Javier Baliñas Santos (2018)
+ *  Javier Baliñas Santos <balinas@gmail.com>
  *
  *  Code ported to family of microcontrollers dsPIC from
  *  cmdline.c,v 1.6 2009/05/27 20:04:07 zer0 Exp.
@@ -46,7 +46,7 @@
 
 #include "main.h"
 #include "robotsim.h"
-#include "beacon.h"
+
 #include "cmdline.h"
 #include "strat_base.h"
 
@@ -55,22 +55,22 @@
 extern parse_pgm_ctx_t main_ctx[];
 
 /* generic write char function */
-static void write_char(char c) 
+static void write_char(char c)
 {
 	uart_send(CMDLINE_UART, c);
 }
 
 /* process commands */
-static void valid_buffer(const char *buf, uint8_t size) 
+static void valid_buffer(const char *buf, uint8_t size)
 {
 	int8_t ret;
 
 	/* reset CTRL-C for trajectory interruption each time we
 	 * receive a new command */
-	interrupt_traj_reset();
+	//TODO interrupt_traj_reset();
 
 	ret = parse(main_ctx, buf);
-	
+
 	if (ret == PARSE_AMBIGUOUS)
 		printf_P(PSTR("Ambiguous command\r\n"));
 	else if (ret == PARSE_NOMATCH)
@@ -83,7 +83,7 @@ static void valid_buffer(const char *buf, uint8_t size)
 static int8_t complete_buffer(const char *buf, char *dstbuf, uint8_t dstsize,
 		int16_t *state)
 {
-	return complete(main_ctx, buf, state, dstbuf, dstsize);
+ 	return complete(main_ctx, buf, state, dstbuf, dstsize);
 }
 
 
@@ -91,14 +91,14 @@ static int8_t complete_buffer(const char *buf, char *dstbuf, uint8_t dstsize,
 void emergency(char c)
 {
 	static uint8_t i = 0;
-	
-	/* interrupt traj here */
-	if (c == '\003')
-		interrupt_traj();
-	
+
+	/* TODO interrupt traj here */
+	//if (c == '\003')
+	//	interrupt_traj();
+
 	if ((i == 0 && c == 'p') ||
 	    (i == 1 && c == 'o') ||
-	    (i == 2 && c == 'p')) 
+	    (i == 2 && c == 'p'))
 		i++;
 	else if ( !(i == 1 && c == 'p') )
 		i = 0;
@@ -112,7 +112,7 @@ void emergency(char c)
 
 /* log function, add a command to configure
  * it dynamically */
-void mylog(struct error * e, ...) 
+void mylog(struct error * e, ...)
 {
 	va_list ap;
 #ifndef HOST_VERSION
@@ -126,7 +126,7 @@ void mylog(struct error * e, ...)
 	if (e->severity > ERROR_SEVERITY_ERROR) {
 		if (gen.log_level < e->severity)
 			return;
-		
+
 		for (i=0; i<NB_LOGS+1; i++)
 			if (gen.logs[i] == e->err_num)
 				break;
@@ -137,12 +137,12 @@ void mylog(struct error * e, ...)
 	va_start(ap, e);
 	tv = time_get_time();
 	printf_P(PSTR("%ld.%.3ld: "), (long int)tv.s, (tv.us/1000UL));
-	
-	printf_P(PSTR("(%d,%d,%d) "),
-		 position_get_x_s16(&mainboard.pos),
-		 position_get_y_s16(&mainboard.pos),
-		 position_get_a_deg_s16(&mainboard.pos));
-	
+
+	//printf_P(PSTR("(%d,%d,%d) "),
+	//	 position_get_x_s16(&mainboard.pos),
+	//	 position_get_y_s16(&mainboard.pos),
+	//	 position_get_a_deg_s16(&mainboard.pos));
+
 	/* XXX not secure vfprintf */
 	vfprintf(stdout, e->text, ap);
 
@@ -161,18 +161,17 @@ int cmdline_interact(void)
 	const char *history, *buffer;
 	int8_t ret, same = 0;
 	int16_t c;
-	static microseconds t1, t2 = 0;
-	
+
 	rdline_init(&gen.rdl, write_char, valid_buffer, complete_buffer);
-	sprintf(gen.prompt, "main > ");	
+	sprintf(gen.prompt, "perenquen > ");
 	rdline_newline(&gen.rdl, gen.prompt);
 
-	while (1){
-
+	while (1)
+	{
 		/* get character */
 		c = uart_recv_nowait(CMDLINE_UART);
-		
-		if (c == -1) 
+
+		if (c == -1)
 			continue;
 
 		/* process character in */

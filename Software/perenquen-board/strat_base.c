@@ -20,8 +20,8 @@
  */
 
 /*  
- *  Copyright Robotics Association of Coslada, Eurobotics Engineering (2011)
- *  Javier Bali�as Santos <javier@arc-robots.org>
+ *  Copyright Javier Baliñas Santos (2018)
+ *  Javier Baliñas Santos <balinas@gmail.com>
  *
  *  Code ported to family of microcontrollers dsPIC from
  *  strat_base.c,v 1.7 2009/05/27 20:04:07 zer0 Exp.
@@ -37,8 +37,8 @@
 #include <aversive/error.h>
 
 #include <uart.h>
-#include <dac_mc.h>
-#include <pwm_servo.h>
+
+
 #include <clock_time.h>
 
 #include <pid.h>
@@ -48,7 +48,7 @@
 #include <vect_base.h>
 #include <lines.h>
 #include <polygon.h>
-#include <obstacle_avoidance.h>
+
 #include <blocking_detection_manager.h>
 #include <robot_system.h>
 #include <position_manager.h>
@@ -56,7 +56,7 @@
 #include <rdline.h>
 #include <parse.h>
 
-#include "../common/i2c_commands.h"
+
 
 #include "main.h"
 #include "cmdline.h"
@@ -64,8 +64,8 @@
 #include "strat_base.h"
 #include "strat.h"
 #include "sensor.h"
-#include "i2c_protocol.h"
-#include "beacon.h"
+
+
 
 /* true if we want to interrupt a trajectory */
 static uint8_t traj_intr=0;

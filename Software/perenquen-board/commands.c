@@ -1,6 +1,6 @@
 /*
  *  Copyright Droids Corporation (2009)
- * 
+ *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation; either version 2 of the License, or
@@ -17,11 +17,11 @@
  *
  *  Revision : $Id$
  *
- *  Olivier MATZ <zer0@droids-corp.org> 
+ *  Olivier MATZ <zer0@droids-corp.org>
  */
 
-/*  
- *  Copyright Robotics Association of Coslada, Eurobotics Engineering (2011)
+/*
+ *  Copyright Javier Baliñas Santos (2018)
  *  Javier Balias Santos <javier@arc-robots.org>
  *
  *  Code ported to family of microcontrollers dsPIC from
@@ -35,16 +35,14 @@
 #ifndef HOST_VERSION
 
 #define COMPILE_COMMANDS_GEN
-//#define COMPILE_COMMANDS_GEN_OPTIONALS
 //#define COMPILE_COMMANDS_CS
-#define COMPILE_COMMANDS_MAINBOARD
+//#define COMPILE_COMMANDS_MAINBOARD
 //#define COMPILE_COMMANDS_MAINBOARD_OPTIONALS
-#define COMPILE_COMMANDS_TRAJ
+//#define COMPILE_COMMANDS_TRAJ
 //#define COMPILE_COMMANDS_TRAJ_OPTIONALS
 
 #else /* HOST_VERSION */
 #define COMPILE_COMMANDS_GEN
-#define COMPILE_COMMANDS_GEN_OPTIONALS
 #define COMPILE_COMMANDS_CS
 #define COMPILE_COMMANDS_MAINBOARD
 #define COMPILE_COMMANDS_MAINBOARD_OPTIONALS
@@ -52,35 +50,20 @@
 #define COMPILE_COMMANDS_TRAJ_OPTIONALS
 #endif
 
-#define COMPILE_CODE
-#ifdef COMPILE_CODE /*---------------------------------------------------------------------------------------------*/
-#endif /* COMPILE_CODE --------------------------------------------------------------------------------------------*/
-
 /* commands_gen.c */
 #ifdef COMPILE_COMMANDS_GEN
-
 #ifndef HOST_VERSION
 #include "./commands_gen.c"
 #endif
-
 extern parse_pgm_inst_t cmd_reset;
-//TODO extern parse_pgm_inst_t cmd_bootloader;
 extern parse_pgm_inst_t cmd_encoders;
-extern parse_pgm_inst_t cmd_pwm_servo;
-extern parse_pgm_inst_t cmd_pwm_servo_show_range;
-extern parse_pgm_inst_t cmd_dac_mc;
-
-#ifdef COMPILE_COMMANDS_MAINBOARD_OPTIONALS /*--------------------------------*/
-extern parse_pgm_inst_t cmd_adc;
-#endif /* COMPILE_COMMANDS_MAINBOARD_OPTIONALS --------------------------------*/
-
-extern parse_pgm_inst_t cmd_sensor;
-extern parse_pgm_inst_t cmd_wt11;
+//TODO extern parse_pgm_inst_t cmd_dac_mc;
+//TODO extern parse_pgm_inst_t cmd_adc;
+//TODO extern parse_pgm_inst_t cmd_sensor;
 extern parse_pgm_inst_t cmd_log;
 extern parse_pgm_inst_t cmd_log_show;
 extern parse_pgm_inst_t cmd_log_type;
 extern parse_pgm_inst_t cmd_scheduler;
-
 #endif /* COMPILE_COMMANDS_GEN */
 
 /* commands_cs.c */
@@ -162,7 +145,7 @@ extern parse_pgm_inst_t cmd_traj_speed;
 extern parse_pgm_inst_t cmd_traj_speed_show;
 
 #ifdef COMPILE_COMMANDS_TRAJ_OPTIONALS /*-------------------------------------*/
-#ifdef TRAJECTORY_MANAGER_V3 
+#ifdef TRAJECTORY_MANAGER_V3
 extern parse_pgm_inst_t cmd_traj_acc;
 extern parse_pgm_inst_t cmd_traj_acc_show;
 extern parse_pgm_inst_t cmd_circle_coef;
@@ -205,40 +188,25 @@ extern parse_pgm_inst_t cmd_subtraj2;
 /* in progmem */
 parse_pgm_ctx_t main_ctx[] = {
 
-#ifdef COMPILE_COMMANDS_GEN
-
-#ifdef COMPILE_COMMANDS_GEN_OPTIONALS /*--------------------------------*/
+    #ifdef COMPILE_COMMANDS_GEN
     /* commands_gen.c */
     (parse_pgm_inst_t *) & cmd_reset,
-    //	(parse_pgm_inst_t *)&cmd_bootloader,
-#endif /* COMPILE_COMMANDS_GEN_OPTIONALS --------------------------------*/
-
     (parse_pgm_inst_t *) & cmd_encoders,
-
-#ifdef COMPILE_COMMANDS_GEN_OPTIONALS /*--------------------------------*/
     (parse_pgm_inst_t *) & cmd_scheduler,
-    (parse_pgm_inst_t *) & cmd_pwm_servo,
-    (parse_pgm_inst_t *) & cmd_pwm_servo_show_range,
-    (parse_pgm_inst_t *) & cmd_dac_mc,
-#endif
-
-#ifdef COMPILE_COMMANDS_GEN_OPTIONALS /*--------------------------------*/
-    (parse_pgm_inst_t *) & cmd_adc,
-#endif /* COMPILE_COMMANDS_GEN_OPTIONALS --------------------------------*/
-
-#ifdef COMPILE_COMMANDS_GEN_OPTIONALS /*--------------------------------*/
-    (parse_pgm_inst_t *) & cmd_sensor,
-    (parse_pgm_inst_t *) & cmd_wt11,
-
+    //(parse_pgm_inst_t *) & cmd_dac_mc,
+    //(parse_pgm_inst_t *) & cmd_adc,
+    //(parse_pgm_inst_t *) & cmd_sensor,
     (parse_pgm_inst_t *) & cmd_log,
     (parse_pgm_inst_t *) & cmd_log_show,
     (parse_pgm_inst_t *) & cmd_log_type,
+    #endif /* COMPILE_COMMANDS_GEN */
 
-#endif /* COMPILE_COMMANDS_GEN_OPTIONALS --------------------------------*/
 
 
-#endif /* COMPILE_COMMANDS_GEN */
+    NULL,
+};
 
+#if 0
 #ifdef COMPILE_COMMANDS_CS
 
     /* commands_cs.c */
@@ -293,7 +261,7 @@ parse_pgm_ctx_t main_ctx[] = {
    // (parse_pgm_inst_t *) & cmd_strat_event,
     (parse_pgm_inst_t *) & cmd_sleep,
 #endif /* COMPILE_COMMANDS_MAINBOARD_OPTIONALS -------------------------------*/
- 
+
 //#ifdef COMPILE_COMMANDS_MAINBOARD_OPTIONALS /*--------------------------------*/
     (parse_pgm_inst_t *) & cmd_popcorn_system,
     (parse_pgm_inst_t *) & cmd_stands_system,
@@ -349,6 +317,4 @@ parse_pgm_ctx_t main_ctx[] = {
 
 
 #endif /* COMPILE_COMMANDS_TRAJ */
-
-    NULL,
-};
+#endif

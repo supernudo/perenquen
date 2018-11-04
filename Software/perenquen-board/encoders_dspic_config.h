@@ -17,7 +17,7 @@
  *
  *  Revision : $Id$
  *
- *  Javier Baliñas Santos <javier@arc-robots.org>
+ *  Javier BaliÃ±as Santos <balinas@gmail.com>
  */
  
 #ifndef _ENCODERS_DSPIC_CONFIG_H_

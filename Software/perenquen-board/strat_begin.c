@@ -1,5 +1,5 @@
 /*  
- *  Copyright Robotics Association of Coslada, Eurobotics Engineering (2011)
+ *  Copyright Javier Baliñas Santos (2018)
  * 
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -31,8 +31,8 @@
 #include <aversive/error.h>
 
 #include <uart.h>
-#include <dac_mc.h>
-#include <pwm_servo.h>
+
+
 #include <clock_time.h>
 
 #include <pid.h>
@@ -42,7 +42,7 @@
 #include <vect_base.h>
 #include <lines.h>
 #include <polygon.h>
-#include <obstacle_avoidance.h>
+
 #include <blocking_detection_manager.h>
 #include <robot_system.h>
 #include <position_manager.h>
@@ -51,9 +51,9 @@
 #include <rdline.h>
 #include <parse.h>
 
-#include "../common/i2c_commands.h"
-#include "i2c_protocol.h"
-#include "bt_protocol.h"
+
+
+
 #include "main.h"
 #include "strat.h"
 #include "strat_base.h"
@@ -61,7 +61,7 @@
 #include "strat_utils.h"
 #include "sensor.h"
 #include "actuator.h"
-#include "beacon.h"
+
 #include "cmdline.h"
 
 

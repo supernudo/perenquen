@@ -50,7 +50,7 @@
 #include <parse.h>
 #include <rdline.h>
 
-#include "../common/i2c_commands.h"
+
 #include "strat.h"
 #include "strat_utils.h"
 #include "main.h"

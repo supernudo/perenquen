@@ -24,8 +24,8 @@
  */
 
 /*  
- *  Copyright Robotics Association of Coslada, Eurobotics Engineering (2011)
- *  Javier Baliñas Santos <javier@arc-robots.org>
+ *  Copyright Javier Baliñas Santos (2018)
+ *  Javier Baliñas Santos <balinas@gmail.com>
  *
  *  Code ported to family of microcontrollers dsPIC from
  *  uart_config.h,v 1.3.10.1 2006/11/26 21:06:02 zer0 Exp.
@@ -52,7 +52,7 @@
 /* enable uart0 interrupts if == 1, disable if == 0 */
 #define UART0_INTERRUPT_ENABLED  1
 
-#define UART0_BAUDRATE 115200
+#define UART0_BAUDRATE 38400
 
 /* 
  * if you enable this, the maximum baudrate you can reach is 

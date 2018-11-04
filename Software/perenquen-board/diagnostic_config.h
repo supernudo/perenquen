@@ -15,16 +15,30 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- *  Revision : $Id: i2c_config.h,v 1.2 2009/03/05 23:01:32 zer0 Exp $
+ *  Revision : $Id: diagnostic_config.h,v 1.1.10.2 2008-05-09 08:23:52 zer0 Exp $
  *
  */
 
+#ifndef _DEBUG_CONFIG_
+#define _DEBUG_CONFIG_ 1.0 // version
 
-#define I2C_BITRATE 1 // divider dor i2c baudrate, see TWBR in doc 
-#define I2C_PRESCALER 3 // prescaler config, rate = 2^(n*2)
 
-/* Size of transmission buffer */
-#define I2C_SEND_BUFFER_SIZE 32
+/** port line definition for the show_int_loop() function */
+/* undefine it to disable this functionnality */
+#define INTERRUPT_SHOW_PORT PORTA
+#define INTERRUPT_SHOW_BIT  3
 
-/* Size of reception buffer */
-#define I2C_RECV_BUFFER_SIZE 32
+
+
+/** memory mark for the min_stack_space_available() function
+    the ram is filled with this value after a reset ! */
+#define MARK 0x55
+
+/** the mark is inserted in whole RAM if this is enabled 
+    (could lead to problems if you need to hold values through a reset...)
+    so it's better to disable it.
+    stack counting is not affected */
+//#define DIAG_FILL_ENTIRE_RAM
+
+
+#endif //_DEBUG_CONFIG_

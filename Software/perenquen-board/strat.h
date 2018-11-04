@@ -17,7 +17,7 @@
  *
  *  Revision : $Id$
  *
- *  Javier Bali�as Santos <javier@arc-robots.org> and Silvia Santano
+ *  Javier Baliñas Santos <balinas@gmail.com> and Silvia Santano
  */
 
 #ifndef _STRAT_H_

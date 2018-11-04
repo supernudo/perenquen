@@ -1,5 +1,5 @@
 /*  
- *  Copyright Robotics Association of Coslada, Eurobotics Engineering (2011)
+ *  Copyright Javier Baliñas Santos (2018)
  * 
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -17,14 +17,14 @@
  *
  *  Revision : $Id$
  *
- *  Javier Bali�as Santos <javier@arc-robots.org>
+ *  Javier Baliñas Santos <balinas@gmail.com>
  */
 
 #include <aversive.h>
 #include <encoders_dspic.h>
-#include <dac_mc.h>
 
-#include "i2c_protocol.h"
+
+
 #include "actuator.h"
 #include "main.h"
 #include "robotsim.h"

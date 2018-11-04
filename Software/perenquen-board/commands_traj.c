@@ -21,7 +21,7 @@
  */
 
 /*
- *  Copyright Robotics Association of Coslada, Eurobotics Engineering (2011)
+ *  Copyright Javier Baliñas Santos (2018)
  *  Javier Bali\F1as Santos <javier@arc-robots.org>
  *
  *  Code ported to family of microcontrollers dsPIC from
@@ -36,8 +36,8 @@
 #include <aversive/error.h>
 
 #include <uart.h>
-#include <dac_mc.h>
-#include <pwm_servo.h>
+
+
 #include <clock_time.h>
 #include <encoders_dspic.h>
 
@@ -49,7 +49,7 @@
 #include <vect_base.h>
 #include <lines.h>
 #include <polygon.h>
-#include <obstacle_avoidance.h>
+
 #include <blocking_detection_manager.h>
 #include <robot_system.h>
 #include <position_manager.h>
@@ -66,8 +66,8 @@
 #include "strat_base.h"
 #include "strat_avoid.h"
 #include "strat.h"
-#include "../common/i2c_commands.h"
-#include "bt_protocol.h"
+
+
 
 #ifdef HOST_VERSION
 #define COMPILE_COMMANDS_TRAJ
@@ -789,11 +789,11 @@ static void cmd_goto_parsed(void * parsed_result, void * data)
     }
     else if (!strcmp_P(res->arg1, PSTR("avoid")))
     {
-        err = goto_and_avoid(res->arg2, res->arg3, TRAJ_FLAGS_STD, TRAJ_FLAGS_NO_NEAR);
-        if (err != END_TRAJ && err != END_NEAR)
-            strat_hardstop();
+        //err = goto_and_avoid(res->arg2, res->arg3, TRAJ_FLAGS_STD, TRAJ_FLAGS_NO_NEAR);
+        //if (err != END_TRAJ && err != END_NEAR)
+        //    strat_hardstop();
 
-		printf_P(PSTR("returned %s\r\n"), get_err(err));
+				printf_P(PSTR("returned %s\r\n"), get_err(err));
 		return;
     }
     else if (!strcmp_P(res->arg1, PSTR("avoid_fw")))
@@ -945,38 +945,6 @@ void auto_position(void)
         goto intr;
 
 
-#if 0
-    /* goto blocking to x axis */
-    trajectory_d_rel(&mainboard.traj, -300);
-    err = wait_traj_end(END_INTR | END_TRAJ | END_BLOCKING);
-    if (err == END_INTR)
-        goto intr;
-    wait_ms(100);
-
-    /* set x and angle */
-    strat_reset_pos(COLOR_X(ROBOT_CENTER_TO_BACK), DO_NOT_SET_POS, COLOR_A_ABS(0));
-
-    /* prepare to y axis */
-    trajectory_d_rel(&mainboard.traj, 90);
-    err = wait_traj_end(END_INTR | END_TRAJ);
-    if (err == END_INTR)
-        goto intr;
-
-    trajectory_a_rel(&mainboard.traj, COLOR_A_REL(90));
-    err = wait_traj_end(END_INTR | END_TRAJ);
-    if (err == END_INTR)
-        goto intr;
-
-    /* goto blocking to y axis */
-    trajectory_d_rel(&mainboard.traj, -800);
-    err = wait_traj_end(END_INTR | END_TRAJ | END_BLOCKING);
-    if (err == END_INTR)
-        goto intr;
-    wait_ms(100);
-
-    /* set y */
-    strat_reset_pos(DO_NOT_SET_POS, COLOR_Y(ROBOT_CENTER_TO_BACK), 90);
-#endif
     /* restore speeds */
     strat_set_speed(old_spdd, old_spda);
     return;
@@ -1136,7 +1104,7 @@ static void cmd_strat_conf_parsed(void *parsed_result, void *data)
 
     else if (!strcmp_P(res->arg1, PSTR("do_fast_g1")))
 		strat_infos.conf.flags |= CONF_FLAG_DO_STAND_FAST_GROUP_1;
-	
+
     else if (!strcmp_P(res->arg1, PSTR("do_escape")))
 		strat_infos.conf.flags |= CONF_FLAG_DO_ESCAPE_UPPER_ZONE;
 

@@ -1,5 +1,5 @@
 /*  
- *  Copyright Robotics Association of Coslada, Eurobotics Engineering (2011)
+ *  Copyright Javier Baliñas Santos (2018)
  * 
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
  *
  *  Revision : $Id$
  *
- *  Javier Bali�as Santos <javier@arc-robots.org>
+ *  Javier Baliñas Santos <balinas@gmail.com>
  */
 
 #ifndef _ACTUATOR_H_

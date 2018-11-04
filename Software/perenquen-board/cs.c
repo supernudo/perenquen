@@ -21,8 +21,8 @@
  */
 
 /*  
- *  Copyright Robotics Association of Coslada, Eurobotics Engineering (2011)
- *  Javier Bali�as Santos <javier@arc-robots.org>
+ *  Copyright Javier Baliñas Santos (2018)
+ *  Javier Baliñas Santos <balinas@gmail.com>
  *
  *  Code ported to family of microcontrollers dsPIC from
  *  cs.c,v 1.8 2009/05/27 20:04:07 zer0 Exp.
@@ -35,8 +35,8 @@
 #include <aversive/error.h>
 
 #include <encoders_dspic.h>
-#include <dac_mc.h>
-#include <pwm_servo.h>
+
+
 //#include <timer.h>
 #include <scheduler.h>
 #include <clock_time.h>
@@ -48,7 +48,7 @@
 #include <vect_base.h>
 #include <lines.h>
 #include <polygon.h>
-#include <obstacle_avoidance.h>
+
 #include <blocking_detection_manager.h>
 #include <robot_system.h>
 #include <position_manager.h>
@@ -60,7 +60,7 @@
 #include "robotsim.h"
 #include "strat.h"
 #include "actuator.h"
-#include "i2c_protocol.h"
+
 
 void dump_cs(const char *name, struct cs *cs);
 

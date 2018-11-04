@@ -21,8 +21,8 @@
  */
 
 /*  
- *  Copyright Robotics Association of Coslada, Eurobotics Engineering (2011)
- *  Javier Bali�as Santos <javier@arc-robots.org>
+ *  Copyright Javier Baliñas Santos (2018)
+ *  Javier Baliñas Santos <balinas@gmail.com>
  *
  *  Code ported to family of microcontrollers dsPIC from
  *  sensor.h,v 1.5 2009/05/27 20:04:07 zer0 Exp.

@@ -21,8 +21,8 @@
  */
 
 /*  
- *  Copyright Robotics Association of Coslada, Eurobotics Engineering (2011)
- *  Javier Baliñas Santos <javier@arc-robots.org>
+ *  Copyright Javier BaliÃ±as Santos (2018)
+ *  Javier BaliÃ±as Santos <balinas@gmail.com>
  *
  *  Code ported to family of microcontrollers dsPIC from
  *  sensor.c,v 1.7 2009/05/27 20:04:07 zer0 Exp.
@@ -60,31 +60,31 @@ static void adc_init(void)
 	/* Adquisition and conversion time (TSAM, TAD, TCONV):
 
 		_SAMC =	11111 = 31 TAD = TSAM
-					•
-					•
-					•
+					ï¿½
+					ï¿½
+					ï¿½
 					00001 = 1 TAD
 					00000 = 0 TAD
 
-		_ADCS =	00111111 = TCY · (ADCS<7:0> + 1) = 64 · TCY = TAD
+		_ADCS =	00111111 = TCY ï¿½ (ADCS<7:0> + 1) = 64 ï¿½ TCY = TAD
 					.
 					.
 					. 	
-					00000010 = TCY · (ADCS<7:0> + 1) = 3 · TCY = TAD 
-					00000001 = TCY · (ADCS<7:0> + 1) = 2 · TCY = TAD
-					00000000 = TCY · (ADCS<7:0> + 1) = 1 · TCY = TAD
+					00000010 = TCY ï¿½ (ADCS<7:0> + 1) = 3 ï¿½ TCY = TAD 
+					00000001 = TCY ï¿½ (ADCS<7:0> + 1) = 2 ï¿½ TCY = TAD
+					00000000 = TCY ï¿½ (ADCS<7:0> + 1) = 1 ï¿½ TCY = TAD
 
 		TADmin = 76 ns
 
-		TCONV = 12 • TAD
+		TCONV = 12 ï¿½ TAD
 
 		FCONVmax = 1.1 Msps 
 
 	*/
 
 	_SSRC = 0b111;			/* TSAM auto with internal counter */
-	_SAMC = 0b11111;		/* TSAM = 31· TCY = 775 ns */
-	_ADCS = 0b00111111;	/* TAD = 64· TCY = 1.6 us, TCONV = 19.2 us (50 Ksps max) */ 
+	_SAMC = 0b11111;		/* TSAM = 31ï¿½ TCY = 775 ns */
+	_ADCS = 0b00111111;	/* TAD = 64ï¿½ TCY = 1.6 us, TCONV = 19.2 us (50 Ksps max) */ 
 
 	_ASAM = 0;
 	

@@ -4,3 +4,10 @@ Datasheets
 Electronics/datasheets
 rescue-backup
 Software/tools
+compiler_files
+dist
+debug
+built
+.tags
+*.d
+*.o
