@@ -113,8 +113,9 @@
 // _TRISE0 = 0; /* PWM1L/RE0 MOTOR-R-INA */
 // _LATE0	= 0;
 
-#define BRAKE_ON()      do {_LATE3 = 0; _LATE2 = 0;} while(0)
-#define BRAKE_OFF()     do {_LATE1 = 1; _LATE0 = 1;} while(0)
+// TODO: apply brake thru PWM module
+#define BRAKE_ON()      do {_LATE0 = 0; _LATE1 = 0; _LATE2 = 0; _LATE3 = 0;} while(0)
+#define BRAKE_OFF()     do {} while(0)
 
 #endif /* !HOST_VERSION */
 

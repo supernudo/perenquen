@@ -144,15 +144,15 @@ void io_pins_init(void)
 	_LATE0	= 0;
 
 	/* encoders */
-	/* TODO: swap one encoder channels for equal inc/dec sign */
-	_QEA1R 	= 96;//70;	/* QEA1 <- RP70(RD6) <- R_ENC_CHA */
+	_QEA1R 	= 70;	/* QEA1 <- RP70(RD6) <- R_ENC_CHA */
 	_TRISD6 = 1;
-	_QEB1R 	= 97;//71;	/* QEB1 <- RP71(RD7) <- R_ENC_CHB */
+	_QEB1R 	= 71;	/* QEB1 <- RP71(RD7) <- R_ENC_CHB */
 	_TRISD7	= 1;
 
-	_QEA2R 	= 70;//96;	/* QEA2 <- RP96(RF0) <- L_ENC_CHA */
+	/* XXX: encoder channels swaped for equal inc/dec sign with right encoder */
+	_QEA2R 	= 97;	/* QEA2 <- RP96(RF0) <- L_ENC_CHA */
 	_TRISF0 = 1;
-	_QEB2R 	= 71;//97;	/* QEB2 <- RP97(RF1)  <- L_ENC_CHB */
+	_QEB2R 	= 96;	/* QEB2 <- RP97(RF1)  <- L_ENC_CHB */
 	_TRISF1	= 1;
 
 	/* TX wall sensors */
@@ -287,12 +287,41 @@ int main(void)
 	/* enable interrupts */
 	sei();
 
-	/* wait to init of slavedspic */
-	wait_ms(2000);
-
 	/* say hello */
 	printf("\r\n");
 	printf("Don't turn it on, take it a part!!\r\n");
+
+	#if 0
+	while (1) {
+		uint8_t flags;
+
+		/* Motors test */
+		//_TRISE2 = 0;
+		//_TRISE3 = 0;
+		//_LATE2 = 1;
+		//_LATE3 = 1;
+		//printf("E2 %d, %d, %d / E3 %d, %d, %d\n\r",
+		//				(int)_TRISE2, (int)_LATE2, (int)_RE2,
+		//				(int)_TRISE3, (int)_LATE3, (int)_RE3);
+		//time_wait_ms(100);
+
+
+		/* Wall-sensors test */
+		_LATD5  = 0;
+		_LATD2  = 0;
+		_LATD4  = 0;
+		_LATD3  = 0;
+		wait_us(900);
+
+		IRQ_LOCK(flags);
+		//_LATD5  = 1;
+		//_LATD2  = 1;
+		//_LATD4  = 1;
+		//_LATD3  = 1;
+		wait_us(50);
+		IRQ_UNLOCK(flags);
+	}
+	#endif
 
 	/* process commands, never returns */
 	cmdline_interact();
