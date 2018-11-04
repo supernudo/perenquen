@@ -57,7 +57,7 @@
 #endif
 extern parse_pgm_inst_t cmd_reset;
 extern parse_pgm_inst_t cmd_encoders;
-//TODO extern parse_pgm_inst_t cmd_dac_mc;
+extern parse_pgm_inst_t cmd_motors;
 //TODO extern parse_pgm_inst_t cmd_adc;
 //TODO extern parse_pgm_inst_t cmd_sensor;
 extern parse_pgm_inst_t cmd_log;
@@ -193,7 +193,7 @@ parse_pgm_ctx_t main_ctx[] = {
     (parse_pgm_inst_t *) & cmd_reset,
     (parse_pgm_inst_t *) & cmd_encoders,
     (parse_pgm_inst_t *) & cmd_scheduler,
-    //(parse_pgm_inst_t *) & cmd_dac_mc,
+    (parse_pgm_inst_t *) & cmd_motors,
     //(parse_pgm_inst_t *) & cmd_adc,
     //(parse_pgm_inst_t *) & cmd_sensor,
     (parse_pgm_inst_t *) & cmd_log,

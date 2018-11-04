@@ -149,8 +149,8 @@ static void do_cs(void *dummy)
 		if ((second >= MATCH_TIME + 2)) {
 
 			/* stop motors */
-			dac_mc_set(LEFT_MOTOR, 0);
-			dac_mc_set(RIGHT_MOTOR, 0);
+			dac_mc_set(MOTOR_LEFT, 0);
+			dac_mc_set(MOTOR_RIGHT, 0);
 
 			/* kill strat */
 			strat_exit();
@@ -203,15 +203,15 @@ void dump_pid(const char *name, struct pid_filter *pid)
 		 pid_get_value_out(pid));
 }
 
-//void dac_set_and_save(void *dac, int32_t val);
+//void motor_pwm_set_and_save(void *pwm_gen_num, int32_t val);
 
 /* cs init */
 void maindspic_cs_init(void)
 {
 	/* ROBOT_SYSTEM */
 	rs_init(&mainboard.rs);
-	rs_set_left_pwm(&mainboard.rs, dac_set_and_save, LEFT_MOTOR);
-	rs_set_right_pwm(&mainboard.rs,  dac_set_and_save, RIGHT_MOTOR);
+	rs_set_left_pwm(&mainboard.rs, motor_pwm_set_and_save, MOTOR_LEFT);
+	rs_set_right_pwm(&mainboard.rs,  motor_pwm_set_and_save, MOTOR_RIGHT);
 
 #define Ed	0.9981761809228520 //1.0 //1.00375
 #define Cl	(2.0/(Ed + 1.0))
@@ -220,14 +220,14 @@ void maindspic_cs_init(void)
 	/* increase gain to decrease dist, increase left and it will turn more left */
 #ifdef HOST_VERSION
 	rs_set_left_ext_encoder(&mainboard.rs, robotsim_encoder_get,
-				LEFT_ENCODER, IMP_COEF * 1.);
+				ENCODER_LEFT, IMP_COEF * 1.);
 	rs_set_right_ext_encoder(&mainboard.rs, robotsim_encoder_get,
-				 RIGHT_ENCODER, IMP_COEF * 1.);
+				 ENCODER_RIGHT, IMP_COEF * 1.);
 #else
 	rs_set_left_ext_encoder(&mainboard.rs, encoders_dspic_get_value, 
-				LEFT_ENCODER, IMP_COEF * Cl); 
+				ENCODER_LEFT, IMP_COEF * Cl); 
 	rs_set_right_ext_encoder(&mainboard.rs, encoders_dspic_get_value, 
-				 RIGHT_ENCODER, IMP_COEF * Cr);
+				 ENCODER_RIGHT, IMP_COEF * Cr);
 #endif
 
 	/* rs will use external encoders */

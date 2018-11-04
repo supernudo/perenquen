@@ -62,6 +62,7 @@
 #include "main.h"
 #include "cmdline.h"
 #include "sensor.h"
+#include "actuator.h"
 
 #ifdef HOST_VERSION
 #define COMPILE_COMMANDS_GEN
@@ -88,11 +89,11 @@ static void cmd_reset_parsed(void * parsed_result, void * data)
 prog_char str_reset_arg0[] = "reset";
 parse_pgm_token_string_t cmd_reset_arg0 = TOKEN_STRING_INITIALIZER(struct cmd_reset_result, arg0, str_reset_arg0);
 
-//prog_char help_reset[] = "Reset the board";
+prog_char help_reset[] = "Reset the board";
 parse_pgm_inst_t cmd_reset = {
 	.f = cmd_reset_parsed,  /* function to call */
 	.data = NULL,      /* 2nd arg of func */
-//	.help_str = help_reset,
+	.help_str = help_reset,
 	.tokens = {        /* token list, NULL terminated */
 		(prog_void *)&cmd_reset_arg0,
 		NULL,
@@ -117,19 +118,16 @@ static void cmd_encoders_parsed(void *parsed_result, void *data)
 	struct cmd_encoders_result *res = parsed_result;
 
 	if (!strcmp_P(res->arg1, PSTR("reset"))) {
-
-		encoders_dspic_set_value((void *)1, 0);
-		encoders_dspic_set_value((void *)2, 0);
+		encoders_dspic_set_value(ENCODER_RIGHT, 0);
+		encoders_dspic_set_value(ENCODER_LEFT, 0);
 		return;
 	}
 
 	/* show */
 	while(!cmdline_keypressed()) {
-        encoders_dspic_manage(NULL);
-		//printf_P(PSTR("% .8ld % .8ld\r\n"),
-		printf("% .8ld % .8ld\r\n",
-			 encoders_dspic_get_value((void *)1),
-			 encoders_dspic_get_value((void *)2));
+		printf("R % .8ld L % .8ld\r\n",
+			 encoders_dspic_get_value(ENCODER_RIGHT),
+			 encoders_dspic_get_value(ENCODER_LEFT;
 
 		wait_ms(50);
 	}
@@ -141,11 +139,11 @@ parse_pgm_token_string_t cmd_encoders_arg0 = TOKEN_STRING_INITIALIZER(struct cmd
 prog_char str_encoders_arg1[] = "show#reset";
 parse_pgm_token_string_t cmd_encoders_arg1 = TOKEN_STRING_INITIALIZER(struct cmd_encoders_result, arg1, str_encoders_arg1);
 
-//prog_char help_encoders[] = "Show encoders values";
+prog_char help_encoders[] = "Show encoders values";
 parse_pgm_inst_t cmd_encoders = {
 	.f = cmd_encoders_parsed,  /* function to call */
 	.data = NULL,      /* 2nd arg of func */
-//	.help_str = help_encoders,
+	.help_str = help_encoders,
 	.tokens = {        /* token list, NULL terminated */
 		(prog_void *)&cmd_encoders_arg0,
 		(prog_void *)&cmd_encoders_arg1,
@@ -173,11 +171,11 @@ parse_pgm_token_string_t cmd_scheduler_arg0 = TOKEN_STRING_INITIALIZER(struct cm
 prog_char str_scheduler_arg1[] = "show";
 parse_pgm_token_string_t cmd_scheduler_arg1 = TOKEN_STRING_INITIALIZER(struct cmd_scheduler_result, arg1, str_scheduler_arg1);
 
-//prog_char help_scheduler[] = "Show scheduler events";
+prog_char help_scheduler[] = "Show scheduler events";
 parse_pgm_inst_t cmd_scheduler = {
 	.f = cmd_scheduler_parsed,  /* function to call */
 	.data = NULL,      /* 2nd arg of func */
-//	.help_str = help_scheduler,
+	.help_str = help_scheduler,
 	.tokens = {        /* token list, NULL terminated */
 		(prog_void *)&cmd_scheduler_arg0,
 		(prog_void *)&cmd_scheduler_arg1,
@@ -186,55 +184,54 @@ parse_pgm_inst_t cmd_scheduler = {
 };
 
 /**********************************************************/
-/* TODO: dac_mc tests */
+/* hspwm tests */
 
-///* this structure is filled when cmd_dac_mc is parsed successfully */
-//struct cmd_dac_mc_result {
-//	fixed_string_t arg0;
-//	fixed_string_t arg1;
-//	int32_t arg2;
-//};
-//
-///* function called when cmd_dac_mc is parsed successfully */
-//static void cmd_dac_mc_parsed(void * parsed_result, __attribute__((unused)) void *data)
-//{
-//#ifdef HOST_VERSION
-//	printf("not implemented\n");
-//#else
-//	void * dac_mc_ptr = NULL;
-//	struct cmd_dac_mc_result * res = parsed_result;
-//
-//	if (!strcmp_P(res->arg1, PSTR("left")))
-//		dac_mc_ptr = &gen.dac_mc_left;
-//	else if (!strcmp_P(res->arg1, PSTR("right")))
-//		dac_mc_ptr = &gen.dac_mc_right;
-//
-//
-//	if (dac_mc_ptr)
-//		dac_mc_set(dac_mc_ptr, res->arg2);
-//
-//	//printf_P(PSTR("done\r\n"));
-//#endif
-//}
-//
-//prog_char str_dac_mc_arg0[] = "dac_mc";
-//parse_pgm_token_string_t cmd_dac_mc_arg0 = TOKEN_STRING_INITIALIZER(struct cmd_dac_mc_result, arg0, str_dac_mc_arg0);
-//prog_char str_dac_mc_arg1[] = "left#right";
-//parse_pgm_token_string_t cmd_dac_mc_arg1 = TOKEN_STRING_INITIALIZER(struct cmd_dac_mc_result, arg1, str_dac_mc_arg1);
-//parse_pgm_token_num_t cmd_dac_mc_arg2 = TOKEN_NUM_INITIALIZER(struct cmd_dac_mc_result, arg2, INT32);
-//
-////prog_char help_dac_mc[] = "Set dac_mc values [-65535 ; 65535]";
-//parse_pgm_inst_t cmd_dac_mc = {
-//	.f = cmd_dac_mc_parsed,  /* function to call */
-//	.data = NULL,      /* 2nd arg of func */
-////	.help_str = help_dac_mc,
-//	.tokens = {        /* token list, NULL terminated */
-//		(prog_void *)&cmd_dac_mc_arg0,
-//		(prog_void *)&cmd_dac_mc_arg1,
-//		(prog_void *)&cmd_dac_mc_arg2,
-//		NULL,
-//	},
-//};
+/* this structure is filled when cmd_motors is parsed successfully */
+struct cmd_motors_result {
+	fixed_string_t arg0;
+	fixed_string_t arg1;
+	int32_t arg2;
+};
+
+/* function called when cmd_motors is parsed successfully */
+static void cmd_motors_parsed(void * parsed_result, __attribute__((unused)) void *data)
+{
+#ifdef HOST_VERSION
+	printf("not implemented\n");
+#else
+	void *pwm_gen_num = NULL;
+	struct cmd_motors_result * res = parsed_result;
+
+	if (!strcmp_P(res->arg1, PSTR("left")))
+		pwm_gen_num = MOTOR_LEFT;
+	else if (!strcmp_P(res->arg1, PSTR("right")))
+		pwm_gen_num = MOTOR_RIGHT;
+
+	if (pwm_gen_num)
+		hspwm_set_pwm(pwm_gen_num, res->arg2);
+
+	printf_P(PSTR("done\r\n"));
+#endif
+}
+
+prog_char str_motors_arg0[] = "motor";
+parse_pgm_token_string_t cmd_motors_arg0 = TOKEN_STRING_INITIALIZER(struct cmd_motors_result, arg0, str_motors_arg0);
+prog_char str_motors_arg1[] = "left#right";
+parse_pgm_token_string_t cmd_motors_arg1 = TOKEN_STRING_INITIALIZER(struct cmd_motors_result, arg1, str_motors_arg1);
+parse_pgm_token_num_t cmd_motors_arg2 = TOKEN_NUM_INITIALIZER(struct cmd_motors_result, arg2, INT32);
+
+prog_char help_motors[] = "Set motor pwm value [-6000 ; 6000]";
+parse_pgm_inst_t cmd_motors = {
+	.f = cmd_motors_parsed,  /* function to call */
+	.data = NULL,      /* 2nd arg of func */
+	.help_str = help_motors,
+	.tokens = {        /* token list, NULL terminated */
+		(prog_void *)&cmd_motors_arg0,
+		(prog_void *)&cmd_motors_arg1,
+		(prog_void *)&cmd_motors_arg2,
+		NULL,
+	},
+};
 
 /**********************************************************/
 /* Adcs tests */
@@ -273,11 +270,11 @@ parse_pgm_inst_t cmd_scheduler = {
 //prog_char str_adc_arg1[] = "show#loop_show";
 //parse_pgm_token_string_t cmd_adc_arg1 = TOKEN_STRING_INITIALIZER(struct cmd_adc_result, arg1, str_adc_arg1);
 //
-////prog_char help_adc[] = "Show adc values";
+//prog_char help_adc[] = "Show adc values";
 //parse_pgm_inst_t cmd_adc = {
 //	.f = cmd_adc_parsed,  /* function to call */
 //	.data = NULL,      /* 2nd arg of func */
-////	.help_str = help_adc,
+//	.help_str = help_adc,
 //	.tokens = {        /* token list, NULL terminated */
 //		(prog_void *)&cmd_adc_arg0,
 //		(prog_void *)&cmd_adc_arg1,
@@ -342,11 +339,11 @@ parse_pgm_inst_t cmd_scheduler = {
 //prog_char str_sensor_arg1[] = "show#loop_show";
 //parse_pgm_token_string_t cmd_sensor_arg1 = TOKEN_STRING_INITIALIZER(struct cmd_sensor_result, arg1, str_sensor_arg1);
 //
-////prog_char help_sensor[] = "Show sensor values";
+//prog_char help_sensor[] = "Show sensor values";
 //parse_pgm_inst_t cmd_sensor = {
 //	.f = cmd_sensor_parsed,  /* function to call */
 //	.data = NULL,      /* 2nd arg of func */
-////	.help_str = help_sensor,
+//	.help_str = help_sensor,
 //	.tokens = {        /* token list, NULL terminated */
 //		(prog_void *)&cmd_sensor_arg0,
 //		(prog_void *)&cmd_sensor_arg1,
@@ -454,11 +451,11 @@ prog_char str_log_arg1[] = "level";
 parse_pgm_token_string_t cmd_log_arg1 = TOKEN_STRING_INITIALIZER(struct cmd_log_result, arg1, str_log_arg1);
 parse_pgm_token_num_t cmd_log_arg2 = TOKEN_NUM_INITIALIZER(struct cmd_log_result, arg2, INT32);
 
-//prog_char help_log[] = "Set log options: level (0 -> 5)";
+prog_char help_log[] = "Set log options: level (0 -> 5)";
 parse_pgm_inst_t cmd_log = {
 	.f = cmd_log_parsed,  /* function to call */
 	.data = NULL,      /* 2nd arg of func */
-//	.help_str = help_log,
+	.help_str = help_log,
 	.tokens = {        /* token list, NULL terminated */
 		(prog_void *)&cmd_log_arg0,
 		(prog_void *)&cmd_log_arg1,
@@ -470,11 +467,11 @@ parse_pgm_inst_t cmd_log = {
 prog_char str_log_arg1_show[] = "show";
 parse_pgm_token_string_t cmd_log_arg1_show = TOKEN_STRING_INITIALIZER(struct cmd_log_result, arg1, str_log_arg1_show);
 
-//prog_char help_log_show[] = "Show configured logs";
+prog_char help_log_show[] = "Show configured logs";
 parse_pgm_inst_t cmd_log_show = {
 	.f = cmd_log_parsed,  /* function to call */
 	.data = NULL,      /* 2nd arg of func */
-//	.help_str = help_log_show,
+	.help_str = help_log_show,
 	.tokens = {        /* token list, NULL terminated */
 		(prog_void *)&cmd_log_arg0,
 		(prog_void *)&cmd_log_arg1_show,
@@ -542,11 +539,11 @@ parse_pgm_token_string_t cmd_log_arg2_type = TOKEN_STRING_INITIALIZER(struct cmd
 prog_char str_log_arg3[] = "on#off";
 parse_pgm_token_string_t cmd_log_arg3 = TOKEN_STRING_INITIALIZER(struct cmd_log_type_result, arg3, str_log_arg3);
 
-//prog_char help_log_type[] = "Set log type";
+prog_char help_log_type[] = "Set log type";
 parse_pgm_inst_t cmd_log_type = {
 	.f = cmd_log_type_parsed,  /* function to call */
 	.data = NULL,      /* 2nd arg of func */
-//	.help_str = help_log_type,
+	.help_str = help_log_type,
 	.tokens = {        /* token list, NULL terminated */
 		(prog_void *)&cmd_log_arg0,
 		(prog_void *)&cmd_log_arg1_type,

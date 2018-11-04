@@ -189,8 +189,8 @@ void strat_exit(void)
     IRQ_UNLOCK(flags);
 
     /* TODO: stop motors */
-    //dac_mc_set(LEFT_MOTOR, 0);
-    //dac_mc_set(RIGHT_MOTOR, 0);
+    //dac_mc_set(MOTOR_LEFT, 0);
+    //dac_mc_set(MOTOR_RIGHT, 0);
 #endif
 
 	strat_infos.match_ends = 1;

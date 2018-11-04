@@ -116,7 +116,7 @@ prog_char str_traj_speed_arg1[] = "angle#distance";
 parse_pgm_token_string_t cmd_traj_speed_arg1 = TOKEN_STRING_INITIALIZER(struct cmd_traj_speed_result, arg1, str_traj_speed_arg1);
 parse_pgm_token_num_t cmd_traj_speed_s = TOKEN_NUM_INITIALIZER(struct cmd_traj_speed_result, s, INT16);
 
-//prog_char help_traj_speed[] = "Set traj_speed values for trajectory manager";
+prog_char help_traj_speed[] = "Set traj_speed values for trajectory manager";
 parse_pgm_inst_t cmd_traj_speed = {
     .f = cmd_traj_speed_parsed, /* function to call */
     .data = NULL, /* 2nd arg of func */
@@ -135,7 +135,7 @@ parse_pgm_inst_t cmd_traj_speed = {
 prog_char str_traj_speed_show_arg[] = "show";
 parse_pgm_token_string_t cmd_traj_speed_show_arg = TOKEN_STRING_INITIALIZER(struct cmd_traj_speed_result, arg1, str_traj_speed_show_arg);
 
-//prog_char help_traj_speed_show[] = "Show traj_speed values for trajectory manager";
+prog_char help_traj_speed_show[] = "Show traj_speed values for trajectory manager";
 parse_pgm_inst_t cmd_traj_speed_show = {
     .f = cmd_traj_speed_parsed, /* function to call */
     .data = NULL, /* 2nd arg of func */
@@ -189,7 +189,7 @@ prog_char str_traj_acc_arg1[] = "angle#distance";
 parse_pgm_token_string_t cmd_traj_acc_arg1 = TOKEN_STRING_INITIALIZER(struct cmd_traj_acc_result, arg1, str_traj_acc_arg1);
 parse_pgm_token_num_t cmd_traj_acc_s = TOKEN_NUM_INITIALIZER(struct cmd_traj_acc_result, s, INT16);
 
-//prog_char help_traj_acc[] = "Set traj_acc values for trajectory manager";
+prog_char help_traj_acc[] = "Set traj_acc values for trajectory manager";
 parse_pgm_inst_t cmd_traj_acc = {
     .f = cmd_traj_acc_parsed, /* function to call */
     .data = NULL, /* 2nd arg of func */
@@ -208,7 +208,7 @@ parse_pgm_inst_t cmd_traj_acc = {
 prog_char str_traj_acc_show_arg[] = "show";
 parse_pgm_token_string_t cmd_traj_acc_show_arg = TOKEN_STRING_INITIALIZER(struct cmd_traj_acc_result, arg1, str_traj_acc_show_arg);
 
-//prog_char help_traj_acc_show[] = "Show traj_acc values for trajectory manager";
+prog_char help_traj_acc_show[] = "Show traj_acc values for trajectory manager";
 parse_pgm_inst_t cmd_traj_acc_show = {
     .f = cmd_traj_acc_parsed, /* function to call */
     .data = NULL, /* 2nd arg of func */
@@ -252,7 +252,7 @@ prog_char str_circle_coef_arg1[] = "set";
 parse_pgm_token_string_t cmd_circle_coef_arg1 = TOKEN_STRING_INITIALIZER(struct cmd_circle_coef_result, arg1, str_circle_coef_arg1);
 parse_pgm_token_num_t cmd_circle_coef_val = TOKEN_NUM_INITIALIZER(struct cmd_circle_coef_result, circle_coef, FLOAT);
 
-//prog_char help_circle_coef[] = "Set circle coef";
+prog_char help_circle_coef[] = "Set circle coef";
 parse_pgm_inst_t cmd_circle_coef = {
     .f = cmd_circle_coef_parsed, /* function to call */
     .data = NULL, /* 2nd arg of func */
@@ -271,7 +271,7 @@ parse_pgm_inst_t cmd_circle_coef = {
 prog_char str_circle_coef_show_arg[] = "show";
 parse_pgm_token_string_t cmd_circle_coef_show_arg = TOKEN_STRING_INITIALIZER(struct cmd_circle_coef_result, arg1, str_circle_coef_show_arg);
 
-//prog_char help_circle_coef_show[] = "Show circle coef";
+prog_char help_circle_coef_show[] = "Show circle coef";
 parse_pgm_inst_t cmd_circle_coef_show = {
     .f = cmd_circle_coef_parsed, /* function to call */
     .data = NULL, /* 2nd arg of func */
@@ -321,7 +321,7 @@ parse_pgm_token_num_t cmd_trajectory_d = TOKEN_NUM_INITIALIZER(struct cmd_trajec
 parse_pgm_token_num_t cmd_trajectory_a = TOKEN_NUM_INITIALIZER(struct cmd_trajectory_result, a_win, FLOAT);
 parse_pgm_token_num_t cmd_trajectory_as = TOKEN_NUM_INITIALIZER(struct cmd_trajectory_result, a_start, FLOAT);
 
-//prog_char help_trajectory[] = "Set trajectory windows (distance, angle, angle_start)";
+prog_char help_trajectory[] = "Set trajectory windows (distance, angle, angle_start)";
 parse_pgm_inst_t cmd_trajectory = {
     .f = cmd_trajectory_parsed, /* function to call */
     .data = NULL, /* 2nd arg of func */
@@ -342,7 +342,7 @@ parse_pgm_inst_t cmd_trajectory = {
 prog_char str_trajectory_show_arg[] = "show";
 parse_pgm_token_string_t cmd_trajectory_show_arg = TOKEN_STRING_INITIALIZER(struct cmd_trajectory_result, arg1, str_trajectory_show_arg);
 
-//prog_char help_trajectory_show[] = "Show trajectory window configuration";
+prog_char help_trajectory_show[] = "Show trajectory window configuration";
 parse_pgm_inst_t cmd_trajectory_show = {
     .f = cmd_trajectory_parsed, /* function to call */
     .data = NULL, /* 2nd arg of func */
@@ -385,9 +385,9 @@ static void cmd_rs_gains_parsed(void * parsed_result, void * data)
 
         /* increase gain to decrease dist, increase left and it will turn more left */
         rs_set_left_ext_encoder(&mainboard.rs, encoders_dspic_get_value,
-                                LEFT_ENCODER, IMP_COEF * cl);
+                                ENCODER_LEFT, IMP_COEF * cl);
         rs_set_right_ext_encoder(&mainboard.rs, encoders_dspic_get_value,
-                                 RIGHT_ENCODER, IMP_COEF * cr);
+                                 ENCODER_RIGHT, IMP_COEF * cr);
     }
 
     printf_P(PSTR("rs_gains set ed = %f, cr = %f, cl = %f\r\n"), ed, cr, cl);
@@ -400,7 +400,7 @@ prog_char str_rs_gains_arg1[] = "set";
 parse_pgm_token_string_t cmd_rs_gains_arg1 = TOKEN_STRING_INITIALIZER(struct cmd_rs_gains_result, arg1, str_rs_gains_arg1);
 parse_pgm_token_num_t cmd_rs_gains_ed = TOKEN_NUM_INITIALIZER(struct cmd_rs_gains_result, ed, FLOAT);
 
-//prog_char help_rs_gains[] = "Set rs_gains (left, right)";
+prog_char help_rs_gains[] = "Set rs_gains (left, right)";
 parse_pgm_inst_t cmd_rs_gains = {
     .f = cmd_rs_gains_parsed, /* function to call */
     .data = NULL, /* 2nd arg of func */
@@ -418,7 +418,7 @@ parse_pgm_inst_t cmd_rs_gains = {
 prog_char str_rs_gains_show_arg[] = "show";
 parse_pgm_token_string_t cmd_rs_gains_show_arg = TOKEN_STRING_INITIALIZER(struct cmd_rs_gains_result, arg1, str_rs_gains_show_arg);
 
-//prog_char help_rs_gains_show[] = "Show rs_gains";
+prog_char help_rs_gains_show[] = "Show rs_gains";
 parse_pgm_inst_t cmd_rs_gains_show = {
     .f = cmd_rs_gains_parsed, /* function to call */
     .data = NULL, /* 2nd arg of func */
@@ -461,7 +461,7 @@ prog_char str_track_arg1[] = "set";
 parse_pgm_token_string_t cmd_track_arg1 = TOKEN_STRING_INITIALIZER(struct cmd_track_result, arg1, str_track_arg1);
 parse_pgm_token_num_t cmd_track_val = TOKEN_NUM_INITIALIZER(struct cmd_track_result, val, FLOAT);
 
-//prog_char help_track[] = "Set track in mm";
+prog_char help_track[] = "Set track in mm";
 parse_pgm_inst_t cmd_track = {
     .f = cmd_track_parsed, /* function to call */
     .data = NULL, /* 2nd arg of func */
@@ -480,7 +480,7 @@ parse_pgm_inst_t cmd_track = {
 prog_char str_track_show_arg[] = "show";
 parse_pgm_token_string_t cmd_track_show_arg = TOKEN_STRING_INITIALIZER(struct cmd_track_result, arg1, str_track_show_arg);
 
-//prog_char help_track_show[] = "Show track";
+prog_char help_track_show[] = "Show track";
 parse_pgm_inst_t cmd_track_show = {
     .f = cmd_track_parsed, /* function to call */
     .data = NULL, /* 2nd arg of func */
@@ -524,7 +524,7 @@ prog_char str_centrifugal_arg1[] = "set";
 parse_pgm_token_string_t cmd_centrifugal_arg1 = TOKEN_STRING_INITIALIZER(struct cmd_centrifugal_result, arg1, str_centrifugal_arg1);
 parse_pgm_token_num_t cmd_centrifugal_val = TOKEN_NUM_INITIALIZER(struct cmd_centrifugal_result, val, FLOAT);
 
-//prog_char help_centrifugal[] = "Set centrifugal coef";
+prog_char help_centrifugal[] = "Set centrifugal coef";
 parse_pgm_inst_t cmd_centrifugal = {
     .f = cmd_centrifugal_parsed, /* function to call */
     .data = NULL, /* 2nd arg of func */
@@ -543,7 +543,7 @@ parse_pgm_inst_t cmd_centrifugal = {
 prog_char str_centrifugal_show_arg[] = "show";
 parse_pgm_token_string_t cmd_centrifugal_show_arg = TOKEN_STRING_INITIALIZER(struct cmd_centrifugal_result, arg1, str_centrifugal_show_arg);
 
-//prog_char help_centrifugal_show[] = "Show centrifugal";
+prog_char help_centrifugal_show[] = "Show centrifugal";
 parse_pgm_inst_t cmd_centrifugal_show = {
     .f = cmd_centrifugal_parsed, /* function to call */
     .data = NULL, /* 2nd arg of func */
@@ -662,7 +662,7 @@ parse_pgm_token_num_t cmd_pt_list_arg2 = TOKEN_NUM_INITIALIZER(struct cmd_pt_lis
 parse_pgm_token_num_t cmd_pt_list_arg3 = TOKEN_NUM_INITIALIZER(struct cmd_pt_list_result, arg3, INT16);
 parse_pgm_token_num_t cmd_pt_list_arg4 = TOKEN_NUM_INITIALIZER(struct cmd_pt_list_result, arg4, INT16);
 
-//prog_char help_pt_list[] = "Insert point in pt_list (idx,x,y)";
+prog_char help_pt_list[] = "Insert point in pt_list (idx,x,y)";
 parse_pgm_inst_t cmd_pt_list = {
     .f = cmd_pt_list_parsed, /* function to call */
     .data = NULL, /* 2nd arg of func */
@@ -683,7 +683,7 @@ parse_pgm_inst_t cmd_pt_list = {
 prog_char str_pt_list_arg1_append[] = "append";
 parse_pgm_token_string_t cmd_pt_list_arg1_append = TOKEN_STRING_INITIALIZER(struct cmd_pt_list_result, arg1, str_pt_list_arg1_append);
 
-//prog_char help_pt_list_append[] = "Append point in pt_list (x,y)";
+prog_char help_pt_list_append[] = "Append point in pt_list (x,y)";
 parse_pgm_inst_t cmd_pt_list_append = {
     .f = cmd_pt_list_parsed, /* function to call */
     .data = NULL, /* 2nd arg of func */
@@ -703,7 +703,7 @@ parse_pgm_inst_t cmd_pt_list_append = {
 prog_char str_pt_list_del_arg[] = "del";
 parse_pgm_token_string_t cmd_pt_list_del_arg = TOKEN_STRING_INITIALIZER(struct cmd_pt_list_result, arg1, str_pt_list_del_arg);
 
-//prog_char help_pt_list_del[] = "Del or insert point in pt_list (num)";
+prog_char help_pt_list_del[] = "Del or insert point in pt_list (num)";
 parse_pgm_inst_t cmd_pt_list_del = {
     .f = cmd_pt_list_parsed, /* function to call */
     .data = NULL, /* 2nd arg of func */
@@ -721,7 +721,7 @@ parse_pgm_inst_t cmd_pt_list_del = {
 prog_char str_pt_list_show_arg[] = "show#reset#start#avoid_start";
 parse_pgm_token_string_t cmd_pt_list_show_arg = TOKEN_STRING_INITIALIZER(struct cmd_pt_list_result, arg1, str_pt_list_show_arg);
 
-//prog_char help_pt_list_show[] = "Show, start or reset pt_list";
+prog_char help_pt_list_show[] = "Show, start or reset pt_list";
 parse_pgm_inst_t cmd_pt_list_show = {
     .f = cmd_pt_list_parsed, /* function to call */
     .data = NULL, /* 2nd arg of func */
@@ -856,7 +856,7 @@ parse_pgm_token_string_t cmd_goto_arg1_a = TOKEN_STRING_INITIALIZER(struct cmd_g
 parse_pgm_token_num_t cmd_goto_arg2 = TOKEN_NUM_INITIALIZER(struct cmd_goto_result, arg2, INT32);
 
 /* 1 params */
-//prog_char help_goto1[] = "Change orientation of the mainboard";
+prog_char help_goto1[] = "Change orientation of the mainboard";
 parse_pgm_inst_t cmd_goto1 = {
     .f = cmd_goto_parsed, /* function to call */
     .data = NULL, /* 2nd arg of func */
@@ -875,7 +875,7 @@ parse_pgm_token_string_t cmd_goto_arg1_b = TOKEN_STRING_INITIALIZER(struct cmd_g
 parse_pgm_token_num_t cmd_goto_arg3 = TOKEN_NUM_INITIALIZER(struct cmd_goto_result, arg3, INT32);
 
 /* 2 params */
-//prog_char help_goto2[] = "Go to a (x,y) or (d,a) position";
+prog_char help_goto2[] = "Go to a (x,y) or (d,a) position";
 parse_pgm_inst_t cmd_goto2 = {
     .f = cmd_goto_parsed, /* function to call */
     .data = NULL, /* 2nd arg of func */
@@ -991,7 +991,7 @@ parse_pgm_token_string_t cmd_position_arg0 = TOKEN_STRING_INITIALIZER(struct cmd
 prog_char str_position_arg1[] = "show#reset#autoset_yellow#autoset_green";
 parse_pgm_token_string_t cmd_position_arg1 = TOKEN_STRING_INITIALIZER(struct cmd_position_result, arg1, str_position_arg1);
 
-//prog_char help_position[] = "Show/reset (x,y,a) position";
+prog_char help_position[] = "Show/reset (x,y,a) position";
 parse_pgm_inst_t cmd_position = {
     .f = cmd_position_parsed, /* function to call */
     .data = NULL, /* 2nd arg of func */
@@ -1011,7 +1011,7 @@ parse_pgm_token_num_t cmd_position_arg2 = TOKEN_NUM_INITIALIZER(struct cmd_posit
 parse_pgm_token_num_t cmd_position_arg3 = TOKEN_NUM_INITIALIZER(struct cmd_position_result, arg3, INT32);
 parse_pgm_token_num_t cmd_position_arg4 = TOKEN_NUM_INITIALIZER(struct cmd_position_result, arg4, INT32);
 
-//prog_char help_position_set[] = "Set (x,y,a) position";
+prog_char help_position_set[] = "Set (x,y,a) position";
 parse_pgm_inst_t cmd_position_set = {
     .f = cmd_position_parsed, /* function to call */
     .data = NULL, /* 2nd arg of func */
@@ -1058,7 +1058,7 @@ parse_pgm_token_string_t cmd_strat_infos_arg0 = TOKEN_STRING_INITIALIZER(struct 
 prog_char str_strat_infos_arg1[] = "show#reset";
 parse_pgm_token_string_t cmd_strat_infos_arg1 = TOKEN_STRING_INITIALIZER(struct cmd_strat_infos_result, arg1, str_strat_infos_arg1);
 
-//prog_char help_strat_infos[] = "reset/show strat infos";
+prog_char help_strat_infos[] = "reset/show strat infos";
 parse_pgm_inst_t cmd_strat_infos = {
     .f = cmd_strat_infos_parsed, /* function to call */
     .data = NULL, /* 2nd arg of func */
@@ -1124,7 +1124,7 @@ parse_pgm_token_string_t cmd_strat_conf_arg0 = TOKEN_STRING_INITIALIZER(struct c
 prog_char str_strat_conf_arg1[] = "show#base#homologation#qualification#do_tower#do_fast_g1#do_escape";
 parse_pgm_token_string_t cmd_strat_conf_arg1 = TOKEN_STRING_INITIALIZER(struct cmd_strat_conf_result, arg1, str_strat_conf_arg1);
 
-//prog_char help_strat_conf[] = "configure specific strat for a match";
+prog_char help_strat_conf[] = "configure specific strat for a match";
 parse_pgm_inst_t cmd_strat_conf = {
     .f = cmd_strat_conf_parsed, /* function to call */
     .data = NULL, /* 2nd arg of func */
@@ -1180,7 +1180,7 @@ prog_char str_strat_conf2_arg2[] = "on#off";
 parse_pgm_token_string_t cmd_strat_conf2_arg2 = TOKEN_STRING_INITIALIZER(struct cmd_strat_conf2_result, arg2, str_strat_conf2_arg2);
 
 
-//prog_char help_strat_conf2[] = "enable/disable strat option";
+prog_char help_strat_conf2[] = "enable/disable strat option";
 parse_pgm_inst_t cmd_strat_conf2 = {
     .f = cmd_strat_conf2_parsed, /* function to call */
     .data = NULL, /* 2nd arg of func */
@@ -1227,7 +1227,7 @@ prog_char str_strat_conf3_arg1[] = "something";
 parse_pgm_token_string_t cmd_strat_conf3_arg1 = TOKEN_STRING_INITIALIZER(struct cmd_strat_conf3_result, arg1, str_strat_conf3_arg1);
 parse_pgm_token_num_t cmd_strat_conf3_arg2 = TOKEN_NUM_INITIALIZER(struct cmd_strat_conf3_result, arg2, UINT16);
 
-//prog_char help_strat_conf3[] = "set strat param value";
+prog_char help_strat_conf3[] = "set strat param value";
 parse_pgm_inst_t cmd_strat_conf3 = {
     .f = cmd_strat_conf3_parsed, /* function to call */
     .data = NULL, /* 2nd arg of func */
@@ -1374,7 +1374,7 @@ prog_char str_subtraj1_arg1[] = "begining#home_popcorns#home_spotlight#home_time
 parse_pgm_token_string_t cmd_subtraj1_arg1 = TOKEN_STRING_INITIALIZER(struct cmd_subtraj1_result, arg1, str_subtraj1_arg1);
 //parse_pgm_token_num_t cmd_subtraj1_arg2 = TOKEN_NUM_INITIALIZER(struct cmd_subtraj1_result, arg2, INT32);
 //parse_pgm_token_num_t cmd_subtraj1_arg3 = TOKEN_NUM_INITIALIZER(struct cmd_subtraj1_result, arg3, INT32);
-//prog_char help_subtraj1[] = "Test sub-trajectories"; //" (a,b,c: specific params)";
+prog_char help_subtraj1[] = "Test sub-trajectories"; //" (a,b,c: specific params)";
 parse_pgm_inst_t cmd_subtraj1 = {
     .f = cmd_subtraj1_parsed, /* function to call */
     .data = NULL, /* 2nd arg of func */
@@ -1520,7 +1520,7 @@ parse_pgm_token_num_t cmd_subtraj2_arg2 = TOKEN_NUM_INITIALIZER(struct cmd_subtr
 //parse_pgm_token_num_t cmd_subtraj2_arg4 = TOKEN_NUM_INITIALIZER(struct cmd_subtraj2_result, arg4, INT32);
 //parse_pgm_token_num_t cmd_subtraj2_arg5 = TOKEN_NUM_INITIALIZER(struct cmd_subtraj2_result, arg5, INT32);
 
-//prog_char help_subtraj2[] = "Test sub-trajectories (a,b,c,d: specific params)";
+prog_char help_subtraj2[] = "Test sub-trajectories (a,b,c,d: specific params)";
 parse_pgm_inst_t cmd_subtraj2 = {
     .f = cmd_subtraj2_parsed, /* function to call */
     .data = NULL, /* 2nd arg of func */

@@ -245,7 +245,10 @@ int main(void)
 	/* ENCODERS */
 	encoders_dspic_init();
 
-	/* TODO: MOTORS H-BRIDGES */
+	/* MOTORS */
+	hspwm_init();
+	hspwm_set_pwm(MOTOR_LEFT, 0);
+	hspwm_set_pwm(MOTOR_RIGHT, 0);
 
 	/* MAIN TIMER */
 	main_timer_init();

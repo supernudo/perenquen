@@ -149,14 +149,6 @@
 #define IMP_COEF 			    	10.0
 #define DIST_IMP_MM 		    (((IMP_ENCODERS*4) / WHEEL_PERIM_MM) * IMP_COEF)
 
-/* encoders handlers */
-#define LEFT_ENCODER        ((void *)2)
-#define RIGHT_ENCODER       ((void *)1)
-
-/* motor handles */
-#define LEFT_MOTOR          ((void *)&gen.dac_mc_left)
-#define RIGHT_MOTOR         ((void *)&gen.dac_mc_right)
-
 /** ERROR NUMS */
 #define E_USER_STRAT        194
 #define E_USER_SENSOR       196
@@ -200,9 +192,13 @@ struct genboard
 	struct rdline rdl;
 	char prompt[RDLINE_PROMPT_SIZE];
 
-	/* TODO motors */
-	// struct dac_mc dac_mc_left;
-	// struct dac_mc dac_mc_right;
+	/* encoders */
+	#define ENCODER_LEFT  ((void*)2)
+	#define ENCODER_RIGHT ((void*)1)
+
+	/* motors */
+	#define MOTOR_LEFT    ((void*)2)
+	#define MOTOR_RIGHT   ((void*)1)
 
 	/* TODO battery */
 
@@ -240,9 +236,9 @@ struct mainboard
 	volatile int16_t speed_a;  /* current angle speed */
 	volatile int16_t speed_d;  /* current dist speed */
 
-	/* TODO review */
-	int32_t dac_l;  /* current left dac */
-	int32_t dac_r;  /* current right dac */
+	/* current motors pwm */
+	int32_t motor_pwm_left;
+	int32_t motor_pwm_right;
 
 };
 

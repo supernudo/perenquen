@@ -1,6 +1,6 @@
-/*  
+/*
  *  Copyright Javier Baliñas Santos (2018)
- * 
+ *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation; either version 2 of the License, or
@@ -25,9 +25,13 @@
 
 #include <stdint.h>
 
+/* High Speed PWM module driver */
+#define HSPWM_DUTY_MAX 6000
+void hspwm_init(void);
+void hspwm_set_pwm(void* gen_num, int16_t val) ;
+
 /* used by cs, correct offset and save values */
-void dac_set_and_save(void *dac, int32_t val);
+void motor_pwm_set_and_save(void *pwm_gen_num, int32_t val);
 
 
 #endif
-

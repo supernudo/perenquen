@@ -155,12 +155,12 @@ static void cmd_event_parsed(void *parsed_result, void *data)
         if (!strcmp_P(res->arg1, PSTR("cs")))
         {
 #ifdef HOST_VERSION
-            robotsim_pwm(LEFT_MOTOR, 0);
-            robotsim_pwm(RIGHT_MOTOR, 0);
+            robotsim_pwm(MOTOR_LEFT, 0);
+            robotsim_pwm(MOTOR_RIGHT, 0);
 #else
             /* TODO */
-            //dac_mc_set(LEFT_MOTOR, 0);
-            //dac_mc_set(RIGHT_MOTOR, 0);
+            //dac_mc_set(MOTOR_LEFT, 0);
+            //dac_mc_set(MOTOR_RIGHT, 0);
 #endif
         }
         mainboard.flags &= (~bit);
@@ -176,7 +176,7 @@ parse_pgm_token_string_t cmd_event_arg1 = TOKEN_STRING_INITIALIZER(struct cmd_ev
 prog_char str_event_arg2[] = "on#off#show";
 parse_pgm_token_string_t cmd_event_arg2 = TOKEN_STRING_INITIALIZER(struct cmd_event_result, arg2, str_event_arg2);
 
-//prog_char help_event[] = "Enable/disable events";
+prog_char help_event[] = "Enable/disable events";
 parse_pgm_inst_t cmd_event = {
     .f = cmd_event_parsed, /* function to call */
     .data = NULL, /* 2nd arg of func */
@@ -223,7 +223,7 @@ parse_pgm_token_string_t cmd_init_arg0 = TOKEN_STRING_INITIALIZER(struct cmd_ini
 prog_char str_init_color[] = "green#yellow";
 parse_pgm_token_string_t cmd_init_color = TOKEN_STRING_INITIALIZER(struct cmd_init_result, color, str_init_color);
 
-//prog_char help_init[] = "Init the robots";
+prog_char help_init[] = "Init the robots";
 parse_pgm_inst_t cmd_init = {
     .f = cmd_init_parsed, /* function to call */
     .data = NULL, /* 2nd arg of func */
@@ -289,7 +289,7 @@ parse_pgm_token_string_t cmd_start_strategy = TOKEN_STRING_INITIALIZER(struct cm
 prog_char str_start_debug[] = "debug#step_debug#match";
 parse_pgm_token_string_t cmd_start_debug = TOKEN_STRING_INITIALIZER(struct cmd_start_result, debug, str_start_debug);
 
-//prog_char help_start[] = "Start the robot";
+prog_char help_start[] = "Start the robot";
 parse_pgm_inst_t cmd_start = {
     .f = cmd_start_parsed, /* function to call */
     .data = NULL, /* 2nd arg of func */
@@ -404,8 +404,8 @@ static void cmd_interact_parsed(void * parsed_result, void * data)
 
     /* stop motors */
     mainboard.flags &= (~DO_CS);
-    dac_set_and_save(LEFT_MOTOR, 0);
-    dac_set_and_save(RIGHT_MOTOR, 0);
+    motor_pwm_set_and_save(MOTOR_LEFT, 0);
+    motor_pwm_set_and_save(MOTOR_RIGHT, 0);
 
     while (1)
     {
@@ -473,12 +473,12 @@ static void cmd_interact_parsed(void * parsed_result, void * data)
             case 'q':
                 if (mainboard.flags & DO_CS)
                     strat_hardstop();
-                dac_set_and_save(LEFT_MOTOR, 0);
-                dac_set_and_save(RIGHT_MOTOR, 0);
+                motor_pwm_set_and_save(MOTOR_LEFT, 0);
+                motor_pwm_set_and_save(MOTOR_RIGHT, 0);
                 return;
             case ' ':
-                dac_set_and_save(LEFT_MOTOR, 0);
-                dac_set_and_save(RIGHT_MOTOR, 0);
+                motor_pwm_set_and_save(MOTOR_LEFT, 0);
+                motor_pwm_set_and_save(MOTOR_RIGHT, 0);
                 break;
             default:
                 break;
@@ -494,20 +494,20 @@ static void cmd_interact_parsed(void * parsed_result, void * data)
             switch (cmd)
             {
             case KEY_UP_ARR:
-                dac_set_and_save(LEFT_MOTOR, PWM_INTERACT);
-                dac_set_and_save(RIGHT_MOTOR, PWM_INTERACT);
+                motor_pwm_set_and_save(MOTOR_LEFT, PWM_INTERACT);
+                motor_pwm_set_and_save(MOTOR_RIGHT, PWM_INTERACT);
                 break;
             case KEY_LEFT_ARR:
-                dac_set_and_save(LEFT_MOTOR, -PWM_INTERACT);
-                dac_set_and_save(RIGHT_MOTOR, PWM_INTERACT);
+                motor_pwm_set_and_save(MOTOR_LEFT, -PWM_INTERACT);
+                motor_pwm_set_and_save(MOTOR_RIGHT, PWM_INTERACT);
                 break;
             case KEY_DOWN_ARR:
-                dac_set_and_save(LEFT_MOTOR, -PWM_INTERACT);
-                dac_set_and_save(RIGHT_MOTOR, -PWM_INTERACT);
+                motor_pwm_set_and_save(MOTOR_LEFT, -PWM_INTERACT);
+                motor_pwm_set_and_save(MOTOR_RIGHT, -PWM_INTERACT);
                 break;
             case KEY_RIGHT_ARR:
-                dac_set_and_save(LEFT_MOTOR, PWM_INTERACT);
-                dac_set_and_save(RIGHT_MOTOR, -PWM_INTERACT);
+                motor_pwm_set_and_save(MOTOR_LEFT, PWM_INTERACT);
+                motor_pwm_set_and_save(MOTOR_RIGHT, -PWM_INTERACT);
                 break;
             }
         }
@@ -518,7 +518,7 @@ static void cmd_interact_parsed(void * parsed_result, void * data)
 prog_char str_interact_arg0[] = "interact";
 parse_pgm_token_string_t cmd_interact_arg0 = TOKEN_STRING_INITIALIZER(struct cmd_interact_result, arg0, str_interact_arg0);
 
-//prog_char help_interact[] = "Interactive mode";
+prog_char help_interact[] = "Interactive mode";
 parse_pgm_inst_t cmd_interact = {
     .f = cmd_interact_parsed, /* function to call */
     .data = NULL, /* 2nd arg of func */
@@ -556,8 +556,8 @@ static void cmd_rs_parsed(void *parsed_result, void *data)
                  cs_get_consign(&mainboard.distance.cs),
                  cs_get_filtered_feedback(&mainboard.distance.cs),
                  cs_get_out(&mainboard.distance.cs));
-        printf_P(PSTR("l=% .4"PRIi32" r=% .4"PRIi32"\r\n"), mainboard.dac_l,
-                 mainboard.dac_r);
+        printf_P(PSTR("l=% .4"PRIi32" r=% .4"PRIi32"\r\n"), mainboard.motor_pwm_left,
+                 mainboard.motor_pwm_right);
         wait_ms(100);
     }
     while (!cmdline_keypressed());
@@ -568,7 +568,7 @@ parse_pgm_token_string_t cmd_rs_arg0 = TOKEN_STRING_INITIALIZER(struct cmd_rs_re
 prog_char str_rs_arg1[] = "show";
 parse_pgm_token_string_t cmd_rs_arg1 = TOKEN_STRING_INITIALIZER(struct cmd_rs_result, arg1, str_rs_arg1);
 
-//prog_char help_rs[] = "Show rs (robot system) values";
+prog_char help_rs[] = "Show rs (robot system) values";
 parse_pgm_inst_t cmd_rs = {
     .f = cmd_rs_parsed, /* function to call */
     .data = NULL, /* 2nd arg of func */
@@ -636,7 +636,7 @@ parse_pgm_token_num_t cmd_clitoid_d_inter_mm =
         TOKEN_NUM_INITIALIZER(struct cmd_clitoid_result,
                               d_inter_mm, FLOAT);
 
-//prog_char help_clitoid[] = "do a clitoid (alpha, beta, R, Vd, Amax, d_inter)";
+prog_char help_clitoid[] = "do a clitoid (alpha, beta, R, Vd, Amax, d_inter)";
 parse_pgm_inst_t cmd_clitoid = {
     .f = cmd_clitoid_parsed, /* function to call */
     .data = NULL, /* 2nd arg of func */
@@ -686,7 +686,7 @@ parse_pgm_token_string_t cmd_time_monitor_arg0 = TOKEN_STRING_INITIALIZER(struct
 prog_char str_time_monitor_arg1[] = "show#reset";
 parse_pgm_token_string_t cmd_time_monitor_arg1 = TOKEN_STRING_INITIALIZER(struct cmd_time_monitor_result, arg1, str_time_monitor_arg1);
 
-//prog_char help_time_monitor[] = "Show since how long we are running";
+prog_char help_time_monitor[] = "Show since how long we are running";
 parse_pgm_inst_t cmd_time_monitor = {
     .f = cmd_time_monitor_parsed, /* function to call */
     .data = NULL, /* 2nd arg of func */
@@ -720,7 +720,7 @@ prog_char str_sleep_arg0[] = "sleep";
 parse_pgm_token_string_t cmd_sleep_arg0 = TOKEN_STRING_INITIALIZER(struct cmd_sleep_result, arg0, str_sleep_arg0);
 parse_pgm_token_num_t cmd_sleep_ms = TOKEN_NUM_INITIALIZER(struct cmd_sleep_result, ms, UINT32);
 
-//prog_char help_sleep[] = "Sleep during some miliseconds";
+prog_char help_sleep[] = "Sleep during some miliseconds";
 parse_pgm_inst_t cmd_sleep = {
     .f = cmd_sleep_parsed, /* function to call */
     .data = NULL, /* 2nd arg of func */

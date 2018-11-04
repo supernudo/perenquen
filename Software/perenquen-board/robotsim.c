@@ -424,17 +424,17 @@ void robotsim_update(void)
 void robotsim_pwm(void *arg, int32_t val)
 {
 	//	printf("%p, %d\n", arg, val);
-	if (arg == LEFT_MOTOR)
+	if (arg == MOTOR_LEFT)
 		l_pwm = (val / (1.25*6.4));
-	else if (arg == RIGHT_MOTOR)
+	else if (arg == MOTOR_RIGHT)
 		r_pwm = (val / (1.25*6.4));
 }
 
 int32_t robotsim_encoder_get(void *arg)
 {
-	if (arg == LEFT_ENCODER)
+	if (arg == ENCODER_LEFT)
 		return l_enc;
-	else if (arg == RIGHT_ENCODER)
+	else if (arg == ENCODER_RIGHT)
 		return r_enc;
 	return 0;
 }

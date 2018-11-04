@@ -1,6 +1,6 @@
-/*  
+/*
  *  Copyright Droids Corporation, Microb Technology, Eirbot (2005)
- * 
+ *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation; either version 2 of the License, or
@@ -44,11 +44,11 @@
 
 
 #ifdef CONFIG_MODULE_SCHEDULER_TIMER0
-/* The 2 values below MUST be coherent: 
- * if  SCHEDULER_CK = TIMER0_PRESCALER_DIV_x, then 
+/* The 2 values below MUST be coherent:
+ * if  SCHEDULER_CK = TIMER0_PRESCALER_DIV_x, then
  * you must have SCHEDULER_CLOCK_PRESCALER = x too !!! */
 #define SCHEDULER_CK TIMER0_PRESCALER_DIV_8
-#define SCHEDULER_CLOCK_PRESCALER 8 
+#define SCHEDULER_CLOCK_PRESCALER 8
 
 #endif /* CONFIG_MODULE_SCHEDULER_TIMER0 */
 
@@ -60,8 +60,8 @@
 #define SCHEDULER_UNIT_FLOAT 1000.0
 #define SCHEDULER_UNIT 1000UL
 #else
-#define SCHEDULER_UNIT_FLOAT 512.0
-#define SCHEDULER_UNIT 512L
+#define SCHEDULER_UNIT_FLOAT 500.0
+#define SCHEDULER_UNIT 500L
 #endif
 
 
