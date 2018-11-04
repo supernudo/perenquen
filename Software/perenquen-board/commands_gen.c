@@ -125,9 +125,9 @@ static void cmd_encoders_parsed(void *parsed_result, void *data)
 
 	/* show */
 	while(!cmdline_keypressed()) {
-		printf("R % .8ld L % .8ld\r\n",
+		printf("R % .8ld L% .8ld\r\n",
 			 encoders_dspic_get_value(ENCODER_RIGHT),
-			 encoders_dspic_get_value(ENCODER_LEFT;
+			 encoders_dspic_get_value(ENCODER_LEFT));
 
 		wait_ms(50);
 	}

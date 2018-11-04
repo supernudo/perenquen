@@ -226,7 +226,7 @@ int main(void)
 	memset(&mainboard, 0, sizeof(mainboard));
 
 	/* init flags */
-    mainboard.flags = DO_ENCODERS | DO_RS | DO_POS | DO_POWER | DO_BD | DO_CS;
+    mainboard.flags = DO_ENCODERS | DO_RS | DO_POS | DO_POWER; //| DO_BD| DO_CS;
 
 #ifndef HOST_VERSION
 	/* UART */
@@ -317,9 +317,9 @@ int main(void)
 		wait_us(900);
 
 		IRQ_LOCK(flags);
-		//_LATD5  = 1;
-		//_LATD2  = 1;
-		//_LATD4  = 1;
+		_LATD5  = 1;
+		_LATD2  = 1;
+		_LATD4  = 1;
 		//_LATD3  = 1;
 		wait_us(50);
 		IRQ_UNLOCK(flags);

@@ -114,7 +114,8 @@
 // _LATE0	= 0;
 
 // TODO: apply brake thru PWM module
-#define BRAKE_ON()      do {_LATE0 = 0; _LATE1 = 0; _LATE2 = 0; _LATE3 = 0;} while(0)
+#define BRAKE_ON()      do {	hspwm_set_pwm(MOTOR_LEFT, 0); hspwm_set_pwm(MOTOR_RIGHT, 0);\
+															_LATE0 = 0; _LATE1 = 0; _LATE2 = 0; _LATE3 = 0; } while(0)
 #define BRAKE_OFF()     do {} while(0)
 
 #endif /* !HOST_VERSION */
@@ -124,16 +125,16 @@
 
 /* distance between encoders weels,
  * decrease track to decrease angle */
-#define EXT_TRACK_MM      303.626213203341000 //303.8
+#define EXT_TRACK_MM      67.0
 #define VIRTUAL_TRACK_MM  EXT_TRACK_MM
 
 /* XXX keep synchronized with maindspic/strat.c */
 
 /* robot dimensions */
-#define ROBOT_LENGTH            288.5
-#define ROBOT_WIDTH             330.0
-#define ROBOT_CENTER_TO_FRONT   167.0
-#define ROBOT_CENTER_TO_BACK    121.5
+#define ROBOT_LENGTH            101.0
+#define ROBOT_WIDTH             75.5
+#define ROBOT_CENTER_TO_FRONT   55.5
+#define ROBOT_CENTER_TO_BACK    (ROBOT_LENGTH - ROBOT_CENTER_TO_FRONT)
 #define ROBOT_HALF_LENGTH_FRONT ROBOT_CENTER_TO_FRONT
 #define ROBOT_HALF_LENGTH_REAR  ROBOT_CENTER_TO_BACK
 
@@ -143,8 +144,8 @@
  * 14400/173 -> 832 imps/10 mm */
 
 /* increase it to go further */
-#define IMP_ENCODERS 		    3600.0
-#define WHEEL_DIAMETER_MM 	55.0
+#define IMP_ENCODERS 		    1024.0
+#define WHEEL_DIAMETER_MM 	25.5
 #define WHEEL_PERIM_MM 	    (WHEEL_DIAMETER_MM * M_PI)
 #define IMP_COEF 			    	10.0
 #define DIST_IMP_MM 		    (((IMP_ENCODERS*4) / WHEEL_PERIM_MM) * IMP_COEF)
@@ -166,7 +167,7 @@
 #define EVENT_PERIOD_LED 			1000000L
 #define EVENT_PERIOD_STRAT		25000L
 #define EVENT_PERIOD_SENSORS	10000L
-#define EVENT_PERIOD_CS 			5000L
+#define EVENT_PERIOD_CS 			1000L
 
 #define CS_PERIOD   ((EVENT_PERIOD_CS/SCHEDULER_UNIT)*SCHEDULER_UNIT) /* in microsecond */
 #define CS_HZ       (1000000. / CS_PERIOD)

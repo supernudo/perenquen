@@ -1,7 +1,7 @@
-/*  
+/*
  *  Copyright Droids Corporation
  *  Olivier Matz <zer0@droids-corp.org>
- * 
+ *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation; either version 2 of the License, or
@@ -20,7 +20,7 @@
  *
  */
 
-/*  
+/*
  *  Copyright Javier Baliñas Santos (2018)
  *  Javier Baliñas Santos <balinas@gmail.com>
  *
@@ -65,7 +65,7 @@
 void dump_cs(const char *name, struct cs *cs);
 
 /* called periodically */
-static void do_cs(void *dummy) 
+static void do_cs(void *dummy)
 {
 	static uint16_t cpt = 0;
 	static int32_t old_a = 0, old_d = 0;
@@ -84,9 +84,9 @@ static void do_cs(void *dummy)
 		int16_t a,d;
 
 		/* Read the encoders, and update internal virtual counters. */
-		
+
 		/* takes about 0.5 ms on AVR@16MHz */
-		rs_update(&mainboard.rs); 
+		rs_update(&mainboard.rs);
 
 		/* process and store current speed */
 		a = rs_get_angle(&mainboard.rs);
@@ -109,7 +109,7 @@ static void do_cs(void *dummy)
 			cs_manage(&mainboard.distance.cs);
 
 #if 0
-		if (cs_get_consign(&mainboard.distance.cs) != cs_get_filtered_consign(&mainboard.distance.cs) || ) 
+		if (cs_get_consign(&mainboard.distance.cs) != cs_get_filtered_consign(&mainboard.distance.cs) || )
 		{
 			t1 = time_get_us2();
         	dump_cs_debug("distance", &mainboard.distance.cs);
@@ -124,7 +124,7 @@ static void do_cs(void *dummy)
 	/* position calculus */
 	if ((cpt & 1) && (mainboard.flags & DO_POS)) {
 
-		/* about 1.5ms 
+		/* about 1.5ms
        		 * (worst case without centrifugal force compensation) */
 		position_manage(&mainboard.pos);
 	}
@@ -135,36 +135,12 @@ static void do_cs(void *dummy)
 		bd_manage_from_cs(&mainboard.distance.bd, &mainboard.distance.cs);
 	}
 
-#ifndef HOST_VERSION
-	/* take a look to match time */
-	if (mainboard.flags & DO_TIMER) {
-		uint8_t second;
-
-		/* the robot should stop correctly in the strat, but
-		 * in some cases, we must force the stop from an
-		 * interrupt */
-
-		second = time_get_s();
-
-		if ((second >= MATCH_TIME + 2)) {
-
-			/* stop motors */
-			dac_mc_set(MOTOR_LEFT, 0);
-			dac_mc_set(MOTOR_RIGHT, 0);
-
-			/* kill strat */
-			strat_exit();
-
-			printf_P(PSTR("END OF TIME\r\n"));
-		}
-	}
-#endif	
 	/* motors brakes */
 	if (mainboard.flags & DO_POWER)
 		BRAKE_OFF();
 	else
 		BRAKE_ON();
-	
+
 	cpt++;
 
 #ifdef HOST_VERSION
@@ -224,9 +200,9 @@ void maindspic_cs_init(void)
 	rs_set_right_ext_encoder(&mainboard.rs, robotsim_encoder_get,
 				 ENCODER_RIGHT, IMP_COEF * 1.);
 #else
-	rs_set_left_ext_encoder(&mainboard.rs, encoders_dspic_get_value, 
-				ENCODER_LEFT, IMP_COEF * Cl); 
-	rs_set_right_ext_encoder(&mainboard.rs, encoders_dspic_get_value, 
+	rs_set_left_ext_encoder(&mainboard.rs, encoders_dspic_get_value,
+				ENCODER_LEFT, IMP_COEF * Cl);
+	rs_set_right_ext_encoder(&mainboard.rs, encoders_dspic_get_value,
 				 ENCODER_RIGHT, IMP_COEF * Cr);
 #endif
 
@@ -245,8 +221,8 @@ void maindspic_cs_init(void)
 	trajectory_set_cs(&mainboard.traj, &mainboard.distance.cs,
 			  &mainboard.angle.cs);
 	trajectory_set_robot_params(&mainboard.traj, &mainboard.rs, &mainboard.pos); /* d, a */
-	trajectory_set_speed(&mainboard.traj, SPEED_DIST_FAST, SPEED_ANGLE_FAST);	
-	
+	trajectory_set_speed(&mainboard.traj, SPEED_DIST_FAST, SPEED_ANGLE_FAST);
+
 	/* distance window, angle window, angle start */
   	trajectory_set_windows(&mainboard.traj, 100., 5.0, 30.0); //50., 5.0, 5.0
 
@@ -261,7 +237,7 @@ void maindspic_cs_init(void)
 	pid_set_gains(&mainboard.angle.pid, 60, 0, 2800); // robotsim tunning
 #endif
 	pid_set_maximums(&mainboard.angle.pid, 0, 30000, 65500);
-	pid_set_out_shift(&mainboard.angle.pid, 6);	
+	pid_set_out_shift(&mainboard.angle.pid, 6);
 	pid_set_derivate_filter(&mainboard.angle.pid, 1);
 
 	/* QUADRAMP */
@@ -322,4 +298,3 @@ void maindspic_cs_init(void)
 	scheduler_add_periodical_event_priority(do_cs, NULL,
 						EVENT_PERIOD_CS / SCHEDULER_UNIT, EVENT_PRIORITY_CS);
 }
-
