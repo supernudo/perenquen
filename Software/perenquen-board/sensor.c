@@ -1,7 +1,7 @@
-/*  
+/*
  *  Copyright Droids Corporation (2009)
  *  Olivier MATZ <zer0@droids-corp.org>
- * 
+ *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation; either version 2 of the License, or
@@ -20,7 +20,7 @@
  *
  */
 
-/*  
+/*
  *  Copyright Javier Baliñas Santos (2018)
  *  Javier Baliñas Santos <balinas@gmail.com>
  *
@@ -42,58 +42,78 @@
 #ifdef NOT_USED_2015
 #ifndef HOST_VERSION
 
+static adc_init(void)
+{
+
+}
+
 #if 0
 
 /************ ADC */
 /* config init */
-static void adc_init(void)
+static void adc2_init(void)
 {
-	/* adc off */
-	_ADON = 0;
+	/* Use ADC1 for allow simultaneous sampling */
 
-	/* 3V external reference  */
-	_VCFG = 0b011;
+	/* Set default config */
+	AD2CON1 = 0;
+	AD2CON2 = 0;
+	AD2CON3 = 0;
+	AD2CON4 = 0;
 
+	/* Internal counter ends sampling and starts conversion (auto-convert) */
+	AD2CON1bits.SSRC = 111;
 
-	/* by default: 10 bit mode and ADCLK from TCY */
-	
-	/* Adquisition and conversion time (TSAM, TAD, TCONV):
-
-		_SAMC =	11111 = 31 TAD = TSAM
-					�
-					�
-					�
-					00001 = 1 TAD
-					00000 = 0 TAD
-
-		_ADCS =	00111111 = TCY � (ADCS<7:0> + 1) = 64 � TCY = TAD
-					.
-					.
-					. 	
-					00000010 = TCY � (ADCS<7:0> + 1) = 3 � TCY = TAD 
-					00000001 = TCY � (ADCS<7:0> + 1) = 2 � TCY = TAD
-					00000000 = TCY � (ADCS<7:0> + 1) = 1 � TCY = TAD
-
-		TADmin = 76 ns
-
-		TCONV = 12 � TAD
-
-		FCONVmax = 1.1 Msps 
-
+	/* Channel Select bits
+			1x = Converts CH0, CH1, CH2 and CH3
+			01 = Converts CH0 and CH1
+			00 = Converts CH0
 	*/
+	AD2CON2bits.CHPS = 0;
 
-	_SSRC = 0b111;			/* TSAM auto with internal counter */
-	_SAMC = 0b11111;		/* TSAM = 31� TCY = 775 ns */
-	_ADCS = 0b00111111;	/* TAD = 64� TCY = 1.6 us, TCONV = 19.2 us (50 Ksps max) */ 
+	/* Increment Rate bits
+			01111 = Generates interrupt after completion of every 16th sample/conversion operation
+			01110 = Generates interrupt after completion of every 15th sample/conversion operation
+			•
+			00001 = Generates interrupt after completion of every 2nd sample/conversion operation
+			00000 = Generates interrupt after completion of every sample/conversion operation
+	*/
+	AD2CON2bits.SMPI = 0;
 
-	_ASAM = 0;
-	
+	/* Auto-Sample Time bits
+			11111 = 31 TAD
+			•
+			00001 = 1 TAD
+			00000 = 0 TAD
+	*/
+	AD2CON3bits.SAMC = 2;
+
+	/* ADC Conversion Clock Select bits
+			11111111 = TP • (ADCS<7:0> + 1) = 256 • TCY = TAD
+			•
+			•
+			•
+			00000010 = TP • (ADCS<7:0> + 1) = 3 • TCY = TAD
+			00000001 = TP • (ADCS<7:0> + 1) = 2 • TCY = TAD
+			00000000 = TP • (ADCS<7:0> + 1) = 1 • TCY = TAD
+	*/
+	AD2CON3bits.ADCS = 0;
+
+	/* Channel 1, 2, 3 Positive Input Select for Sample A bit
+			1 = CH1 positive input is AN3, CH2 positive input is AN4, CH3 positive input is AN5
+			0 = CH1 positive input is AN0, CH2 positive input is AN1, CH3 positive input is AN2
+	*/
+	AD2CHS123bits.CH123SA = 1;
+
+	/* Channel 0 Positive Input Select for Sample A bits */
+	AD2CHS0bits.CH0SA = 0;
+
 	/* interrupt */
 	_AD1IF = 0;
 	_AD1IE = 1;
 
-	/* adc on */
-	_ADON = 1;
+	/* ADC module is operating */
+	AD2CON1bits.ADON = 1;
 }
 
 
@@ -101,7 +121,7 @@ static void adc_init(void)
 void adc_launch(uint16_t conf)
 {
 	AD1CHS0 = conf;
-	
+
 	/* lauch conversion */
 	_SAMP = 1;
 }
@@ -149,7 +169,7 @@ int16_t rii_strong(struct adc_infos *adc, int16_t val)
 #define ADC_CONF(x) (x)
 
 /* define which ADC to poll, see in sensor.h */
-static struct adc_infos adc_infos[ADC_MAX] = { 
+static struct adc_infos adc_infos[ADC_MAX] = {
 	[ADC_LASER_1] = { .config = ADC_CONF(7), .filter = NULL },
 	[ADC_LASER_2] = { .config = ADC_CONF(6), .filter = NULL },
 };
@@ -173,7 +193,7 @@ static void adc_event(uint16_t result)
 }
 
 /* called every 10 ms, see init below */
-static void do_adc(void *dummy) 
+static void do_adc(void *dummy)
 {
 	/* launch first conversion */
 	adc_launch(adc_infos[0].config);
@@ -219,7 +239,7 @@ static struct sensor_filter sensor_filter[SENSOR_MAX] = {
 	[S_RESERVED4] = { 0, 0, 0, 1, 0, 0 }, /* 5 */
 	[S_RESERVED5] = { 0, 0, 0, 1, 0, 0 }, /* 6 */
 	[S_RESERVED6] = { 0, 0, 0, 1, 0, 0 }, /* 7 */
-		
+
 	[S_GP0_0] = { 10, 0, 0, 5, 0, 0 }, /* 8 */
 	[S_GP0_1] = { 10, 0, 0, 5, 0, 0 }, /*  */
 	[S_GP0_2] = { 10, 0, 0, 5, 0, 0 }, /*  */
@@ -262,7 +282,7 @@ static struct sensor_filter sensor_filter[SENSOR_MAX] = {
 /* value of filtered sensors */
 static uint64_t sensor_filtered = 0;
 
-/* sensor mapping : 
+/* sensor mapping :
  * 0:  	  PORTA 9 (START)
  * 1-7:   reserved
  * 8-15:  i2c GP0
@@ -317,10 +337,10 @@ static void do_boolean_sensors(void *dummy)
 	uint64_t tmp = 0;
 
 	for (i=0; i<SENSOR_MAX; i++) {
-		
+
 		if(sensor_filter[i].filter == 0)
 			continue;
-		
+
 		if (((uint64_t)1 << i) & sensor) {
 			if (sensor_filter[i].cpt < sensor_filter[i].filter)
 				sensor_filter[i].cpt++;
@@ -333,7 +353,7 @@ static void do_boolean_sensors(void *dummy)
 			if (sensor_filter[i].cpt <= sensor_filter[i].thres_off)
 				sensor_filter[i].prev = 0;
 		}
-		
+
 		if (sensor_filter[i].prev && !sensor_filter[i].invert) {
 			tmp |= ((uint64_t)1 << i);
 		}
@@ -350,8 +370,8 @@ static void do_boolean_sensors(void *dummy)
 
 /* virtual obstacle */
 #define DISABLE_CPT_MAX 100 	/* XXX T_SENSORS = 10ms */
-static uint16_t disable = 0; 	/* used to disable obstacle detection 
-			   				     * during some time 
+static uint16_t disable = 0; 	/* used to disable obstacle detection
+			   				     * during some time
 								 */
 
 /* called every 10 ms */
@@ -397,9 +417,8 @@ void sensor_init(void)
 {
 #ifndef HOST_VERSION
 //	adc_init();
-#endif	
+#endif
 	/* CS EVENT */
-	scheduler_add_periodical_event_priority(do_sensors, NULL, 
+	scheduler_add_periodical_event_priority(do_sensors, NULL,
 						EVENT_PERIOD_SENSORS / SCHEDULER_UNIT, EVENT_PRIORITY_SENSORS);
 }
-
