@@ -58,8 +58,7 @@
 extern parse_pgm_inst_t cmd_reset;
 extern parse_pgm_inst_t cmd_encoders;
 extern parse_pgm_inst_t cmd_motors;
-//TODO extern parse_pgm_inst_t cmd_adc;
-//TODO extern parse_pgm_inst_t cmd_sensor;
+extern parse_pgm_inst_t cmd_sensors;
 extern parse_pgm_inst_t cmd_log;
 extern parse_pgm_inst_t cmd_log_show;
 extern parse_pgm_inst_t cmd_log_type;
@@ -194,15 +193,11 @@ parse_pgm_ctx_t main_ctx[] = {
     (parse_pgm_inst_t *) & cmd_encoders,
     (parse_pgm_inst_t *) & cmd_scheduler,
     (parse_pgm_inst_t *) & cmd_motors,
-    //(parse_pgm_inst_t *) & cmd_adc,
-    //(parse_pgm_inst_t *) & cmd_sensor,
+    (parse_pgm_inst_t *) & cmd_sensors,
     (parse_pgm_inst_t *) & cmd_log,
     (parse_pgm_inst_t *) & cmd_log_show,
     (parse_pgm_inst_t *) & cmd_log_type,
     #endif /* COMPILE_COMMANDS_GEN */
-
-
-
     NULL,
 };
 

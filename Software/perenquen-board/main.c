@@ -71,9 +71,9 @@ struct mainboard mainboard;
 void do_led_blink(void *dummy)
 {
 	/* simple blink */
-	LED1_TOGGLE();
+	//LED1_TOGGLE();
 	//LED2_TOGGLE();
-	LED3_TOGGLE();
+	//LED3_TOGGLE();
 	LED4_TOGGLE();
 
 }
@@ -166,18 +166,18 @@ void io_pins_init(void)
 	_LATD3  = 0;
 
 	/* RX wall sensors */
-	/* TODO: AN1 FRONT-L-RX */
-	/* TODO: AN5 FRONT-R-RX */
-	/* TODO: AN3 DIAG-L-RX */
-	/* TODO: AN4 DIAG-R-RX */
-	/* TODO: AN2 FLASH-RX */
+	_ANSB1 = 1;	/* AN1/RB1 FRONT-L-RX */
+	_ANSB5 = 1;		/* AN5/RB5 FRONT-R-RX */
+	_ANSB3 = 1;		/* AN3/RB3 DIAG-L-RX */
+	_ANSB4 = 1;		/* AN4/RB4 DIAG-R-RX */
+	_ANSB2 = 1;		/* AN2/RB2 FLASH-RX */
 
 	/* battery */
-	/* TODO: AN0 VBAT-SENS */
+	_ANSB0 = 1;		/* AN0/RB0 VBAT-SENS */
 
 	/* gyro */
-	/* TODO: AN29 GYRO-VREF */
-	/* TODO: AN30 GYRO-OUTZ */
+	_ANSE5 = 1;		/* AN29/RE5 GYRO-VREF */
+	_ANSE6 = 1;		/* AN30/RE6 GYRO-OUTZ */
 
 	/* user switches */
 	_TRISB15 = 1; /* USER_SW1 */
@@ -274,7 +274,7 @@ int main(void)
 	// TODO maindspic_cs_init();
 
 	/* sensors, will also init hardware adc */
-	// TODO sensor_init();
+	sensor_init();
 
 	/* strat-related event */
 	// TODO scheduler_add_periodical_event_priority(strat_event, NULL,
@@ -297,17 +297,6 @@ int main(void)
 	#if 0
 	while (1) {
 		uint8_t flags;
-
-		/* Motors test */
-		//_TRISE2 = 0;
-		//_TRISE3 = 0;
-		//_LATE2 = 1;
-		//_LATE3 = 1;
-		//printf("E2 %d, %d, %d / E3 %d, %d, %d\n\r",
-		//				(int)_TRISE2, (int)_LATE2, (int)_RE2,
-		//				(int)_TRISE3, (int)_LATE3, (int)_RE3);
-		//time_wait_ms(100);
-
 
 		/* Wall-sensors test */
 		_LATD5  = 0;

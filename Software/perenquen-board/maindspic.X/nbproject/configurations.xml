@@ -387,7 +387,7 @@
           <property key="output-file-format" value="elf"/>
         </C30Global>
       </item>
-      <item path="../sensor.c" ex="true" overriding="false">
+      <item path="../sensor.c" ex="false" overriding="false">
         <C30>
         </C30>
         <C30-AS>

@@ -234,122 +234,83 @@ parse_pgm_inst_t cmd_motors = {
 };
 
 /**********************************************************/
-/* Adcs tests */
-
-///* this structure is filled when cmd_adc is parsed successfully */
-//struct cmd_adc_result {
-//	fixed_string_t arg0;
-//	fixed_string_t arg1;
-//};
-//
-///* function called when cmd_adc is parsed successfully */
-//static void cmd_adc_parsed(void *parsed_result, void *data)
-//{
-//#ifdef HOST_VERSION
-//	printf("not implemented\n");
-//#else
-//	struct cmd_adc_result *res = parsed_result;
-//	uint8_t i, loop = 0;
-//
-//	if (!strcmp_P(res->arg1, PSTR("loop_show")))
-//		loop = 1;
-//
-//	do {
-//		printf_P(PSTR("ADC values: "));
-//		for (i=0; i<ADC_MAX; i++) {
-//			printf_P(PSTR("%.4d "), sensor_get_adc(i));
-//		}
-//		printf_P(PSTR("\r\n"));
-//		wait_ms(100);
-//	} while (loop && !cmdline_keypressed());
-//#endif
-//}
-//
-//prog_char str_adc_arg0[] = "adc";
-//parse_pgm_token_string_t cmd_adc_arg0 = TOKEN_STRING_INITIALIZER(struct cmd_adc_result, arg0, str_adc_arg0);
-//prog_char str_adc_arg1[] = "show#loop_show";
-//parse_pgm_token_string_t cmd_adc_arg1 = TOKEN_STRING_INITIALIZER(struct cmd_adc_result, arg1, str_adc_arg1);
-//
-//prog_char help_adc[] = "Show adc values";
-//parse_pgm_inst_t cmd_adc = {
-//	.f = cmd_adc_parsed,  /* function to call */
-//	.data = NULL,      /* 2nd arg of func */
-//	.help_str = help_adc,
-//	.tokens = {        /* token list, NULL terminated */
-//		(prog_void *)&cmd_adc_arg0,
-//		(prog_void *)&cmd_adc_arg1,
-//		NULL,
-//	},
-//};
-
-/**********************************************************/
 /* Sensors tests */
 
-///* this structure is filled when cmd_sensor is parsed successfully */
-//struct cmd_sensor_result {
-//	fixed_string_t arg0;
-//	fixed_string_t arg1;
-//};
-//
-///* function called when cmd_sensor is parsed successfully */
-//static void cmd_sensor_parsed(void *parsed_result, void *data)
-//{
-//#ifdef HOST_VERSION
-//	printf("not implemented\n");
-//#else
-//	struct cmd_sensor_result *res = parsed_result;
-//	uint8_t i, loop = 0;
-//	uint64_t sensors_saved = 0;
-//
-//	if (!strcmp_P(res->arg1, PSTR("loop_show")))
-//		loop = 1;
-//
-//	do {
-//
-//		if (sensor_get_all() == sensors_saved)
-//		continue;
-//
-//		sensors_saved = sensor_get_all();
-//
-//		printf_P(PSTR("SENSOR values: \r\n"));
-//		for (i=0; i<SENSOR_MAX; i++) {
-//
-//			if(i<8)
-//				printf_P(PSTR("S_CAP%.2d = %d "), i, !!sensor_get(i));
-//			else if (i<16)
-//				printf_P(PSTR("S_GPI%.2d = %d "), (i-8), !!sensor_get(i));
-//			else if (i<24)
-//				printf_P(PSTR("S_GPI%.2d = %d "), 10+(i-16), !!sensor_get(i));
-//			else if (i<32)
-//				printf_P(PSTR("S_GPI%.2d = %d "), 20+(i-24), !!sensor_get(i));
-//			else
-//				printf_P(PSTR("S_GPI%.2d = %d "), 30+(i-32), !!sensor_get(i));
-//
-//			if((i+1)%8 == 0)
-//				printf("\n\r");
-//		}
-//		printf_P(PSTR("\r\n"));
-//		wait_ms(100);
-//	} while (loop && !cmdline_keypressed());
-//#endif
-//}
-//
-//prog_char str_sensor_arg0[] = "sensor";
-//parse_pgm_token_string_t cmd_sensor_arg0 = TOKEN_STRING_INITIALIZER(struct cmd_sensor_result, arg0, str_sensor_arg0);
-//prog_char str_sensor_arg1[] = "show#loop_show";
-//parse_pgm_token_string_t cmd_sensor_arg1 = TOKEN_STRING_INITIALIZER(struct cmd_sensor_result, arg1, str_sensor_arg1);
-//
-//prog_char help_sensor[] = "Show sensor values";
-//parse_pgm_inst_t cmd_sensor = {
-//	.f = cmd_sensor_parsed,  /* function to call */
-//	.data = NULL,      /* 2nd arg of func */
-//	.help_str = help_sensor,
-//	.tokens = {        /* token list, NULL terminated */
-//		(prog_void *)&cmd_sensor_arg0,
-//		(prog_void *)&cmd_sensor_arg1,
-//		NULL,
-//	},
-//};
+/* this structure is filled when cmd_sensors is parsed successfully */
+struct cmd_sensors_result {
+	fixed_string_t arg0;
+	fixed_string_t arg1;
+};
+
+/* function called when cmd_sensors is parsed successfully */
+static void cmd_sensors_parsed(void *parsed_result, void *data)
+{
+#ifdef HOST_VERSION
+	printf("not implemented\n");
+#else
+	struct cmd_sensors_result *res = parsed_result;
+	uint8_t i, loop = 0;
+
+	if (!strcmp_P(res->arg1, PSTR("loop_show")))
+		loop = 1;
+
+	do {
+
+		/* Read sensor */
+		sensor_adc_do_read(S_ADC_FRONT_LEFT_OFF);
+		sensor_adc_do_read(S_ADC_FRONT_RIGHT_OFF);
+		sensor_adc_do_read(S_ADC_DIAG_LEFT_OFF);
+		sensor_adc_do_read(S_ADC_DIAG_RIGHT_OFF);
+
+		sensor_adc_do_read(S_ADC_FRONT_LEFT);
+		sensor_adc_do_read(S_ADC_FRONT_RIGHT);
+		sensor_adc_do_read(S_ADC_DIAG_LEFT);
+		sensor_adc_do_read(S_ADC_DIAG_RIGHT);
+
+		sensor_adc_do_read(S_ADC_BATTERY);
+		sensor_adc_do_read(S_ADC_GYRO);
+		sensor_adc_do_read(S_ADC_GYRO_REF);
+		sensor_adc_do_read(S_ADC_FLASH);
+
+
+		/* Print value */
+		printf("FL %.4d %.4d ", sensor_adc_get_value(S_ADC_FRONT_LEFT_OFF),
+											 			sensor_adc_get_value(S_ADC_FRONT_LEFT));
+		printf("FR %.4d %.4d ", sensor_adc_get_value(S_ADC_FRONT_RIGHT_OFF),
+														sensor_adc_get_value(S_ADC_FRONT_RIGHT));
+		printf("DL %.4d %.4d ", sensor_adc_get_value(S_ADC_DIAG_LEFT_OFF),
+														sensor_adc_get_value(S_ADC_DIAG_LEFT));
+		printf("DR %.4d %.4d ", sensor_adc_get_value(S_ADC_DIAG_RIGHT),
+														sensor_adc_get_value(S_ADC_DIAG_RIGHT_OFF));
+
+		printf("BAT %.4d ", 3*sensor_adc_get_value_mv(S_ADC_BATTERY));
+		printf("G %.4d ", sensor_adc_get_value_mv(S_ADC_GYRO));
+		printf("GREF %.4d ", sensor_adc_get_value_mv(S_ADC_GYRO_REF));
+		printf("FLSH %.4d ", sensor_adc_get_value_mv(S_ADC_FLASH));
+
+		printf_P("\r\n");
+		wait_ms(100);
+	} while (loop && !cmdline_keypressed());
+#endif
+}
+
+prog_char str_adc_arg0[] = "sensors";
+parse_pgm_token_string_t cmd_sensors_arg0 = TOKEN_STRING_INITIALIZER(struct cmd_sensors_result, arg0, str_adc_arg0);
+prog_char str_adc_arg1[] = "show#loop_show";
+parse_pgm_token_string_t cmd_sensors_arg1 = TOKEN_STRING_INITIALIZER(struct cmd_sensors_result, arg1, str_adc_arg1);
+
+prog_char help_adc[] = "Show sensors values";
+parse_pgm_inst_t cmd_sensors = {
+	.f = cmd_sensors_parsed,  /* function to call */
+	.data = NULL,      /* 2nd arg of func */
+	.help_str = help_adc,
+	.tokens = {        /* token list, NULL terminated */
+		(prog_void *)&cmd_sensors_arg0,
+		(prog_void *)&cmd_sensors_arg1,
+		NULL,
+	},
+};
+
 
 
 /**********************************************************/
