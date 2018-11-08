@@ -80,6 +80,21 @@ static void adc2_init(void)
 	*/
 	AD2CON2bits.SMPI = 0;
 
+	/* ADC Conversion Clock Select bits
+	11111111 = TP • (ADCS<7:0> + 1) = 256 • TCY = TAD
+	•
+	•
+	•
+	00000010 = TP • (ADCS<7:0> + 1) = 3 • TCY = TAD
+	00000001 = TP • (ADCS<7:0> + 1) = 2 • TCY = TAD
+	00000000 = TP • (ADCS<7:0> + 1) = 1 • TCY = TAD
+	*/
+	/* TCY = 1/FCY = 1/60MhZ = 16,67ns
+		 TADmin@10bits = 76ns
+		 ADCS = 76ns/16,67ns = 5 --> TAD = 83,335ns */
+	#define ADC_TAD_ns 	(83.335)
+	AD2CON3bits.ADCS = 5;
+
 	/* Auto-Sample Time bits
 			11111 = 31 TAD
 			•
@@ -88,16 +103,6 @@ static void adc2_init(void)
 	*/
 	AD2CON3bits.SAMC = 2;
 
-	/* ADC Conversion Clock Select bits
-			11111111 = TP • (ADCS<7:0> + 1) = 256 • TCY = TAD
-			•
-			•
-			•
-			00000010 = TP • (ADCS<7:0> + 1) = 3 • TCY = TAD
-			00000001 = TP • (ADCS<7:0> + 1) = 2 • TCY = TAD
-			00000000 = TP • (ADCS<7:0> + 1) = 1 • TCY = TAD
-	*/
-	AD2CON3bits.ADCS = 0;
 
 	/* Channel 1, 2, 3 Positive Input Select for Sample A bit
 			1 = CH1 positive input is AN3, CH2 positive input is AN4, CH3 positive input is AN5
@@ -109,11 +114,16 @@ static void adc2_init(void)
 	AD2CHS0bits.CH0SA = 0;
 
 	/* interrupt */
-	_AD1IF = 0;
-	_AD1IE = 1;
+	//_AD1IF = 0;
+	//_AD1IE = 1;
 
 	/* ADC module is operating */
 	AD2CON1bits.ADON = 1;
+}
+
+void sensor_sample_wall_sensors(void)
+{
+
 }
 
 

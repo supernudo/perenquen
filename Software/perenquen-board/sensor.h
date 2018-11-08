@@ -1,7 +1,7 @@
-/*  
+/*
  *  Copyright Droids Corporation (2009)
  *  Olivier MATZ <zer0@droids-corp.org>
- * 
+ *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation; either version 2 of the License, or
@@ -20,7 +20,7 @@
  *
  */
 
-/*  
+/*
  *  Copyright Javier Baliñas Santos (2018)
  *  Javier Baliñas Santos <balinas@gmail.com>
  *
@@ -29,9 +29,15 @@
  */
 
 /* synchronize with sensor.c */
-#define ADC_LASER_1   0
-#define ADC_LASER_2   1
-#define ADC_MAX       2
+#define ADC_FRONT_LEFT    0
+#define ADC_FRONT_RIGHT   1
+#define ADC_DIAG_LEFT     2
+#define ADC_DIAG_RIGHT    3
+#define ADC_BATTERY       4
+#define ADC_GYRO          5
+#define ADC_GYRO_REF      6
+#define ADC_FLASH         7
+#define ADC_MAX           8
 
 /* synchronize with sensor.c */
 #define S_START_SWITCH 0
@@ -119,5 +125,3 @@ uint8_t sensor_get(uint8_t i);
 void sensor_obstacle_disable(void);
 void sensor_obstacle_enable(void);
 uint8_t sensor_obstacle_is_disabled(void);
-
-
