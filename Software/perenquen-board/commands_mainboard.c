@@ -76,15 +76,9 @@
 
 #include "robotsim.h"
 #include "strat_base.h"
-#include "strat_avoid.h"
+
 #include "strat_utils.h"
-#include "wt11.h"
 
-
-#ifdef HOST_VERSION
-#define COMPILE_COMMANDS_MAINBOARD
-#define COMPILE_COMMANDS_MAINBOARD_OPTIONALS
-#endif
 
 struct cmd_event_result
 {
@@ -158,9 +152,8 @@ static void cmd_event_parsed(void *parsed_result, void *data)
             robotsim_pwm(MOTOR_LEFT, 0);
             robotsim_pwm(MOTOR_RIGHT, 0);
 #else
-            /* TODO */
-            //dac_mc_set(MOTOR_LEFT, 0);
-            //dac_mc_set(MOTOR_RIGHT, 0);
+            hspwm_set_pwm(MOTOR_LEFT, 0);
+          	hspwm_set_pwm(MOTOR_RIGHT, 0);
 #endif
         }
         mainboard.flags &= (~bit);
@@ -194,7 +187,7 @@ parse_pgm_inst_t cmd_event = {
 /* Init match */
 
 /* from commands_traj.c */
-void auto_position(void);
+//void auto_position(void);
 
 /* this structure is filled when cmd_init is parsed successfully */
 struct cmd_init_result
@@ -207,11 +200,10 @@ struct cmd_init_result
 /* function called when cmd_init is parsed successfully */
 static void cmd_init_parsed(void *parsed_result, void *data)
 {
-  struct cmd_init_result *res = parsed_result;
-  int8_t c;
+    //struct cmd_init_result *res = parsed_result;
 
 	/* autopos main robot */
-	auto_position();
+	//auto_position();
 
 	time_wait_ms (200);
 
@@ -220,7 +212,7 @@ static void cmd_init_parsed(void *parsed_result, void *data)
 
 prog_char str_init_arg0[] = "init";
 parse_pgm_token_string_t cmd_init_arg0 = TOKEN_STRING_INITIALIZER(struct cmd_init_result, arg0, str_init_arg0);
-prog_char str_init_color[] = "green#yellow";
+prog_char str_init_color[] = "left#righ";
 parse_pgm_token_string_t cmd_init_color = TOKEN_STRING_INITIALIZER(struct cmd_init_result, color, str_init_color);
 
 prog_char help_init[] = "Init the robots";
@@ -252,34 +244,35 @@ struct cmd_start_result
 /* function called when cmd_start is parsed successfully */
 static void cmd_start_parsed(void *parsed_result, void *data)
 {
-    struct cmd_start_result *res = parsed_result;
-    uint8_t old_level = gen.log_level;
-    int8_t c;
+    //struct cmd_start_result *res = parsed_result;
+    //uint8_t old_level = gen.log_level;
+    //int8_t c;
 
-    gen.logs[NB_LOGS] = E_USER_STRAT;
-    if (!strcmp_P(res->debug, PSTR("debug")))
-    {
-        strat_infos.dump_enabled = 1;
-        gen.log_level = 5;
-    }
-    else if (!strcmp_P(res->debug, PSTR("step_debug")))
-    {
-        strat_infos.dump_enabled = 1;
-        strat_infos.debug_step = 1;
-        gen.log_level = 5;
-    }
-    else
-    {
-        strat_infos.dump_enabled = 0;
-        gen.log_level = 0;
-    }
+    // TODO
+    //gen.logs[NB_LOGS] = E_USER_STRAT;
+    //if (!strcmp_P(res->debug, PSTR("debug")))
+    //{
+    //    strat_infos.dump_enabled = 1;
+    //    gen.log_level = 5;
+    //}
+    //else if (!strcmp_P(res->debug, PSTR("step_debug")))
+    //{
+    //    strat_infos.dump_enabled = 1;
+    //    strat_infos.debug_step = 1;
+    //    gen.log_level = 5;
+    //}
+    //else
+    //{
+    //    strat_infos.dump_enabled = 0;
+    //    gen.log_level = 0;
+    //}
 
-    strat_dump_conf();
+    //strat_dump_conf();
 
-    strat_start();
+    //strat_start();
 
-    gen.logs[NB_LOGS] = 0;
-    gen.log_level = old_level;
+    //gen.logs[NB_LOGS] = 0;
+    //gen.log_level = old_level;
 }
 
 prog_char str_start_arg0[] = "start";

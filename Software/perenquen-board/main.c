@@ -70,6 +70,7 @@ struct mainboard mainboard;
 #ifndef HOST_VERSION
 void do_led_blink(void *dummy)
 {
+
 	/* simple blink */
 	//LED1_TOGGLE();
 	//LED2_TOGGLE();
@@ -226,7 +227,7 @@ int main(void)
 	memset(&mainboard, 0, sizeof(mainboard));
 
 	/* init flags */
-    mainboard.flags = DO_ENCODERS | DO_RS | DO_POS | DO_POWER; //| DO_BD| DO_CS;
+    mainboard.flags = DO_ENCODERS | DO_RS | DO_POS | DO_POWER | DO_CS; //| DO_BD;
 
 #ifndef HOST_VERSION
 	/* UART */
@@ -271,10 +272,22 @@ int main(void)
 	time_init(EVENT_PRIORITY_TIME);
 
 	/* all cs management */
-	// TODO maindspic_cs_init();
+	maindspic_cs_init();
 
 	/* sensors, will also init hardware adc */
 	sensor_init();
+
+	/* Battery check */
+	sensor_adc_do_read(S_ADC_BATTERY);
+	if (3*sensor_adc_get_value_mv(S_ADC_BATTERY) <= 6000)	{
+		while(1) {
+			LED1_TOGGLE();
+			//LED2_TOGGLE();
+			LED3_TOGGLE();
+			LED4_TOGGLE();
+			wait_ms(100);
+		}
+	}
 
 	/* strat-related event */
 	// TODO scheduler_add_periodical_event_priority(strat_event, NULL,
@@ -291,8 +304,10 @@ int main(void)
 	sei();
 
 	/* say hello */
+	printf("\r\n\r\n");
+	printf("Hi there!! I'm Perenquen Robot :) \r\n");
+	printf("Battery voltage: %d mV\n\r", 3*sensor_adc_get_value_mv(S_ADC_BATTERY));
 	printf("\r\n");
-	printf("Don't turn it on, take it a part!!\r\n");
 
 	#if 0
 	while (1) {

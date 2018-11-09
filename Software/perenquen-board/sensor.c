@@ -137,7 +137,7 @@ void do_adc_sensor_read(struct adc_sensor *adcs)
 	IRQ_LOCK(flags);
 
 	/* DEBUG */
-	LED1_ON();
+	//LED1_ON();
 
 	/* Set ADC channel */
 	AD1CHS0bits.CH0SA = adcs->adc_channel;
@@ -166,7 +166,7 @@ void do_adc_sensor_read(struct adc_sensor *adcs)
 	adcs->value = ADC1BUF0;
 
 	/* DEBUG */
-	LED1_OFF();
+	//LED1_OFF();
 
 	IRQ_UNLOCK(flags);
 }
@@ -175,11 +175,11 @@ void do_adc_sensor_read(struct adc_sensor *adcs)
 #define WALL_SENSORS_DELAY_US 50
 static struct adc_sensor adc_sensors[S_ADC_MAX] = {
 	[S_ADC_FRONT_LEFT] 			= { .adc_channel = 1, .enable_port = &LATD, .enable_pin = 5, 		.delay_us = WALL_SENSORS_DELAY_US},
-	[S_ADC_FRONT_LEFT_OFF] 	= { .adc_channel = 1, .enable_port = NULL, .enable_pin = NULL, 	.delay_us = WALL_SENSORS_DELAY_US},
+	[S_ADC_FRONT_LEFT_OFF] 	= { .adc_channel = 1, .enable_port = NULL, .enable_pin = NULL, 	.delay_us = 1},
 	[S_ADC_FRONT_RIGHT] 		= { .adc_channel = 5, .enable_port = &LATD, .enable_pin = 2, 		.delay_us = WALL_SENSORS_DELAY_US},
-	[S_ADC_FRONT_RIGHT_OFF] = { .adc_channel = 5, .enable_port = NULL, .enable_pin = NULL, 	.delay_us = WALL_SENSORS_DELAY_US},
+	[S_ADC_FRONT_RIGHT_OFF] = { .adc_channel = 5, .enable_port = NULL, .enable_pin = NULL, 	.delay_us = 1},
 	[S_ADC_DIAG_LEFT] 			= { .adc_channel = 3, .enable_port = &LATD, .enable_pin = 4, 		.delay_us = WALL_SENSORS_DELAY_US},
-	[S_ADC_DIAG_LEFT_OFF] 	= { .adc_channel = 3, .enable_port = NULL, .enable_pin = NULL, 	.delay_us = WALL_SENSORS_DELAY_US},
+	[S_ADC_DIAG_LEFT_OFF] 	= { .adc_channel = 3, .enable_port = NULL, .enable_pin = NULL, 	.delay_us = 1},
 	[S_ADC_DIAG_RIGHT] 			= { .adc_channel = 4, .enable_port = &LATD, .enable_pin = 4, 		.delay_us = WALL_SENSORS_DELAY_US},
 	[S_ADC_DIAG_RIGHT_OFF] 	= { .adc_channel = 4, .enable_port = NULL, .enable_pin = NULL, 	.delay_us = 1},
 	[S_ADC_BATTERY] 				= { .adc_channel = 0, .enable_port = NULL, .enable_pin = NULL, 	.delay_us = 1},

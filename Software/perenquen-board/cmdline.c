@@ -138,10 +138,10 @@ void mylog(struct error * e, ...)
 	tv = time_get_time();
 	printf_P(PSTR("%ld.%.3ld: "), (long int)tv.s, (tv.us/1000UL));
 
-	//printf_P(PSTR("(%d,%d,%d) "),
-	//	 position_get_x_s16(&mainboard.pos),
-	//	 position_get_y_s16(&mainboard.pos),
-	//	 position_get_a_deg_s16(&mainboard.pos));
+	printf_P(PSTR("(%d,%d,%d) "),
+		 position_get_x_s16(&mainboard.pos),
+		 position_get_y_s16(&mainboard.pos),
+		 position_get_a_deg_s16(&mainboard.pos));
 
 	/* XXX not secure vfprintf */
 	vfprintf(stdout, e->text, ap);

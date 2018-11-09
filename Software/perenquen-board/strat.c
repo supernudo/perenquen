@@ -57,7 +57,7 @@
 #include "main.h"
 #include "strat.h"
 #include "strat_base.h"
-#include "strat_avoid.h"
+
 #include "strat_utils.h"
 #include "sensor.h"
 #include "actuator.h"
@@ -76,8 +76,6 @@ struct strat_infos strat_infos = {
         .flags = 0,
     },
 };
-
-struct strat_smart strat_smart[ROBOT_MAX];
 
 
 
@@ -223,7 +221,7 @@ void strat_event(void *dummy) {
 /* Strat main loop */
 uint8_t strat_main(void)
 {
-    uint8_t err;
+    //uint8_t err;
     strat_limit_speed_enable ();
 
     /* TODO strat */

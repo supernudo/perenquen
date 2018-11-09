@@ -64,15 +64,9 @@
 #include "cmdline.h"
 #include "strat_utils.h"
 #include "strat_base.h"
-#include "strat_avoid.h"
+
 #include "strat.h"
 
-
-
-#ifdef HOST_VERSION
-#define COMPILE_COMMANDS_TRAJ
-#define COMPILE_COMMANDS_TRAJ_OPTIONALS
-#endif
 
 #define ERROUT(e) do {\
 		err = e;			 \
@@ -147,8 +141,6 @@ parse_pgm_inst_t cmd_traj_speed_show = {
         NULL,
     },
 };
-
-#ifdef COMPILE_COMMANDS_TRAJ_OPTIONALS /*-------------------------------------*/
 
 #ifdef TRAJECTORY_MANAGER_V3
 
@@ -283,6 +275,7 @@ parse_pgm_inst_t cmd_circle_coef_show = {
         NULL,
     },
 };
+
 #endif /* TRAJECTORY_MANAGER_V3 */
 
 /**********************************************************/
@@ -643,7 +636,7 @@ static void cmd_pt_list_parsed(void * parsed_result, void * data)
         {
             while (1)
             {
-                why = goto_and_avoid(pt_list[i].x, pt_list[i].y, TRAJ_FLAGS_STD, TRAJ_FLAGS_NO_NEAR_NO_TIMER);
+                //why = goto_and_avoid(pt_list[i].x, pt_list[i].y, TRAJ_FLAGS_STD, TRAJ_FLAGS_NO_NEAR_NO_TIMER);
                 printf("next point\r\n");
                 if (why != END_OBSTACLE)
                     break;
@@ -679,7 +672,6 @@ parse_pgm_inst_t cmd_pt_list = {
 };
 
 /* append */
-
 prog_char str_pt_list_arg1_append[] = "append";
 parse_pgm_token_string_t cmd_pt_list_arg1_append = TOKEN_STRING_INITIALIZER(struct cmd_pt_list_result, arg1, str_pt_list_arg1_append);
 
@@ -716,8 +708,8 @@ parse_pgm_inst_t cmd_pt_list_del = {
         NULL,
     },
 };
-/* show */
 
+/* show */
 prog_char str_pt_list_show_arg[] = "show#reset#start#avoid_start";
 parse_pgm_token_string_t cmd_pt_list_show_arg = TOKEN_STRING_INITIALIZER(struct cmd_pt_list_result, arg1, str_pt_list_show_arg);
 
@@ -733,8 +725,6 @@ parse_pgm_inst_t cmd_pt_list_show = {
         NULL,
     },
 };
-
-#endif /* COMPILE_COMMANDS_TRAJ_OPTIONALS ------------------------------------*/
 
 
 /**********************************************************/
@@ -754,7 +744,7 @@ struct cmd_goto_result
 static void cmd_goto_parsed(void * parsed_result, void * data)
 {
     struct cmd_goto_result * res = parsed_result;
-    uint8_t err;
+    uint8_t err = 0;
     microseconds t1, t2;
 
     interrupt_traj_reset();
@@ -793,12 +783,12 @@ static void cmd_goto_parsed(void * parsed_result, void * data)
         //if (err != END_TRAJ && err != END_NEAR)
         //    strat_hardstop();
 
-				printf_P(PSTR("returned %s\r\n"), get_err(err));
+		//		printf_P(PSTR("returned %s\r\n"), get_err(err));
 		return;
     }
     else if (!strcmp_P(res->arg1, PSTR("avoid_fw")))
     {
-        err = goto_and_avoid_forward(res->arg2, res->arg3, TRAJ_FLAGS_STD, TRAJ_FLAGS_NO_NEAR);
+        //err = goto_and_avoid_forward(res->arg2, res->arg3, TRAJ_FLAGS_STD, TRAJ_FLAGS_NO_NEAR);
         if (err != END_TRAJ && err != END_NEAR)
             strat_hardstop();
 
@@ -807,7 +797,7 @@ static void cmd_goto_parsed(void * parsed_result, void * data)
     }
     else if (!strcmp_P(res->arg1, PSTR("avoid_bw")))
     {
-        err = goto_and_avoid_backward(res->arg2, res->arg3, TRAJ_FLAGS_STD, TRAJ_FLAGS_NO_NEAR);
+        //err = goto_and_avoid_backward(res->arg2, res->arg3, TRAJ_FLAGS_STD, TRAJ_FLAGS_NO_NEAR);
         if (err != END_TRAJ && err != END_NEAR)
             strat_hardstop();
 
@@ -832,7 +822,7 @@ static void cmd_goto_parsed(void * parsed_result, void * data)
 	while ((err = test_traj_end(TRAJ_FLAGS_NO_NEAR)) == 0 || !cmdline_keypressed())
 	{
 	    t2 = time_get_us2();
-	    if (t2 - t1 >= 10000)
+	    if (t2 - t1 >= 2000)
 	    {
 	        dump_cs_debug("angle", &mainboard.angle.cs);
 	        dump_cs_debug("distance", &mainboard.distance.cs);
@@ -907,51 +897,51 @@ struct cmd_position_result
 
 void auto_position(void)
 {
-#define AUTOPOS_SPEED_FAST 	500
-#define TRESPA_BAR		17
-#define HOME_X_EDGE		70
-//#define HOME_Y_UP_EDGE	1200
-
-#define HOME_Y_UP_EDGE_YELLOW	1200
-#define HOME_Y_UP_EDGE_GREEN	1200
-
-    uint8_t err;
-    uint16_t old_spdd, old_spda;
-
-    /* save & set speeds */
-    interrupt_traj_reset();
-    strat_get_speed(&old_spdd, &old_spda);
-    strat_set_speed(AUTOPOS_SPEED_FAST, AUTOPOS_SPEED_FAST);
-
-	/* set position of the robot aligned to home edges */
-	mainboard.our_color == I2C_COLOR_YELLOW?
-	strat_reset_pos(COLOR_X(HOME_X_EDGE + ROBOT_CENTER_TO_BACK),
-					COLOR_Y(HOME_Y_UP_EDGE_YELLOW - TRESPA_BAR - (ROBOT_WIDTH/2.0)),
-					COLOR_A_ABS(0)):
-	strat_reset_pos(COLOR_X(HOME_X_EDGE + ROBOT_CENTER_TO_BACK),
-					COLOR_Y(HOME_Y_UP_EDGE_GREEN - TRESPA_BAR - (ROBOT_WIDTH/2.0)),
-					COLOR_A_ABS(0));
-
-
-	/* goto in line with the center cup */
-	trajectory_d_rel(&mainboard.traj, 350-ROBOT_CENTER_TO_BACK);
-    err = wait_traj_end(END_INTR | END_TRAJ);
-    if (err == END_INTR)
-        goto intr;
-
-	trajectory_turnto_xy(&mainboard.traj, COLOR_X(MY_CUP_3_X), MY_CUP_3_Y);
-    err = wait_traj_end(END_INTR | END_TRAJ);
-    if (err == END_INTR)
-        goto intr;
-
-
-    /* restore speeds */
-    strat_set_speed(old_spdd, old_spda);
-    return;
-
-intr:
-    strat_hardstop();
-    strat_set_speed(old_spdd, old_spda);
+//#define AUTOPOS_SPEED_FAST 	500
+//#define TRESPA_BAR		17
+//#define HOME_X_EDGE		70
+////#define HOME_Y_UP_EDGE	1200
+//
+//#define HOME_Y_UP_EDGE_YELLOW	1200
+//#define HOME_Y_UP_EDGE_GREEN	1200
+//
+//    uint8_t err;
+//    uint16_t old_spdd, old_spda;
+//
+//    /* save & set speeds */
+//    interrupt_traj_reset();
+//    strat_get_speed(&old_spdd, &old_spda);
+//    strat_set_speed(AUTOPOS_SPEED_FAST, AUTOPOS_SPEED_FAST);
+//
+//	/* set position of the robot aligned to home edges */
+//	mainboard.our_color == I2C_COLOR_YELLOW?
+//	strat_reset_pos(COLOR_X(HOME_X_EDGE + ROBOT_CENTER_TO_BACK),
+//					COLOR_Y(HOME_Y_UP_EDGE_YELLOW - TRESPA_BAR - (ROBOT_WIDTH/2.0)),
+//					COLOR_A_ABS(0)):
+//	strat_reset_pos(COLOR_X(HOME_X_EDGE + ROBOT_CENTER_TO_BACK),
+//					COLOR_Y(HOME_Y_UP_EDGE_GREEN - TRESPA_BAR - (ROBOT_WIDTH/2.0)),
+//					COLOR_A_ABS(0));
+//
+//
+//	/* goto in line with the center cup */
+//	trajectory_d_rel(&mainboard.traj, 350-ROBOT_CENTER_TO_BACK);
+//    err = wait_traj_end(END_INTR | END_TRAJ);
+//    if (err == END_INTR)
+//        goto intr;
+//
+//	trajectory_turnto_xy(&mainboard.traj, COLOR_X(MY_CUP_3_X), MY_CUP_3_Y);
+//    err = wait_traj_end(END_INTR | END_TRAJ);
+//    if (err == END_INTR)
+//        goto intr;
+//
+//
+//    /* restore speeds */
+//    strat_set_speed(old_spdd, old_spda);
+//    return;
+//
+//intr:
+//    strat_hardstop();
+//    strat_set_speed(old_spdd, old_spda);
 }
 
 /* function called when cmd_position is parsed successfully */
@@ -970,13 +960,13 @@ static void cmd_position_parsed(void * parsed_result, void * data)
     }
     else if (!strcmp_P(res->arg1, PSTR("autoset_yellow")))
     {
-        mainboard.our_color = I2C_COLOR_YELLOW;
-        auto_position();
+        //mainboard.our_color = I2C_COLOR_YELLOW;
+        //auto_position();
     }
     else if (!strcmp_P(res->arg1, PSTR("autoset_green")))
     {
-        mainboard.our_color = I2C_COLOR_GREEN;
-        auto_position();
+        //mainboard.our_color = I2C_COLOR_GREEN;
+        //auto_position();
     }
 
     /* else it's just a "show" */
@@ -1084,39 +1074,39 @@ struct cmd_strat_conf_result
 /* function called when cmd_strat_conf is parsed successfully */
 static void cmd_strat_conf_parsed(void *parsed_result, void *data)
 {
-    struct cmd_strat_conf_result *res = parsed_result;
+    //struct cmd_strat_conf_result *res = parsed_result;
 
-    if (!strcmp_P(res->arg1, PSTR("base")))
-    {
-	   strat_infos.match_strategy=STR_BASE;
-    }
-    if (!strcmp_P(res->arg1, PSTR("qualification")))
-    {
-	   strat_infos.match_strategy=STR_QUALIFICATION;
-    }
-    if (!strcmp_P(res->arg1, PSTR("homologation")))
-    {
-	   strat_infos.match_strategy=STR_HOMOLOGATION;
+    //if (!strcmp_P(res->arg1, PSTR("base")))
+    //{
+	  // strat_infos.match_strategy=STR_BASE;
+    //}
+    //if (!strcmp_P(res->arg1, PSTR("qualification")))
+    //{
+	  // strat_infos.match_strategy=STR_QUALIFICATION;
+    //}
+    //if (!strcmp_P(res->arg1, PSTR("homologation")))
+    //{
+	  // strat_infos.match_strategy=STR_HOMOLOGATION;
 
-    }
-    else if (!strcmp_P(res->arg1, PSTR("do_tower")))
-		strat_infos.conf.flags |= CONF_FLAG_DO_TOWER;
+    //}
+    //else if (!strcmp_P(res->arg1, PSTR("do_tower")))
+		//strat_infos.conf.flags |= CONF_FLAG_DO_TOWER;
 
-    else if (!strcmp_P(res->arg1, PSTR("do_fast_g1")))
-		strat_infos.conf.flags |= CONF_FLAG_DO_STAND_FAST_GROUP_1;
+    //else if (!strcmp_P(res->arg1, PSTR("do_fast_g1")))
+		//strat_infos.conf.flags |= CONF_FLAG_DO_STAND_FAST_GROUP_1;
 
-    else if (!strcmp_P(res->arg1, PSTR("do_escape")))
-		strat_infos.conf.flags |= CONF_FLAG_DO_ESCAPE_UPPER_ZONE;
+    //else if (!strcmp_P(res->arg1, PSTR("do_escape")))
+		//strat_infos.conf.flags |= CONF_FLAG_DO_ESCAPE_UPPER_ZONE;
 
 
-	/* flags */
-	strat_smart[MAIN_ROBOT].current_strategy=0;
-	strat_smart[SEC_ROBOT].current_strategy=0;
-	strat_set_next_sec_strategy();
-	strat_set_next_main_strategy();
+		///* flags */
+		//strat_smart[MAIN_ROBOT].current_strategy=0;
+		//strat_smart[SEC_ROBOT].current_strategy=0;
+		//strat_set_next_sec_strategy();
+		//strat_set_next_main_strategy();
 
-	strat_infos.dump_enabled = 1;
-	strat_dump_conf();
+		//strat_infos.dump_enabled = 1;
+		//strat_dump_conf();
 }
 
 prog_char str_strat_conf_arg0[] = "strat_conf";
@@ -1137,111 +1127,6 @@ parse_pgm_inst_t cmd_strat_conf = {
     },
 };
 
-#ifdef COMPILE_COMMANDS_TRAJ_OPTIONALS
-
-/**********************************************************/
-/* strat configuration */
-
-/* this structure is filled when cmd_strat_conf2 is parsed successfully */
-struct cmd_strat_conf2_result
-{
-    fixed_string_t arg0;
-    fixed_string_t arg1;
-    fixed_string_t arg2;
-};
-
-/* function called when cmd_strat_conf2 is parsed successfully */
-static void cmd_strat_conf2_parsed(void *parsed_result, void *data)
-{
-    struct cmd_strat_conf2_result *res = parsed_result;
-    uint8_t on, bit = 0;
-
-    if (!strcmp_P(res->arg2, PSTR("on")))
-        on = 1;
-    else
-        on = 0;
-
-    /* contruct here the bit mask */
-
-    if (on)
-        strat_infos.conf.flags |= bit;
-    else
-        strat_infos.conf.flags &= (~bit);
-
-    strat_infos.dump_enabled = 1;
-    strat_dump_conf();
-}
-
-prog_char str_strat_conf2_arg0[] = "strat_conf";
-parse_pgm_token_string_t cmd_strat_conf2_arg0 = TOKEN_STRING_INITIALIZER(struct cmd_strat_conf2_result, arg0, str_strat_conf2_arg0);
-prog_char str_strat_conf2_arg1[] = "opp_tracking";
-parse_pgm_token_string_t cmd_strat_conf2_arg1 = TOKEN_STRING_INITIALIZER(struct cmd_strat_conf2_result, arg1, str_strat_conf2_arg1);
-prog_char str_strat_conf2_arg2[] = "on#off";
-parse_pgm_token_string_t cmd_strat_conf2_arg2 = TOKEN_STRING_INITIALIZER(struct cmd_strat_conf2_result, arg2, str_strat_conf2_arg2);
-
-
-prog_char help_strat_conf2[] = "enable/disable strat option";
-parse_pgm_inst_t cmd_strat_conf2 = {
-    .f = cmd_strat_conf2_parsed, /* function to call */
-    .data = NULL, /* 2nd arg of func */
-    //.help_str = help_strat_conf2,
-    .tokens =
-    { /* token list, NULL terminated */
-        (prog_void *) & cmd_strat_conf2_arg0,
-        (prog_void *) & cmd_strat_conf2_arg1,
-        (prog_void *) & cmd_strat_conf2_arg2,
-        NULL,
-    },
-};
-
-
-/**********************************************************/
-/* strat configuration */
-
-/* this structure is filled when cmd_strat_conf3 is parsed successfully */
-struct cmd_strat_conf3_result
-{
-    fixed_string_t arg0;
-    fixed_string_t arg1;
-    uint8_t arg2;
-};
-
-/* function called when cmd_strat_conf3 is parsed successfully */
-static void cmd_strat_conf3_parsed(void *parsed_result, void *data)
-{
-    struct cmd_strat_conf3_result *res = parsed_result;
-
-    if (!strcmp_P(res->arg1, PSTR("something")))
-    {
-        /* set value of a strat parameter */
-			printf ("not implemented");
-    }
-
-    strat_infos.dump_enabled = 1;
-    strat_dump_conf();
-}
-
-prog_char str_strat_conf3_arg0[] = "strat_conf";
-parse_pgm_token_string_t cmd_strat_conf3_arg0 = TOKEN_STRING_INITIALIZER(struct cmd_strat_conf3_result, arg0, str_strat_conf3_arg0);
-prog_char str_strat_conf3_arg1[] = "something";
-parse_pgm_token_string_t cmd_strat_conf3_arg1 = TOKEN_STRING_INITIALIZER(struct cmd_strat_conf3_result, arg1, str_strat_conf3_arg1);
-parse_pgm_token_num_t cmd_strat_conf3_arg2 = TOKEN_NUM_INITIALIZER(struct cmd_strat_conf3_result, arg2, UINT16);
-
-prog_char help_strat_conf3[] = "set strat param value";
-parse_pgm_inst_t cmd_strat_conf3 = {
-    .f = cmd_strat_conf3_parsed, /* function to call */
-    .data = NULL, /* 2nd arg of func */
-    //.help_str = help_strat_conf3,
-    .tokens =
-    { /* token list, NULL terminated */
-        (prog_void *) & cmd_strat_conf3_arg0,
-        (prog_void *) & cmd_strat_conf3_arg1,
-        (prog_void *) & cmd_strat_conf3_arg2,
-        NULL,
-    },
-};
-
-#endif /* COMPILE_COMMANDS_TRAJ_OPTIONALS */
 
 /**********************************************************/
 /* Subtraj 1 */
@@ -1258,119 +1143,13 @@ struct cmd_subtraj1_result
 /* function called when cmd_subtraj1 is parsed successfully */
 static void cmd_subtraj1_parsed(void *parsed_result, void *data)
 {
-    struct cmd_subtraj1_result *res = parsed_result;
-    uint8_t err = 0;
-    uint8_t zone_num = ZONES_MAX;
-
-	strat_infos.debug_step = 1;
-
-   	/**
-	 *	strat several zones
-	 */
-    if (strcmp_P(res->arg1, PSTR("begining")) == 0) {
-        //err = strat_begining();
-		printf_P(PSTR("subtraj returned %s\r\n"), get_err(err));
-    }
-
-	/**
-     * 	go & work on zone
-	 */
-
-	/* go and work on zone */
-   	else if (!strcmp_P(res->arg1, PSTR("home_spotlight"))) {
-	   	zone_num = ZONE_MY_HOME_SPOTLIGHT;
-		time_reset();
-	}
-
-   	else if (!strcmp_P(res->arg1, PSTR("home_timeout"))) {
-        zone_num = ZONE_MY_HOME_POPCORNS;
-		time_set(STAND_RELEASE_TIME-1, 0);
-	}
-
-   	else if (!strcmp_P(res->arg1, PSTR("home_popcorns"))) {
-        zone_num = ZONE_MY_HOME_POPCORNS;
-		time_reset();
-	}
-
-   	else if (!strcmp_P(res->arg1, PSTR("machine")))
-        zone_num = ZONE_MY_POPCORNMAC;
-
-   	else if (!strcmp_P(res->arg1, PSTR("machine_opp")))
-        zone_num = ZONE_OPP_POPCORNMAC;
-
-    else if (!strcmp_P(res->arg1, PSTR("cinema_up"))) {
-        zone_num = ZONE_MY_CINEMA_UP;
-	}
-    else if (!strcmp_P(res->arg1, PSTR("cinema_down_sec"))) {
-        zone_num = ZONE_MY_CINEMA_DOWN_SEC;
-	}
-    else if (!strcmp_P(res->arg1, PSTR("cinema_down_main"))) {
-        zone_num = ZONE_MY_CINEMA_DOWN_MAIN;
-	}
-    else if (!strcmp_P(res->arg1, PSTR("stairs_ways"))) {
-        zone_num = ZONE_MY_STAIRWAY;
-	}
-    else if (!strcmp_P(res->arg1, PSTR("outside"))) {
-        zone_num = ZONE_MY_HOME_OUTSIDE;
-	}
-    else if (!strcmp_P(res->arg1, PSTR("platform"))) {
-        zone_num = ZONE_MY_PLATFORM;
-	}
-    else if (!strcmp_P(res->arg1, PSTR("stairs"))) {
-        zone_num = ZONE_MY_STAIRS;
-	}
-
-
-	/* go and work */
-    if (zone_num < ZONES_MAX)
-	{
-		if (strat_infos.zones[zone_num].robot==MAIN_ROBOT)
-		{
-            /* goto */
-            err = strat_goto_zone(MAIN_ROBOT, zone_num);
-		    printf_P(PSTR("goto returned %s\r\n"), get_err(err));
-			if (!TRAJ_SUCCESS(err))
-			   ERROUT(err);
-
-       		/* work */
-            err = strat_work_on_zone(MAIN_ROBOT, zone_num);
-            printf_P(PSTR("work returned %s\r\n"), get_err(err));
-		}
-		else {
-            /* goto */
-            err = strat_goto_zone(SEC_ROBOT, zone_num);
-			if (bt_robot_2nd_wait_ack()!=0) {
-				printf_P(PSTR("bt cmd ERROR\n\r"));
-				ERROUT(END_ERROR);
-			}
-			err = bt_robot_2nd_wait_end();
-		    printf_P(PSTR("goto returned %s\r\n"), get_err(err));
-			if (!TRAJ_SUCCESS(err))
-			   ERROUT(err);
-
-            /* XXX debug */
-            //strat_debug_wait_key_pressed (SEC_ROBOT);
-
-            /* work */
-            err = strat_work_on_zone(SEC_ROBOT, zone_num);
-			if (bt_robot_2nd_wait_ack()!=0) {
-				printf_P(PSTR("bt cmd ERROR\n\r"));
-				ERROUT(END_ERROR);
-			}
-			err = bt_robot_2nd_wait_end();
-		    printf_P(PSTR("work returned %s\r\n"), get_err(err));
-			if (!TRAJ_SUCCESS(err))
-			   ERROUT(err);
-		}
-
-    }
-end:
-    trajectory_hardstop(&mainboard.traj);
+    //struct cmd_subtraj1_result *res = parsed_result;
+    //uint8_t err = 0;
 }
 
 prog_char str_subtraj1_arg0[] = "subtraj";
 parse_pgm_token_string_t cmd_subtraj1_arg0 = TOKEN_STRING_INITIALIZER(struct cmd_subtraj1_result, arg0, str_subtraj1_arg0);
-prog_char str_subtraj1_arg1[] = "begining#home_popcorns#home_spotlight#home_timeout#machine#machine_opp#cinema_up#cinema_down_sec#cinema_down_main#platform#stairs#stairs_ways#outside";
+prog_char str_subtraj1_arg1[] = "";
 parse_pgm_token_string_t cmd_subtraj1_arg1 = TOKEN_STRING_INITIALIZER(struct cmd_subtraj1_result, arg1, str_subtraj1_arg1);
 //parse_pgm_token_num_t cmd_subtraj1_arg2 = TOKEN_NUM_INITIALIZER(struct cmd_subtraj1_result, arg2, INT32);
 //parse_pgm_token_num_t cmd_subtraj1_arg3 = TOKEN_NUM_INITIALIZER(struct cmd_subtraj1_result, arg3, INT32);
@@ -1385,154 +1164,6 @@ parse_pgm_inst_t cmd_subtraj1 = {
         (prog_void *) &cmd_subtraj1_arg1,
         //(prog_void *) &cmd_subtraj1_arg2,
         //(prog_void *)&cmd_subtraj1_arg3,
-        NULL,
-    },
-};
-
-
-/**********************************************************/
-/* Subtraj 2 */
-
-/* this structure is filled when cmd_subtraj2 is parsed successfully */
-struct cmd_subtraj2_result
-{
-    fixed_string_t arg0;
-    fixed_string_t arg1;
-    uint8_t arg2;
-    //	int32_t arg2;
-    //	int32_t arg3;
-    //	int32_t arg4;
-    //	int32_t arg5;
-};
-
-/* function called when cmd_subtraj2 is parsed successfully */
-static void cmd_subtraj2_parsed(void *parsed_result, void *data)
-{
-
-    struct cmd_subtraj2_result *res = parsed_result;
-    uint8_t err = 0;
-    uint8_t zone_num = ZONES_MAX;
-
-	strat_infos.debug_step = 1;
-
-	/**
-	 *	strat smart
-	 */
-    if (!strcmp_P(res->arg1, PSTR("strat_ptinto"))) {
-
-
-		/* play */
-		strat_secondary_robot_disable ();
-		err = strat_smart_main_robot();
-		printf_P(PSTR("strat smart returned %s\r\n"), get_err(err));
-		ERROUT(err);
-    }
-    else if (!strcmp_P(res->arg1, PSTR("strat_tirantes"))) {
-
-
-		/* play */
-		strat_secondary_robot_disable ();
-		do {
-			time_wait_ms(200);
-			err = strat_smart_secondary_robot();
-		} while (!err);
-		printf_P(PSTR("strat smart returned %s\r\n"), get_err(err));
-		ERROUT(err);
-    }
-
-	/**
-     * 	go & work on zone
-	 */
-
-	/* get zone number */
-	if (res->arg2 == 0) {
-		zone_num = ZONES_MAX;
-	}
-    else if (!strcmp_P(res->arg1, PSTR("stand_group"))) {
-		if (res->arg2 <= 4)
-        	zone_num = ZONE_MY_STAND_GROUP_1 + res->arg2 - 1;
-	}
-    else if (!strcmp_P(res->arg1, PSTR("clapper"))) {
-		if (res->arg2 <= 3)
-        	zone_num = ZONE_MY_CLAP_1 + res->arg2 - 1;
-	}
-  	else if (!strcmp_P(res->arg1, PSTR("cup"))) {
-
-		if (res->arg2 <= 3)
-        	zone_num = ZONE_POPCORNCUP_1 + res->arg2 - 1;
-	}
-
-	/* go and work*/
-    if (zone_num < ZONES_MAX) {
-
-		if (strat_infos.zones[zone_num].robot==MAIN_ROBOT) {
-
-            /* goto */
-            err = strat_goto_zone(MAIN_ROBOT, zone_num);
-		    printf_P(PSTR("goto returned %s\r\n"), get_err(err));
-			if (!TRAJ_SUCCESS(err))
-			   ERROUT(err);
-
-       		/* work */
-            err = strat_work_on_zone(MAIN_ROBOT, zone_num);
-            printf_P(PSTR("work returned %s\r\n"), get_err(err));
-		}
-		else {
-            /* goto */
-            err = strat_goto_zone(SEC_ROBOT, zone_num);
-			if (bt_robot_2nd_wait_ack()!=0) {
-				printf_P(PSTR("bt cmd ERROR\n\r"));
-				ERROUT(END_ERROR);
-			}
-			err = bt_robot_2nd_wait_end();
-		    printf_P(PSTR("goto returned %s\r\n"), get_err(err));
-			if (!TRAJ_SUCCESS(err))
-			   ERROUT(err);
-
-            /* XXX debug */
-            //strat_debug_wait_key_pressed (SEC_ROBOT);
-
-            /* work */
-            err = strat_work_on_zone(SEC_ROBOT, zone_num);
-			if (bt_robot_2nd_wait_ack()!=0) {
-				printf_P(PSTR("bt cmd ERROR\n\r"));
-				ERROUT(END_ERROR);
-			}
-			err = bt_robot_2nd_wait_end();
-		    printf_P(PSTR("work returned %s\r\n"), get_err(err));
-			if (!TRAJ_SUCCESS(err))
-			   ERROUT(err);
-		}
-    }
-	else
-		printf_P(PSTR("invalid element number\r\n"));
-
-end:
-    trajectory_hardstop(&mainboard.traj);
-}
-
-prog_char str_subtraj2_arg0[] = "subtraj";
-parse_pgm_token_string_t cmd_subtraj2_arg0 = TOKEN_STRING_INITIALIZER(struct cmd_subtraj2_result, arg0, str_subtraj2_arg0);
-prog_char str_subtraj2_arg1[] = "strat_ptinto#strat_tirantes#stand_group#clapper#cup";
-parse_pgm_token_string_t cmd_subtraj2_arg1 = TOKEN_STRING_INITIALIZER(struct cmd_subtraj2_result, arg1, str_subtraj2_arg1);
-parse_pgm_token_num_t cmd_subtraj2_arg2 = TOKEN_NUM_INITIALIZER(struct cmd_subtraj2_result, arg2, UINT8);
-//parse_pgm_token_num_t cmd_subtraj2_arg3 = TOKEN_NUM_INITIALIZER(struct cmd_subtraj2_result, arg3, INT32);
-//parse_pgm_token_num_t cmd_subtraj2_arg4 = TOKEN_NUM_INITIALIZER(struct cmd_subtraj2_result, arg4, INT32);
-//parse_pgm_token_num_t cmd_subtraj2_arg5 = TOKEN_NUM_INITIALIZER(struct cmd_subtraj2_result, arg5, INT32);
-
-prog_char help_subtraj2[] = "Test sub-trajectories (a,b,c,d: specific params)";
-parse_pgm_inst_t cmd_subtraj2 = {
-    .f = cmd_subtraj2_parsed, /* function to call */
-    .data = NULL, /* 2nd arg of func */
-    //.help_str = help_subtraj2,
-    .tokens =
-    { /* token list, NULL terminated */
-        (prog_void *) &cmd_subtraj2_arg0,
-        (prog_void *) &cmd_subtraj2_arg1,
-		(prog_void *) &cmd_subtraj2_arg2,
-        //		(prog_void *)&cmd_subtraj2_arg3,
-        //		(prog_void *)&cmd_subtraj2_arg4,
-        //		(prog_void *)&cmd_subtraj2_arg5,
         NULL,
     },
 };

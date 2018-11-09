@@ -97,24 +97,6 @@ uint8_t y_is_more_than(int16_t y);
  * robot. works in yellow or green color. */
 uint8_t x_is_more_than(int16_t x);
 
-/* return 1 if x > x_opp or opponent not there */
-uint8_t opp1_x_is_more_than(int16_t x);
-
-/* return 1 if x > x_opp or opponent not there */
-uint8_t opp2_x_is_more_than(int16_t x);
-
-/* return 1 if x > x_opp or opponent not there */
-uint8_t robot_2nd_x_is_more_than(int16_t x);
-
-/* return 1 if y > y_opp or opponent not there */
-uint8_t opp1_y_is_more_than(int16_t y);
-
-/* return 1 if y > y_opp or opponent not there */
-uint8_t opp2_y_is_more_than(int16_t y);
-
-/* return 1 if y > y_opp or opponent not there */
-uint8_t robot_2nd_y_is_more_than(int16_t y);
-
 int16_t fast_sin(int16_t deg);
 int16_t fast_cos(int16_t deg);
 

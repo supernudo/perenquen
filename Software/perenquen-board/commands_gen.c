@@ -249,7 +249,8 @@ static void cmd_sensors_parsed(void *parsed_result, void *data)
 	printf("not implemented\n");
 #else
 	struct cmd_sensors_result *res = parsed_result;
-	uint8_t i, loop = 0;
+	//uint8_t i;
+    uint8_t loop = 0;
 
 	if (!strcmp_P(res->arg1, PSTR("loop_show")))
 		loop = 1;

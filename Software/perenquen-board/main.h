@@ -139,15 +139,15 @@
 #define ROBOT_HALF_LENGTH_REAR  ROBOT_CENTER_TO_BACK
 
 /* Some calculus:
- * it is a 3600 imps -> 14400 because we see 1/4 period
- * and diameter: 55mm -> perimeter 173mm
- * 14400/173 -> 832 imps/10 mm */
+ * it is a 1024 imps -> 4096 because we see 1/4 period
+ * and diameter: 25.5mm -> perimeter 80.11mm
+ * 4096/88.11 -> 51,129 imps/mm */
 
 /* increase it to go further */
 #define IMP_ENCODERS 		    1024.0
 #define WHEEL_DIAMETER_MM 	25.5
 #define WHEEL_PERIM_MM 	    (WHEEL_DIAMETER_MM * M_PI)
-#define IMP_COEF 			    	10.0
+#define IMP_COEF 			    	200.0
 #define DIST_IMP_MM 		    (((IMP_ENCODERS*4) / WHEEL_PERIM_MM) * IMP_COEF)
 
 /** ERROR NUMS */
@@ -223,6 +223,12 @@ struct mainboard
 #define DO_BD         16
 #define DO_TIMER      32
 #define DO_POWER      64
+
+	uint8_t our_color;
+	#define I2C_COLOR_YELLOW	0
+	#define AREA_X 10
+	#define AREA_Y 10
+    #define OBS_CLERANCE 1
 
 	/* control systems */
 	struct cs_block angle;
