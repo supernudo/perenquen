@@ -230,14 +230,14 @@ void maindspic_cs_init(void)
 	/* PID */
 	pid_init(&mainboard.angle.pid);
 #ifndef HOST_VERSION
-	pid_set_gains(&mainboard.angle.pid, 10, 0, 0); // real
+	pid_set_gains(&mainboard.angle.pid, 800, 0, 0); // real
 #else
 //	pid_set_gains(&mainboard.angle.pid, 40, 0, 1200); // robotsim tunning
 //	pid_set_gains(&mainboard.angle.pid, 300, 0, 3500); // robotsim tunning
 	pid_set_gains(&mainboard.angle.pid, 60, 0, 2800); // robotsim tunning
 #endif
 	pid_set_maximums(&mainboard.angle.pid, 0, 3000, 6000);
-	pid_set_out_shift(&mainboard.angle.pid, 6);
+	pid_set_out_shift(&mainboard.angle.pid, 8);
 	pid_set_derivate_filter(&mainboard.angle.pid, 1);
 
 	/* QUADRAMP */
@@ -262,14 +262,14 @@ void maindspic_cs_init(void)
 	/* PID */
 	pid_init(&mainboard.distance.pid);
 #ifndef HOST_VERSION
-	pid_set_gains(&mainboard.distance.pid, 10, 0, 0); // real
+	pid_set_gains(&mainboard.distance.pid, 800, 0, 0); // real
 #else
 //	pid_set_gains(&mainboard.distance.pid, 40, 0, 1200); // robotsim tunning
 //	pid_set_gains(&mainboard.distance.pid, 300, 0, 3500); // robotsim tunning
 	pid_set_gains(&mainboard.distance.pid, 60, 0, 2800); // robotsim tunning
 #endif
 	pid_set_maximums(&mainboard.distance.pid, 0, 3000, 6000);
-	pid_set_out_shift(&mainboard.distance.pid, 6);
+	pid_set_out_shift(&mainboard.distance.pid, 8);
 	pid_set_derivate_filter(&mainboard.distance.pid, 1);
 
 	/* QUADRAMP */

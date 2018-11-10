@@ -484,7 +484,7 @@ class Interp(cmd.Cmd):
             #print (t2 - t1)
 
           # read log data
-          time.sleep(TS/1000.0)
+          time.sleep(TS/10000.0)
           line = self.ser.readline()
           #print(line)
           m = re.match("(-?\+?\d+).(-?\+?\d+): \((-?\+?\d+),(-?\+?\d+),(-?\+?\d+)\) "
@@ -503,12 +503,12 @@ class Interp(cmd.Cmd):
             out = np.append(out, int(m.groups()[9]))
 
             if i>0:
-                v_cons = np.append(v_cons, (f_cons[i] - f_cons[i-1])*1/TS)
-                v_feedback = np.append(v_feedback, (feedback[i] - feedback[i-1])*1/TS)
+                v_cons = np.append(v_cons, (f_cons[i] - f_cons[i-1])*5/TS)
+                v_feedback = np.append(v_feedback, (feedback[i] - feedback[i-1])*5/TS)
 
             if i>1:
-                a_cons = np.append(a_cons, (v_cons[i] - v_cons[i-1])*1/TS)
-                a_feedback = np.append(a_feedback, (v_feedback[i] - v_feedback[i-1])*1/TS)
+                a_cons = np.append(a_cons, (v_cons[i] - v_cons[i-1])*5/TS)
+                a_feedback = np.append(a_feedback, (v_feedback[i] - v_feedback[i-1])*5/TS)
 
             i += 1
             continue

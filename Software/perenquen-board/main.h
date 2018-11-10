@@ -147,7 +147,7 @@
 #define IMP_ENCODERS 		    1024.0
 #define WHEEL_DIAMETER_MM 	25.5
 #define WHEEL_PERIM_MM 	    (WHEEL_DIAMETER_MM * M_PI)
-#define IMP_COEF 			    	200.0
+#define IMP_COEF 			    	10.0
 #define DIST_IMP_MM 		    (((IMP_ENCODERS*4) / WHEEL_PERIM_MM) * IMP_COEF)
 
 /** ERROR NUMS */
@@ -167,7 +167,7 @@
 #define EVENT_PERIOD_LED 			1000000L
 #define EVENT_PERIOD_STRAT		25000L
 #define EVENT_PERIOD_SENSORS	10000L
-#define EVENT_PERIOD_CS 			1000L
+#define EVENT_PERIOD_CS 			5000L
 
 #define CS_PERIOD   ((EVENT_PERIOD_CS/SCHEDULER_UNIT)*SCHEDULER_UNIT) /* in microsecond */
 #define CS_HZ       (1000000. / CS_PERIOD)

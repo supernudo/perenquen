@@ -822,7 +822,7 @@ static void cmd_goto_parsed(void * parsed_result, void * data)
 	while ((err = test_traj_end(TRAJ_FLAGS_NO_NEAR)) == 0 || !cmdline_keypressed())
 	{
 	    t2 = time_get_us2();
-	    if (t2 - t1 >= 2000)
+	    if (t2 - t1 >= 10000)
 	    {
 	        dump_cs_debug("angle", &mainboard.angle.cs);
 	        dump_cs_debug("distance", &mainboard.distance.cs);
