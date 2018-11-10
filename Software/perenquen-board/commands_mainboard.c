@@ -164,16 +164,16 @@ void strat_follow_wall(uint8_t side, int32_t gain)
           angle = error*gain/1024;
           DEBUG(E_USER_STRAT, "LEFT error %d, angle %f\n\r", error, angle);
 
-          trajectory_only_a_rel(&mainboard.traj, (uint32_t)angle);
+          trajectory_only_a_rel(&mainboard.traj, (int32_t)angle);
         }
         else {
           sensor_adc_do_read(S_ADC_DIAG_RIGHT);
 
           error = calib_diag_right - sensor_adc_get_value(S_ADC_DIAG_RIGHT);
-          angle = error*gain/1024;
+          angle = -error*gain/1024;
           DEBUG(E_USER_STRAT, "RIGHT error %d, angle %f\n\r", error, angle);
 
-          trajectory_only_a_rel(&mainboard.traj, (uint32_t)angle);
+          trajectory_only_a_rel(&mainboard.traj, (int32_t)angle);
         }
 
         /* End traj */
