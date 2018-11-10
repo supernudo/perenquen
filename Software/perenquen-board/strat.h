@@ -47,11 +47,11 @@
 #define CENTER_X 1500
 #define CENTER_Y 1000
 
-#define SIDE_LEFT		I2C_SIDE_LEFT
-#define SIDE_RIGHT 	    I2C_SIDE_RIGHT
-#define SIDE_FRONT      SIDE_LEFT
-#define SIDE_REAR       SIDE_RIGHT
-#define SIDE_ALL		I2C_SIDE_ALL
+#define SIDE_LEFT		    0
+#define SIDE_RIGHT 	    1
+#define SIDE_FRONT      2
+#define SIDE_REAR       3
+#define SIDE_ALL		    4
 
 #define GO_FORWARD	    0
 #define GO_BACKWARD	    1
@@ -77,7 +77,7 @@
 
 /* default speeds */
 #define SPEED_DIST_VERY_FAST 	  5000.
-#define SPEED_ANGLE_VERY_FAST 	5000.
+#define SPEED_ANGLE_VERY_FAST 	10000.
 #define SPEED_DIST_FAST 		4000.
 #define SPEED_ANGLE_FAST 		4000.
 #define SPEED_DIST_SLOW 		2500.
@@ -94,20 +94,20 @@
 #define ACC_ANGLE 60
 #else
 #define ACC_DIST  40
-#define ACC_ANGLE 60
+#define ACC_ANGLE 25
 #endif
 
 /* default speeds */
-#define SPEED_DIST_VERY_FAST 	4000
-#define SPEED_DIST_FAST 		  3000
-#define SPEED_ANGLE_VERY_FAST 3000
-#define SPEED_ANGLE_FAST 		  3000
+#define SPEED_DIST_VERY_FAST 	1000
+#define SPEED_DIST_FAST 		  1000
+#define SPEED_ANGLE_VERY_FAST 10000
+#define SPEED_ANGLE_FAST 		  10000
 
 //Do not change
-#define SPEED_DIST_SLOW 		   2000
-#define SPEED_ANGLE_SLOW 		   2000
-#define SPEED_DIST_VERY_SLOW 	  500
-#define SPEED_ANGLE_VERY_SLOW   500
+#define SPEED_DIST_SLOW 		   1000
+#define SPEED_ANGLE_SLOW 		   10000
+#define SPEED_DIST_VERY_SLOW 	 1000
+#define SPEED_ANGLE_VERY_SLOW  10000
 
 #ifdef HOST_VERSION
 #define ACC_DIST  72

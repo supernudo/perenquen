@@ -67,7 +67,7 @@ static void valid_buffer(const char *buf, uint8_t size)
 
 	/* reset CTRL-C for trajectory interruption each time we
 	 * receive a new command */
-	//TODO interrupt_traj_reset();
+	interrupt_traj_reset();
 
 	ret = parse(main_ctx, buf);
 
@@ -93,8 +93,8 @@ void emergency(char c)
 	static uint8_t i = 0;
 
 	/* TODO interrupt traj here */
-	//if (c == '\003')
-	//	interrupt_traj();
+	if (c == '\003')
+		interrupt_traj();
 
 	if ((i == 0 && c == 'p') ||
 	    (i == 1 && c == 'o') ||

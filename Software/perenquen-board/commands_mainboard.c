@@ -79,6 +79,149 @@
 
 #include "strat_utils.h"
 
+uint8_t strat_obstacle(void)
+{
+  #define S_FRONT_OBSTACLE_VALUE 500
+  sensor_adc_do_read(S_ADC_FRONT_LEFT);
+  sensor_adc_do_read(S_ADC_FRONT_RIGHT);
+  return (sensor_adc_get_value(S_ADC_FRONT_LEFT) > S_FRONT_OBSTACLE_VALUE &&
+          sensor_adc_get_value(S_ADC_FRONT_RIGHT) > S_FRONT_OBSTACLE_VALUE);
+}
+
+void strat_follow_wall(uint8_t side, int32_t gain)
+{
+  #define STATE_CALIB         0
+  #define STATE_WAITING_START 1
+  #define STATE_GO_FORWARD    2
+  #define STATE_WALL_TRACKER  3
+  #define STATE_TURN          4
+  #define STATE_TURN_END      5
+
+  #define S_FRONT_START_VALUE     200
+  #define S_FRONT_END_TURN_VALUE  150
+
+  uint8_t state = STATE_CALIB;
+  uint16_t calib_diag_left=0, calib_diag_right=0;
+  int16_t error;
+  float angle = 0.0;
+  uint8_t err;
+  uint8_t running = 1;
+  uint8_t sensor;
+
+
+  interrupt_traj_reset();
+
+  while (running)
+  {
+    switch(state) {
+      case STATE_CALIB:
+        sensor_adc_do_read(S_ADC_DIAG_LEFT);
+        sensor_adc_do_read(S_ADC_DIAG_RIGHT);
+        calib_diag_left = sensor_adc_get_value(S_ADC_DIAG_LEFT);
+        calib_diag_right = sensor_adc_get_value(S_ADC_DIAG_RIGHT);
+        DEBUG(E_USER_STRAT, "calib left %d\n\r", calib_diag_left);
+        DEBUG(E_USER_STRAT, "calib right %d\n\r", calib_diag_right);
+        state = STATE_WAITING_START;
+        break;
+
+      case STATE_WAITING_START:
+        sensor_adc_do_read(S_ADC_FRONT_LEFT);
+        sensor_adc_do_read(S_ADC_FRONT_RIGHT);
+        DEBUG(E_USER_STRAT, "Waiting START...\n\r");
+        while(sensor_adc_get_value(S_ADC_FRONT_LEFT) < S_FRONT_START_VALUE &&
+              sensor_adc_get_value(S_ADC_FRONT_RIGHT) < S_FRONT_START_VALUE)
+        {
+          sensor_adc_do_read(S_ADC_FRONT_LEFT);
+          sensor_adc_do_read(S_ADC_FRONT_RIGHT);
+          time_wait_ms(100);
+        }
+        while(sensor_adc_get_value(S_ADC_FRONT_LEFT) > S_FRONT_START_VALUE ||
+              sensor_adc_get_value(S_ADC_FRONT_RIGHT) > S_FRONT_START_VALUE)
+        {
+          sensor_adc_do_read(S_ADC_FRONT_LEFT);
+          sensor_adc_do_read(S_ADC_FRONT_RIGHT);
+          time_wait_ms(100);
+        }
+
+        DEBUG(E_USER_STRAT, "GO!!!!\n\r");
+        state = STATE_GO_FORWARD;
+        break;
+
+      case STATE_GO_FORWARD:
+        trajectory_d_rel(&mainboard.traj, 30000);
+        DEBUG(E_USER_STRAT, "Go forward\n\r");
+        state = STATE_WALL_TRACKER;
+        break;
+
+      case STATE_WALL_TRACKER:
+
+        /* Wall tracker */
+        //time_wait_ms(100);
+        if (side == SIDE_LEFT) {
+          sensor_adc_do_read(S_ADC_DIAG_LEFT);
+
+          error = calib_diag_left - sensor_adc_get_value(S_ADC_DIAG_LEFT);
+          angle = error*gain/1024;
+          DEBUG(E_USER_STRAT, "LEFT error %d, angle %f\n\r", error, angle);
+
+          trajectory_only_a_rel(&mainboard.traj, (uint32_t)angle);
+        }
+        else {
+          sensor_adc_do_read(S_ADC_DIAG_RIGHT);
+
+          error = calib_diag_right - sensor_adc_get_value(S_ADC_DIAG_RIGHT);
+          angle = error*gain/1024;
+          DEBUG(E_USER_STRAT, "RIGHT error %d, angle %f\n\r", error, angle);
+
+          trajectory_only_a_rel(&mainboard.traj, (uint32_t)angle);
+        }
+
+        /* End traj */
+        err = test_traj_end(END_TRAJ|END_OBSTACLE|END_INTR);
+        if(err == END_TRAJ) {
+          DEBUG(E_USER_STRAT, "traj returns END_TRAJ\n\r");
+          state = STATE_GO_FORWARD;
+        }
+        else if(err == END_OBSTACLE) {
+          DEBUG(E_USER_STRAT, "traj returns END_OBSTACLE\n\r");
+          state = STATE_TURN;
+          //running = 0;
+        }
+        else if(err == END_INTR) {
+          DEBUG(E_USER_STRAT, "traj returns END_INTR\n\r");
+          //running = 0;
+        }
+        break;
+
+      case STATE_TURN:
+        trajectory_a_rel(&mainboard.traj, (side==SIDE_LEFT? -270:270));
+        DEBUG(E_USER_STRAT, "Turn %d start\n\r", (side==SIDE_LEFT? -270:270));
+        state = STATE_TURN_END;
+        break;
+
+      case STATE_TURN_END:
+        DEBUG(E_USER_STRAT, "Waiting turn end...\n\r");
+        sensor = (side==SIDE_LEFT? S_ADC_FRONT_LEFT : S_ADC_FRONT_RIGHT);
+        sensor_adc_do_read(sensor);
+        while(sensor_adc_get_value(sensor) > S_FRONT_END_TURN_VALUE) {
+          sensor_adc_do_read(sensor);
+          err = test_traj_end(END_TRAJ);
+          if(err == END_TRAJ) {
+            DEBUG(E_USER_STRAT, "traj returns END_TRAJ\n\r");
+            state = STATE_TURN;
+          }
+        }
+        trajectory_hardstop(&mainboard.traj);
+        //time_wait_ms(100);
+        DEBUG(E_USER_STRAT, "Turn end\n\r");
+        state = STATE_GO_FORWARD;
+        break;
+
+      default:
+        break;
+    }
+  }
+}
 
 struct cmd_event_result
 {
@@ -238,13 +381,20 @@ struct cmd_start_result
 {
     fixed_string_t arg0;
     fixed_string_t strategy;
-    fixed_string_t debug;
+    int32_t arg2;
+    //fixed_string_t debug;
 };
 
 /* function called when cmd_start is parsed successfully */
 static void cmd_start_parsed(void *parsed_result, void *data)
 {
-    //struct cmd_start_result *res = parsed_result;
+    struct cmd_start_result *res = parsed_result;
+
+    if (!strcmp_P(res->strategy, PSTR("left")))
+      strat_follow_wall(SIDE_LEFT, res->arg2);
+    else
+      strat_follow_wall(SIDE_RIGHT, res->arg2);
+
     //uint8_t old_level = gen.log_level;
     //int8_t c;
 
@@ -277,10 +427,12 @@ static void cmd_start_parsed(void *parsed_result, void *data)
 
 prog_char str_start_arg0[] = "start";
 parse_pgm_token_string_t cmd_start_arg0 = TOKEN_STRING_INITIALIZER(struct cmd_start_result, arg0, str_start_arg0);
-prog_char str_start_strategy[] = "base#homologation#qualification#finals";
+prog_char str_start_strategy[] = "left#right";
 parse_pgm_token_string_t cmd_start_strategy = TOKEN_STRING_INITIALIZER(struct cmd_start_result, strategy, str_start_strategy);
-prog_char str_start_debug[] = "debug#step_debug#match";
-parse_pgm_token_string_t cmd_start_debug = TOKEN_STRING_INITIALIZER(struct cmd_start_result, debug, str_start_debug);
+parse_pgm_token_num_t cmd_start_arg2 = TOKEN_NUM_INITIALIZER(struct cmd_start_result, arg2, INT32);
+
+//prog_char str_start_debug[] = "debug#step_debug#match";
+//parse_pgm_token_string_t cmd_start_debug = TOKEN_STRING_INITIALIZER(struct cmd_start_result, debug, str_start_debug);
 
 prog_char help_start[] = "Start the robot";
 parse_pgm_inst_t cmd_start = {
@@ -291,7 +443,8 @@ parse_pgm_inst_t cmd_start = {
     { /* token list, NULL terminated */
         (prog_void *) & cmd_start_arg0,
         (prog_void *) & cmd_start_strategy,
-        (prog_void *) & cmd_start_debug,
+        (prog_void *) & cmd_start_arg2,
+        //(prog_void *) & cmd_start_debug,
         NULL,
     },
 };

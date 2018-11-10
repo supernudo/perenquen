@@ -327,10 +327,10 @@ uint8_t test_traj_end(uint8_t why)
 		return END_BLOCKING;
 	}
 
-	//if ((why & END_OBSTACLE) && strat_obstacle()) {
-	//	strat_hardstop();
-	//	return END_OBSTACLE;
-	//}
+	if ((why & END_OBSTACLE) && strat_obstacle()) {
+		strat_hardstop();
+		return END_OBSTACLE;
+	}
 
 	/* interrupt traj by user */
 	if ((why & END_INTR) && traj_intr) {
