@@ -203,14 +203,18 @@ void strat_follow_wall(uint8_t side, int32_t gain)
         DEBUG(E_USER_STRAT, "Waiting turn end...\n\r");
         sensor = (side==SIDE_LEFT? S_ADC_FRONT_LEFT : S_ADC_FRONT_RIGHT);
         sensor_adc_do_read(sensor);
-        while(sensor_adc_get_value(sensor) > S_FRONT_END_TURN_VALUE) {
+        err = 0;
+        while(sensor_adc_get_value(sensor) > S_FRONT_END_TURN_VALUE && err == 0) {
           sensor_adc_do_read(sensor);
           err = test_traj_end(END_TRAJ);
-          if(err == END_TRAJ) {
-            DEBUG(E_USER_STRAT, "traj returns END_TRAJ\n\r");
-            state = STATE_TURN;
-          }
         }
+
+        if(err == END_TRAJ) {
+          DEBUG(E_USER_STRAT, "traj returns END_TRAJ\n\r");
+          state = STATE_TURN;
+          break;
+        }
+
         trajectory_hardstop(&mainboard.traj);
         //time_wait_ms(100);
         DEBUG(E_USER_STRAT, "Turn end\n\r");
