@@ -399,6 +399,9 @@ static void cmd_start_parsed(void *parsed_result, void *data)
     else
       strat_follow_wall(SIDE_RIGHT, res->arg2);
 
+    // OK speed 1000 gain 100
+    // OK speed 1500 gain 200
+
     //uint8_t old_level = gen.log_level;
     //int8_t c;
 
