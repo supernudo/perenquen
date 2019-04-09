@@ -1,7 +1,7 @@
-/*  
+/*
  *  Copyright Droids Corporation
  *  Olivier Matz <zer0@droids-corp.org>
- * 
+ *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation; either version 2 of the License, or
@@ -20,7 +20,7 @@
  *
  */
 
-/*  
+/*
  *  Copyright Javier Baliñas Santos (2018)
  *  Javier Baliñas Santos <balinas@gmail.com>
  *
@@ -54,5 +54,9 @@ static inline int16_t cmdline_getchar(void) {
 static inline uint8_t cmdline_getchar_wait(void) {
 	return uart_recv(CMDLINE_UART);
 }
+
+/* Echo Enable/Disable */
+void cmdline_echo_enable (void);
+void cmdline_echo_disable (void);
 
 #endif

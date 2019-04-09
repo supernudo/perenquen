@@ -12,6 +12,22 @@
             <asminc-extensions/>
             <sourceEncoding>ISO-8859-1</sourceEncoding>
             <make-dep-projects/>
+            <sourceRootList>
+                <sourceRootElem>..</sourceRootElem>
+                <sourceRootElem>../../common</sourceRootElem>
+                <sourceRootElem>../../libs/aversive4dspic/modules/devices/robot/trajectory_manager_v2</sourceRootElem>
+                <sourceRootElem>../../libs/aversive4dspic/modules/devices/robot/position_manager</sourceRootElem>
+                <sourceRootElem>../../libs/aversive4dspic/modules/devices/robot/trajectory_manager</sourceRootElem>
+            </sourceRootList>
+            <confList>
+                <confElem>
+                    <name>default</name>
+                    <type>2</type>
+                </confElem>
+            </confList>
+            <formatting>
+                <project-formatting-style>false</project-formatting-style>
+            </formatting>
         </data>
     </configuration>
 </project>

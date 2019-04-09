@@ -174,18 +174,18 @@ void do_adc_sensor_read(struct adc_sensor *adcs)
 /* define wall sensors read, see in sensor.h */
 #define WALL_SENSORS_DELAY_US 50
 static struct adc_sensor adc_sensors[S_ADC_MAX] = {
-	[S_ADC_FRONT_LEFT] 			= { .adc_channel = 1, .enable_port = &LATD, .enable_pin = 5, 		.delay_us = WALL_SENSORS_DELAY_US},
-	[S_ADC_FRONT_LEFT_OFF] 	= { .adc_channel = 1, .enable_port = NULL, .enable_pin = NULL, 	.delay_us = 1},
-	[S_ADC_FRONT_RIGHT] 		= { .adc_channel = 5, .enable_port = &LATD, .enable_pin = 2, 		.delay_us = WALL_SENSORS_DELAY_US},
-	[S_ADC_FRONT_RIGHT_OFF] = { .adc_channel = 5, .enable_port = NULL, .enable_pin = NULL, 	.delay_us = 1},
-	[S_ADC_DIAG_LEFT] 			= { .adc_channel = 3, .enable_port = &LATD, .enable_pin = 4, 		.delay_us = WALL_SENSORS_DELAY_US},
-	[S_ADC_DIAG_LEFT_OFF] 	= { .adc_channel = 3, .enable_port = NULL, .enable_pin = NULL, 	.delay_us = 1},
-	[S_ADC_DIAG_RIGHT] 			= { .adc_channel = 4, .enable_port = &LATD, .enable_pin = 4, 		.delay_us = WALL_SENSORS_DELAY_US},
-	[S_ADC_DIAG_RIGHT_OFF] 	= { .adc_channel = 4, .enable_port = NULL, .enable_pin = NULL, 	.delay_us = 1},
-	[S_ADC_BATTERY] 				= { .adc_channel = 0, .enable_port = NULL, .enable_pin = NULL, 	.delay_us = 1},
-	[S_ADC_GYRO] 						= { .adc_channel = 30,.enable_port = NULL, .enable_pin = NULL, 	.delay_us = 1},
-	[S_ADC_GYRO_REF] 				= { .adc_channel = 29,.enable_port = NULL, .enable_pin = NULL, 	.delay_us = 1},
-	[S_ADC_FLASH] 					= { .adc_channel = 2, .enable_port = NULL, .enable_pin = NULL, 	.delay_us = 1},
+	[S_ADC_FRONT_LEFT] 		= { .adc_channel = 1, .enable_port = &LATD, .enable_pin = 5, 		.delay_us = WALL_SENSORS_DELAY_US},
+	[S_ADC_FRONT_LEFT_OFF] 	= { .adc_channel = 1, .enable_port = NULL,  .enable_pin = NULL, 	.delay_us = 1},
+	[S_ADC_FRONT_RIGHT] 	= { .adc_channel = 5, .enable_port = &LATD, .enable_pin = 2, 		.delay_us = WALL_SENSORS_DELAY_US},
+	[S_ADC_FRONT_RIGHT_OFF] = { .adc_channel = 5, .enable_port = NULL,  .enable_pin = NULL, 	.delay_us = 1},
+	[S_ADC_DIAG_LEFT] 		= { .adc_channel = 3, .enable_port = &LATD, .enable_pin = 4, 		.delay_us = WALL_SENSORS_DELAY_US},
+	[S_ADC_DIAG_LEFT_OFF] 	= { .adc_channel = 3, .enable_port = NULL,  .enable_pin = NULL, 	.delay_us = 1},
+	[S_ADC_DIAG_RIGHT] 		= { .adc_channel = 4, .enable_port = &LATD, .enable_pin = 4, 		.delay_us = WALL_SENSORS_DELAY_US},
+	[S_ADC_DIAG_RIGHT_OFF] 	= { .adc_channel = 4, .enable_port = NULL,  .enable_pin = NULL, 	.delay_us = 1},
+	[S_ADC_BATTERY] 		= { .adc_channel = 0, .enable_port = NULL,  .enable_pin = NULL, 	.delay_us = 1},
+	[S_ADC_GYRO] 			= { .adc_channel = 30,.enable_port = NULL,  .enable_pin = NULL, 	.delay_us = 1},
+	[S_ADC_GYRO_REF] 		= { .adc_channel = 29,.enable_port = NULL,  .enable_pin = NULL, 	.delay_us = 1},
+	[S_ADC_FLASH] 			= { .adc_channel = 2, .enable_port = NULL,  .enable_pin = NULL, 	.delay_us = 1},
 };
 
 void sensor_adc_do_read (uint8_t num) {

@@ -41,6 +41,8 @@
 #include <position_manager.h>
 #include <trajectory_manager.h>
 
+
+
 /* SOME USEFUL MACROS AND VALUES  *********************************************/
 
 /* uart 0 is for cmds and uart 1 is
@@ -157,17 +159,17 @@
 
 
 /* EVENTS PRIORITIES */
-#define EVENT_PRIORITY_LED 		 170
+#define EVENT_PRIORITY_LED 	   170
 #define EVENT_PRIORITY_TIME    160
+#define EVENT_PRIORITY_CS      150
 #define EVENT_PRIORITY_SENSORS 120
-#define EVENT_PRIORITY_CS      100
 #define EVENT_PRIORITY_STRAT   80
 
 /* EVENTS PERIODS */
 #define EVENT_PERIOD_LED 			1000000L
 #define EVENT_PERIOD_STRAT		25000L
 #define EVENT_PERIOD_SENSORS	10000L
-#define EVENT_PERIOD_CS 			5000L
+#define EVENT_PERIOD_CS 			1000L
 
 #define CS_PERIOD   ((EVENT_PERIOD_CS/SCHEDULER_UNIT)*SCHEDULER_UNIT) /* in microsecond */
 #define CS_HZ       (1000000. / CS_PERIOD)
@@ -184,6 +186,32 @@ struct cs_block {
   struct pid_filter pid;
 	struct quadramp_filter qr;
 	struct blocking_detection bd;
+};
+
+struct tm_cs_block {
+	/* total 5 x 4 bytes = 20 bytes */
+	int32_t consign;
+	int32_t fconsign;
+	int32_t error;
+	int32_t ffeedback;
+	int32_t out;
+};
+
+struct tm_block {
+	uint8_t header[4];						// 4 bytes
+	uint32_t time_ms;							// 4 bytes
+	struct tm_cs_block angle;			// 20 bytes
+	struct tm_cs_block distance;	// 20 bytes
+																// 48 bytes total
+
+	// wall sensors: 4 x 2 = 8 bytes
+	// gyro: 								 2 bytes
+	// battery: 						 1 byte
+	// encoders:		 2 x 4 = 8 bytes
+	// x, y, a:			 3 x 2 = 6 bytes
+	// i, j:				 2 x 1 = 2 bytes
+	// slot_info:						 1 byte
+	// total:							  74 bytes
 };
 
 /* genboard */
@@ -223,12 +251,13 @@ struct mainboard
 #define DO_BD         16
 #define DO_TIMER      32
 #define DO_POWER      64
+#define DO_TM_DATA		128
 
 	uint8_t our_color;
 	#define I2C_COLOR_YELLOW	0
 	#define AREA_X 10
 	#define AREA_Y 10
-    #define OBS_CLERANCE 1
+  #define OBS_CLERANCE 1
 
 	/* control systems */
 	struct cs_block angle;
@@ -246,6 +275,9 @@ struct mainboard
 	/* current motors pwm */
 	int32_t motor_pwm_left;
 	int32_t motor_pwm_right;
+
+	/* telemetry data */
+	struct tm_block tm;
 
 };
 

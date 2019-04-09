@@ -740,22 +740,26 @@ struct cmd_goto_result
     int32_t arg4;
 };
 
+void tm_data_send(void);
+
 /* function called when cmd_goto is parsed successfully */
 static void cmd_goto_parsed(void * parsed_result, void * data)
 {
     struct cmd_goto_result * res = parsed_result;
     uint8_t err = 0;
-    microseconds t1, t2;
+    uint8_t dump = 0;
 
     interrupt_traj_reset();
 
     if (!strcmp_P(res->arg1, PSTR("a_rel")))
     {
         trajectory_a_rel(&mainboard.traj, res->arg2);
+				dump = 'a';
     }
     else if (!strcmp_P(res->arg1, PSTR("d_rel")))
     {
         trajectory_d_rel(&mainboard.traj, res->arg2);
+				dump = 'd';
     }
     else if (!strcmp_P(res->arg1, PSTR("a_abs")))
     {
@@ -817,23 +821,22 @@ static void cmd_goto_parsed(void * parsed_result, void * data)
         trajectory_d_a_rel(&mainboard.traj, res->arg2, res->arg3);
     }
 
-
-	t1 = time_get_us2();
 	while ((err = test_traj_end(TRAJ_FLAGS_NO_NEAR)) == 0 || !cmdline_keypressed())
 	{
-	    t2 = time_get_us2();
-	    if (t2 - t1 >= 10000)
-	    {
-	        dump_cs_debug("angle", &mainboard.angle.cs);
-	        dump_cs_debug("distance", &mainboard.distance.cs);
-	        t1 = t2;
-	    }
+		if (dump == 'a') {
+			LED1_ON();
+			//dump_cs_short("a", &mainboard.angle.cs);
+			tm_data_send();
+			LED1_OFF();
+		}
+		else if(dump == 'd')
+			dump_cs_short("d", &mainboard.distance.cs);
 
 		if (err!=0 && err != END_TRAJ && err != END_NEAR) {
 			strat_hardstop();
 			break;
 		}
-    }
+  }
 
 	printf_P(PSTR("returned %s\r\n"), get_err(err));
 

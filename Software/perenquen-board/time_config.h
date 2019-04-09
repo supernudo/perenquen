@@ -20,4 +20,4 @@
  */
 
 /** precision of the time processor, in us */
-#define TIME_PRECISION 10000l
+#define TIME_PRECISION 250l

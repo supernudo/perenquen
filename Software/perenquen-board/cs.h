@@ -31,4 +31,5 @@
 void maindspic_cs_init(void);
 void dump_cs(const char *name, struct cs *cs);
 void dump_cs_debug(const char *name, struct cs *cs);
+void dump_cs_short(const char *name, struct cs *cs);
 void dump_pid(const char *name, struct pid_filter *pid);

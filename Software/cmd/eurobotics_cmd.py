@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 
 import os,sys,atexit
-#import termios
+import termios
 import serial
 from select import select
 import cmd
@@ -216,7 +216,7 @@ class SerialLogger:
 
 class Interp(cmd.Cmd):
     prompt = "Eurobotics > "
-    def __init__(self, tty, baudrate=38400):
+    def __init__(self, tty, baudrate=921600):
         cmd.Cmd.__init__(self)
         self.ser = serial.Serial(tty,baudrate=baudrate)
         self.escape  = "\x01" # C-a
@@ -265,7 +265,7 @@ class Interp(cmd.Cmd):
         else:
             log.error("No log to stop")
 
-    """
+
     def do_raw(self, args):
         "Switch to RAW mode"
         stdin = os.open("/dev/stdin",os.O_RDONLY)
@@ -319,7 +319,7 @@ class Interp(cmd.Cmd):
         finally:
             termios.tcsetattr(stdin, termios.TCSADRAIN, stdin_termios)
             log.info("Back to normal mode")
-    """
+
     def bootloader(self, filename, boardnum):
         self.ser.write("")
         time.sleep(0.4)
@@ -446,16 +446,18 @@ class Interp(cmd.Cmd):
         print name, cons, gain_p, gain_i, gain_d
 
         self.ser.write("position set 1500 1000 0\n")
+        print("position set 1500 1000 0\n")
         time.sleep(1)
 
         # cs log on
         self.ser.write("log type cs on\n")
+        print("log type cs on\n")
         time.sleep(0.1)
 
-        if name == "distance":
+        if name == "d":
             self.ser.write("gain distance %d %d %d\n"%(gain_p, gain_i, gain_d))
             self.ser.write("goto d_rel %d\n"%(cons))
-        elif name == "angle":
+        elif name == "a":
             self.ser.write("gain angle %d %d %d\n"%(gain_p, gain_i, gain_d))
             self.ser.write("goto a_rel %d\n"%(cons))
         else:
@@ -466,9 +468,10 @@ class Interp(cmd.Cmd):
         time.sleep(0.01)
         t1 = time.time()
 
-        TS = 2
+        TS = 5
         i = 0
         t = np.zeros(0)
+        us = np.zeros(0)
         cons = f_cons = err = feedback = out = np.zeros(0)
         v_cons = v_feedback = np.zeros(1)
         a_cons = a_feedback = a_cons = a_feedback = np.zeros(2)
@@ -486,29 +489,36 @@ class Interp(cmd.Cmd):
           # read log data
           time.sleep(TS/10000.0)
           line = self.ser.readline()
-          #print(line)
-          m = re.match("(-?\+?\d+).(-?\+?\d+): \((-?\+?\d+),(-?\+?\d+),(-?\+?\d+)\) "
-                       "%s cons= (-?\+?\d+) fcons= (-?\+?\d+) err= (-?\+?\d+) "
-                       "in= (-?\+?\d+) out= (-?\+?\d+)"%(name), line)
+
+          tm_data = struct.struct('Iiiiiiiiiiic')
+
+          print(line)
+          #m = re.match("(-?\+?\d+).(-?\+?\d+): \((-?\+?\d+),(-?\+?\d+),(-?\+?\d+)\) "
+          #             "%s cons= (-?\+?\d+) fcons= (-?\+?\d+) err= (-?\+?\d+) "
+          #             "in= (-?\+?\d+) out= (-?\+?\d+)"%(name), line)
+
+          m = re.match("%s (\d+) (-?\+?\d+) (-?\+?\d+) (-?\+?\d+) (-?\+?\d+) (-?\+?\d+)"%(name), line)
+
 
           # data logging
           if m:
             #print line
             #print m.groups()
             t = np.append(t, i*TS)
-            cons = np.append(cons, int(m.groups()[5]))
-            f_cons = np.append(f_cons, int(m.groups()[6]))
-            err = np.append(err, int(m.groups()[7]))
-            feedback = np.append(feedback, int(m.groups()[8]))
-            out = np.append(out, int(m.groups()[9]))
+            us = np.append(us, int(m.groups()[0]))
+            cons = np.append(cons, int(m.groups()[1]))
+            f_cons = np.append(f_cons, int(m.groups()[2]))
+            err = np.append(err, int(m.groups()[3]))
+            feedback = np.append(feedback, int(m.groups()[4]))
+            out = np.append(out, int(m.groups()[5]))
 
             if i>0:
-                v_cons = np.append(v_cons, (f_cons[i] - f_cons[i-1])*5/TS)
-                v_feedback = np.append(v_feedback, (feedback[i] - feedback[i-1])*5/TS)
+                v_cons = np.append(v_cons, (f_cons[i] - f_cons[i-1])/(us[i]-us[i-1]))
+                v_feedback = np.append(v_feedback, (feedback[i] - feedback[i-1])/(us[i]-us[i-1]))
 
             if i>1:
-                a_cons = np.append(a_cons, (v_cons[i] - v_cons[i-1])*5/TS)
-                a_feedback = np.append(a_feedback, (v_feedback[i] - v_feedback[i-1])*5/TS)
+                a_cons = np.append(a_cons, (v_cons[i] - v_cons[i-1])/(us[i]-us[i-1]))
+                a_feedback = np.append(a_feedback, (v_feedback[i] - v_feedback[i-1])/(us[i]-us[i-1]))
 
             i += 1
             continue
@@ -517,45 +527,52 @@ class Interp(cmd.Cmd):
           m = re.match("returned", line)
           if m:
             print line.rstrip()
+            us = us - us[0]
 
             plt.figure(1)
             plt.subplot(311)
-            plt.plot(t,v_cons, label="consigna")
-            plt.plot(t,v_feedback, label="feedback")
+            plt.plot(us,v_cons,'.-', label="consigna")
+            plt.plot(us,v_feedback,'.-', label="feedback")
             plt.ylabel('v (pulsos/Ts)')
             plt.grid(True)
             plt.legend()
             plt.title('%s kp=%s, ki=%d, kd=%d'%(name, gain_p, gain_i, gain_d))
 
             plt.subplot(312)
-            plt.plot(t,a_cons, label="consigna")
-            plt.plot(t,a_feedback, label="feedback")
+            plt.plot(us,a_cons,'.-', label="consigna")
+            plt.plot(us,a_feedback,'.-', label="feedback")
             plt.ylabel('a (pulsos/Ts^2)')
             plt.grid(True)
             plt.legend()
 
             plt.subplot(313)
-            plt.plot(t,out)
+            plt.plot(us,out,'.-')
             plt.xlabel('t (ms)')
             plt.ylabel('u (cuentas)')
             plt.grid(True)
-            plt.legend()
+
 
             plt.figure(2)
-            plt.subplot(211)
-            plt.plot(t,f_cons-feedback[0], label="consigna")
-            plt.plot(t,feedback-feedback[0], label="feedback")
+            plt.subplot(311)
+            plt.plot(us,f_cons-feedback[0], '.-', label="consigna")
+            plt.plot(us,feedback-feedback[0], '.-', label="feedback")
             plt.ylabel('posicion (pulsos)')
             plt.grid(True)
             plt.legend()
             plt.title('%s kp=%s, ki=%d, kd=%d'%(name, gain_p, gain_i, gain_d))
 
-            plt.subplot(212)
-            plt.plot(t,err)
+            plt.subplot(312)
+            plt.plot(us,err, '.-')
             plt.xlabel('t (ms)')
             plt.ylabel('error (pulsos)')
             plt.grid(True)
-            plt.legend()
+
+
+            plt.subplot(313)
+            plt.plot(us,out,'.-')
+            plt.xlabel('t (ms)')
+            plt.ylabel('u (cuentas)')
+            plt.grid(True)
 
             plt.show()
             break

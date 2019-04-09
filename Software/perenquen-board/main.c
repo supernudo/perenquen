@@ -52,6 +52,8 @@
 #include <parse.h>
 #include <rdline.h>
 
+#include <oscillator.h>
+
 #include "main.h"
 #include "strat.h"
 #include "cmdline.h"
@@ -197,6 +199,32 @@ void io_pins_init(void)
 }
 #endif /* !HOST_VERSION */
 
+void hc05_programming(void) {
+
+	/* enable interrupts */
+	sei();
+
+	printf("AT\n\r");
+	wait_ms(100);
+	printf("AT\n\r");
+	wait_ms(100);
+	//printf("AT+PSWD=goma\n\r");
+	//wait_ms(100);
+	//printf("AT+UART=115200,0,0\n\r");	
+	//printf("AT+UART=230400,0,0\n\r");	
+	//printf("AT+UART=460800,0,0\n\r");	
+	printf("AT+UART=921600,0,0\n\r");	
+	//printf("AT+UART=1382400,0,0\n\r");		
+	wait_ms(100);
+
+    /* LEDS */
+	LED1_ON();
+	//LED2_OFF();
+	LED3_ON();
+	LED4_ON();
+    
+	while(1);
+}
 
 int main(void)
 {
@@ -232,6 +260,7 @@ int main(void)
 #ifndef HOST_VERSION
 	/* UART */
 	uart_init();
+	//hc05_programming();
 	uart_register_rx_event(CMDLINE_UART, emergency);
 #endif
 
@@ -279,7 +308,7 @@ int main(void)
 
 	/* Battery check */
 	sensor_adc_do_read(S_ADC_BATTERY);
-	if (3*sensor_adc_get_value_mv(S_ADC_BATTERY) <= 6000)	{
+	if (3*sensor_adc_get_value_mv(S_ADC_BATTERY) <= 6300)	{
 		while(1) {
 			LED1_TOGGLE();
 			//LED2_TOGGLE();
@@ -308,6 +337,7 @@ int main(void)
 	printf("Hi there!! I'm Perenquen Robot :) \r\n");
 	printf("Battery voltage: %d mV\n\r", 3*sensor_adc_get_value_mv(S_ADC_BATTERY));
 	printf("\r\n");
+	printf("M=%d\n\r", (int)M);
 
 	#if 0
 	while (1) {

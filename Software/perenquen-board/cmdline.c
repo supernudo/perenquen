@@ -54,9 +54,25 @@
 /* see in commands.c for the list of commands. */
 extern parse_pgm_ctx_t main_ctx[];
 
+/* Echo Enable/Disable */
+static uint8_t echo_enable = 0;
+
+void cmdline_echo_enable (void) {
+	echo_enable = 1;
+}
+
+void cmdline_echo_disable (void) {
+	echo_enable = 0;
+}
+
 /* generic write char function */
 static void write_char(char c)
 {
+	/* if echo is OFF, returns */
+	if (!echo_enable) {
+		return;
+	}
+
 	uart_send(CMDLINE_UART, c);
 }
 

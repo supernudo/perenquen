@@ -4,10 +4,13 @@ Datasheets
 Electronics/datasheets
 rescue-backup
 Software/tools
+Software/resources
 compiler_files
 dist
 debug
 built
 .tags
+.tags1
 *.d
 *.o
+Wiki

@@ -56,6 +56,8 @@
 #include <parse.h>
 #include <rdline.h>
 
+#include <uart.h>
+
 #include "main.h"
 #include "robotsim.h"
 #include "strat.h"
@@ -69,6 +71,8 @@ static void do_cs(void *dummy)
 {
 	static uint16_t cpt = 0;
 	static int32_t old_a = 0, old_d = 0;
+
+	//LED1_ON();
 
 #ifdef HOST_VERSION
 	robotsim_update();
@@ -148,6 +152,8 @@ static void do_cs(void *dummy)
 		robotsim_dump();
 	}
 #endif
+
+	//LED1_OFF();
 }
 
 
@@ -169,6 +175,25 @@ void dump_cs(const char *name, struct cs *cs)
 		 cs_get_out(cs));
 }
 
+void dump_cs_short(const char *name, struct cs *cs)
+{
+	static char buff[128];
+	uint8_t i, size=96;
+
+	//printf("%s %ld %+.5ld %+.5ld %+.5ld %+.5ld %+.5ld\r\n",
+	//	 name, time_get_us2()/1000, cs_get_consign(cs), cs_get_filtered_consign(cs),
+	//	 cs_get_error(cs), cs_get_filtered_feedback(cs),
+	//	 cs_get_out(cs));
+
+	//size = sprintf(buff, "%s %ld %+.5ld %+.5ld %+.5ld %+.5ld %+.5ld\r\n",
+	// 		 name, time_get_us2()/1000, cs_get_consign(cs), cs_get_filtered_consign(cs),
+	// 		 cs_get_error(cs), cs_get_filtered_feedback(cs),
+	// 		 cs_get_out(cs));
+
+	for(i=0; i<size; i++)
+	 	uart_send(0, buff[i]);
+}
+
 void dump_pid(const char *name, struct pid_filter *pid)
 {
 	printf_P(PSTR("%s P= %+.8"PRIi32" I= %+.8"PRIi32" D= %+.8"PRIi32" out= %+.8"PRIi32"\r\n"),
@@ -177,6 +202,30 @@ void dump_pid(const char *name, struct pid_filter *pid)
 		 pid_get_value_I(pid) * pid_get_gain_I(pid),
 		 pid_get_value_D(pid) * pid_get_gain_D(pid),
 		 pid_get_value_out(pid));
+}
+
+void tm_data_send(void)
+{
+	void *pdata = (void*)&mainboard.tm;
+	uint8_t data_size = sizeof(struct tm_block);
+    uint8_t i;
+
+	mainboard.tm.time_ms = time_get_us2()/1000;
+	mainboard.tm.angle.consign = cs_get_consign(&mainboard.angle.cs);
+	mainboard.tm.angle.fconsign = cs_get_filtered_consign(&mainboard.angle.cs);
+	mainboard.tm.angle.error = cs_get_error(&mainboard.angle.cs);
+	mainboard.tm.angle.ffeedback = cs_get_filtered_feedback(&mainboard.angle.cs);
+	mainboard.tm.angle.out = cs_get_out(&mainboard.angle.cs);
+	mainboard.tm.distance.consign = cs_get_consign(&mainboard.distance.cs);
+	mainboard.tm.distance.fconsign = cs_get_filtered_consign(&mainboard.distance.cs);
+	mainboard.tm.distance.error = cs_get_error(&mainboard.distance.cs);
+	mainboard.tm.distance.ffeedback = cs_get_filtered_feedback(&mainboard.distance.cs);
+	mainboard.tm.distance.out = cs_get_out(&mainboard.distance.cs);
+	mainboard.tm.tail = '\n';
+
+
+	for(i=0; i<data_size; i++)
+		uart_send(0,*(char*)pdata++);
 }
 
 //void motor_pwm_set_and_save(void *pwm_gen_num, int32_t val);
@@ -230,7 +279,7 @@ void maindspic_cs_init(void)
 	/* PID */
 	pid_init(&mainboard.angle.pid);
 #ifndef HOST_VERSION
-	pid_set_gains(&mainboard.angle.pid, 800, 0, 0); // real
+	pid_set_gains(&mainboard.angle.pid, 1400, 0, 200); // real
 #else
 //	pid_set_gains(&mainboard.angle.pid, 40, 0, 1200); // robotsim tunning
 //	pid_set_gains(&mainboard.angle.pid, 300, 0, 3500); // robotsim tunning
@@ -262,7 +311,7 @@ void maindspic_cs_init(void)
 	/* PID */
 	pid_init(&mainboard.distance.pid);
 #ifndef HOST_VERSION
-	pid_set_gains(&mainboard.distance.pid, 800, 0, 0); // real
+	pid_set_gains(&mainboard.distance.pid, 1400, 0, 400); // real
 #else
 //	pid_set_gains(&mainboard.distance.pid, 40, 0, 1200); // robotsim tunning
 //	pid_set_gains(&mainboard.distance.pid, 300, 0, 3500); // robotsim tunning
