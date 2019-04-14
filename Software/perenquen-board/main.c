@@ -64,6 +64,8 @@
 #include "robotsim.h"
 #include "strat_base.h"
 
+#include "telemetry.h"
+
 struct genboard gen;
 struct mainboard mainboard;
 
@@ -208,13 +210,20 @@ void hc05_programming(void) {
 	wait_ms(100);
 	printf("AT\n\r");
 	wait_ms(100);
+
+	printf("AT+ORGL\n\r");
+	wait_ms(1000);
+	printf("AT\n\r");
+	wait_ms(100);
+
 	//printf("AT+PSWD=goma\n\r");
 	//wait_ms(100);
-	//printf("AT+UART=115200,0,0\n\r");	
-	//printf("AT+UART=230400,0,0\n\r");	
-	//printf("AT+UART=460800,0,0\n\r");	
-	printf("AT+UART=921600,0,0\n\r");	
-	//printf("AT+UART=1382400,0,0\n\r");		
+
+	//printf("AT+UART=115200,0,0\n\r");
+	//printf("AT+UART=230400,0,0\n\r");
+	//printf("AT+UART=460800,0,0\n\r");
+	printf("AT+UART=921600,0,0\n\r");
+	//printf("AT+UART=1382400,0,0\n\r");
 	wait_ms(100);
 
     /* LEDS */
@@ -222,7 +231,7 @@ void hc05_programming(void) {
 	//LED2_OFF();
 	LED3_ON();
 	LED4_ON();
-    
+
 	while(1);
 }
 
@@ -359,6 +368,9 @@ int main(void)
 		IRQ_UNLOCK(flags);
 	}
 	#endif
+
+	/* init telemetry */
+	tm_data_init();
 
 	/* process commands, never returns */
 	cmdline_interact();

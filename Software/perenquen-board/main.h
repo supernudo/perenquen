@@ -42,7 +42,6 @@
 #include <trajectory_manager.h>
 
 
-
 /* SOME USEFUL MACROS AND VALUES  *********************************************/
 
 /* uart 0 is for cmds and uart 1 is
@@ -188,32 +187,6 @@ struct cs_block {
 	struct blocking_detection bd;
 };
 
-struct tm_cs_block {
-	/* total 5 x 4 bytes = 20 bytes */
-	int32_t consign;
-	int32_t fconsign;
-	int32_t error;
-	int32_t ffeedback;
-	int32_t out;
-};
-
-struct tm_block {
-	uint8_t header[4];						// 4 bytes
-	uint32_t time_ms;							// 4 bytes
-	struct tm_cs_block angle;			// 20 bytes
-	struct tm_cs_block distance;	// 20 bytes
-																// 48 bytes total
-
-	// wall sensors: 4 x 2 = 8 bytes
-	// gyro: 								 2 bytes
-	// battery: 						 1 byte
-	// encoders:		 2 x 4 = 8 bytes
-	// x, y, a:			 3 x 2 = 6 bytes
-	// i, j:				 2 x 1 = 2 bytes
-	// slot_info:						 1 byte
-	// total:							  74 bytes
-};
-
 /* genboard */
 struct genboard
 {
@@ -275,9 +248,6 @@ struct mainboard
 	/* current motors pwm */
 	int32_t motor_pwm_left;
 	int32_t motor_pwm_right;
-
-	/* telemetry data */
-	struct tm_block tm;
 
 };
 

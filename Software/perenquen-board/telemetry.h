@@ -42,6 +42,11 @@ struct tm_cs_data
 /* Telemetry data packet */
 struct tm_data
 {
+	#define TM_HEADER_BYTE_0 'T'
+	#define TM_HEADER_BYTE_1 'M'
+	#define TM_HEADER_BYTE_2 'D'
+	#define TM_HEADER_BYTE_3 'T'
+	
 	uint8_t header[4];						// 4 bytes
 	uint32_t time_ms;							// 4 bytes
 	struct tm_cs_data angle;			// 20 bytes
@@ -64,3 +69,5 @@ void tm_data_init(void);
 
 /* Update telemetry packet and send it thru UART */
 void tm_data_send(void);
+
+#endif /* _TELEMETRY_H_ */

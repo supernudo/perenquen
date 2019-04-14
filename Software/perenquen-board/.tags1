@@ -3,15 +3,223 @@
 !_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
 !_TAG_PROGRAM_NAME	Exuberant Ctags	//
 !_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
-!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
-gen	/media/datos/Proyectos/Perenquen/Software/perenquen/main.c	/^struct genboard gen;$/;"	variable	line:76	typeref:struct:genboard
-mainboard	/media/datos/Proyectos/Perenquen/Software/perenquen/main.c	/^struct mainboard mainboard;$/;"	variable	line:77	typeref:struct:mainboard
-slavedspic	/media/datos/Proyectos/Perenquen/Software/perenquen/main.c	/^struct slavedspic slavedspic;$/;"	variable	line:78	typeref:struct:slavedspic
-beaconboard	/media/datos/Proyectos/Perenquen/Software/perenquen/main.c	/^struct beaconboard beaconboard;$/;"	variable	line:79	typeref:struct:beaconboard
-robot_2nd	/media/datos/Proyectos/Perenquen/Software/perenquen/main.c	/^struct robot_2nd robot_2nd;$/;"	variable	line:80	typeref:struct:robot_2nd
-do_led_blink	/media/datos/Proyectos/Perenquen/Software/perenquen/main.c	/^void do_led_blink(void *dummy)$/;"	function	line:85	signature:(void *dummy)
-main_timer_interrupt	/media/datos/Proyectos/Perenquen/Software/perenquen/main.c	/^static void main_timer_interrupt(void)$/;"	function	line:91	file:	signature:(void)
-main_timer_init	/media/datos/Proyectos/Perenquen/Software/perenquen/main.c	/^void main_timer_init(void)$/;"	function	line:99	signature:(void)
-_T1Interrupt	/media/datos/Proyectos/Perenquen/Software/perenquen/main.c	/^void __attribute__((__interrupt__, no_auto_psv)) _T1Interrupt(void)$/;"	function	line:111	signature:(void)
-io_pins_init	/media/datos/Proyectos/Perenquen/Software/perenquen/main.c	/^void io_pins_init(void)$/;"	function	line:117	signature:(void)
-main	/media/datos/Proyectos/Perenquen/Software/perenquen/main.c	/^int main(void)$/;"	function	line:183	signature:(void)
+!_TAG_PROGRAM_VERSION	5.8	//
+ERROUT	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^#define ERROUT(/;"	macro	line:71	file:
+cmd_traj_speed_result	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^struct cmd_traj_speed_result$/;"	struct	line:80	file:
+arg0	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^    fixed_string_t arg0;$/;"	member	line:82	struct:cmd_traj_speed_result	file:
+arg1	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^    fixed_string_t arg1;$/;"	member	line:83	struct:cmd_traj_speed_result	file:
+s	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^    int16_t s;$/;"	member	line:84	struct:cmd_traj_speed_result	file:
+cmd_traj_speed_parsed	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^static void cmd_traj_speed_parsed(void *parsed_result, void *data)$/;"	function	line:88	file:	signature:(void *parsed_result, void *data)
+str_traj_speed_arg0	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^prog_char str_traj_speed_arg0[] = "traj_speed";$/;"	variable	line:107
+cmd_traj_speed_arg0	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^parse_pgm_token_string_t cmd_traj_speed_arg0 = TOKEN_STRING_INITIALIZER(struct cmd_traj_speed_result, arg0, str_traj_speed_arg0);$/;"	variable	line:108
+str_traj_speed_arg1	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^prog_char str_traj_speed_arg1[] = "angle#distance";$/;"	variable	line:109
+cmd_traj_speed_arg1	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^parse_pgm_token_string_t cmd_traj_speed_arg1 = TOKEN_STRING_INITIALIZER(struct cmd_traj_speed_result, arg1, str_traj_speed_arg1);$/;"	variable	line:110
+cmd_traj_speed_s	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^parse_pgm_token_num_t cmd_traj_speed_s = TOKEN_NUM_INITIALIZER(struct cmd_traj_speed_result, s, INT16);$/;"	variable	line:111
+help_traj_speed	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^prog_char help_traj_speed[] = "Set traj_speed values for trajectory manager";$/;"	variable	line:113
+cmd_traj_speed	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^parse_pgm_inst_t cmd_traj_speed = {$/;"	variable	line:114
+str_traj_speed_show_arg	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^prog_char str_traj_speed_show_arg[] = "show";$/;"	variable	line:129
+cmd_traj_speed_show_arg	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^parse_pgm_token_string_t cmd_traj_speed_show_arg = TOKEN_STRING_INITIALIZER(struct cmd_traj_speed_result, arg1, str_traj_speed_show_arg);$/;"	variable	line:130
+help_traj_speed_show	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^prog_char help_traj_speed_show[] = "Show traj_speed values for trajectory manager";$/;"	variable	line:132
+cmd_traj_speed_show	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^parse_pgm_inst_t cmd_traj_speed_show = {$/;"	variable	line:133
+cmd_traj_acc_result	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^struct cmd_traj_acc_result$/;"	struct	line:151	file:
+arg0	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^    fixed_string_t arg0;$/;"	member	line:153	struct:cmd_traj_acc_result	file:
+arg1	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^    fixed_string_t arg1;$/;"	member	line:154	struct:cmd_traj_acc_result	file:
+s	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^    float s;$/;"	member	line:155	struct:cmd_traj_acc_result	file:
+cmd_traj_acc_parsed	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^static void cmd_traj_acc_parsed(void *parsed_result, void *data)$/;"	function	line:159	file:	signature:(void *parsed_result, void *data)
+str_traj_acc_arg0	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^prog_char str_traj_acc_arg0[] = "traj_acc";$/;"	variable	line:178
+cmd_traj_acc_arg0	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^parse_pgm_token_string_t cmd_traj_acc_arg0 = TOKEN_STRING_INITIALIZER(struct cmd_traj_acc_result, arg0, str_traj_acc_arg0);$/;"	variable	line:179
+str_traj_acc_arg1	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^prog_char str_traj_acc_arg1[] = "angle#distance";$/;"	variable	line:180
+cmd_traj_acc_arg1	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^parse_pgm_token_string_t cmd_traj_acc_arg1 = TOKEN_STRING_INITIALIZER(struct cmd_traj_acc_result, arg1, str_traj_acc_arg1);$/;"	variable	line:181
+cmd_traj_acc_s	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^parse_pgm_token_num_t cmd_traj_acc_s = TOKEN_NUM_INITIALIZER(struct cmd_traj_acc_result, s, INT16);$/;"	variable	line:182
+help_traj_acc	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^prog_char help_traj_acc[] = "Set traj_acc values for trajectory manager";$/;"	variable	line:184
+cmd_traj_acc	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^parse_pgm_inst_t cmd_traj_acc = {$/;"	variable	line:185
+str_traj_acc_show_arg	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^prog_char str_traj_acc_show_arg[] = "show";$/;"	variable	line:200
+cmd_traj_acc_show_arg	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^parse_pgm_token_string_t cmd_traj_acc_show_arg = TOKEN_STRING_INITIALIZER(struct cmd_traj_acc_result, arg1, str_traj_acc_show_arg);$/;"	variable	line:201
+help_traj_acc_show	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^prog_char help_traj_acc_show[] = "Show traj_acc values for trajectory manager";$/;"	variable	line:203
+cmd_traj_acc_show	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^parse_pgm_inst_t cmd_traj_acc_show = {$/;"	variable	line:204
+cmd_circle_coef_result	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^struct cmd_circle_coef_result$/;"	struct	line:221	file:
+arg0	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^    fixed_string_t arg0;$/;"	member	line:223	struct:cmd_circle_coef_result	file:
+arg1	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^    fixed_string_t arg1;$/;"	member	line:224	struct:cmd_circle_coef_result	file:
+circle_coef	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^    float circle_coef;$/;"	member	line:225	struct:cmd_circle_coef_result	file:
+cmd_circle_coef_parsed	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^static void cmd_circle_coef_parsed(void *parsed_result, void *data)$/;"	function	line:229	file:	signature:(void *parsed_result, void *data)
+str_circle_coef_arg0	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^prog_char str_circle_coef_arg0[] = "circle_coef";$/;"	variable	line:241
+cmd_circle_coef_arg0	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^parse_pgm_token_string_t cmd_circle_coef_arg0 = TOKEN_STRING_INITIALIZER(struct cmd_circle_coef_result, arg0, str_circle_coef_arg0);$/;"	variable	line:242
+str_circle_coef_arg1	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^prog_char str_circle_coef_arg1[] = "set";$/;"	variable	line:243
+cmd_circle_coef_arg1	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^parse_pgm_token_string_t cmd_circle_coef_arg1 = TOKEN_STRING_INITIALIZER(struct cmd_circle_coef_result, arg1, str_circle_coef_arg1);$/;"	variable	line:244
+cmd_circle_coef_val	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^parse_pgm_token_num_t cmd_circle_coef_val = TOKEN_NUM_INITIALIZER(struct cmd_circle_coef_result, circle_coef, FLOAT);$/;"	variable	line:245
+help_circle_coef	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^prog_char help_circle_coef[] = "Set circle coef";$/;"	variable	line:247
+cmd_circle_coef	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^parse_pgm_inst_t cmd_circle_coef = {$/;"	variable	line:248
+str_circle_coef_show_arg	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^prog_char str_circle_coef_show_arg[] = "show";$/;"	variable	line:263
+cmd_circle_coef_show_arg	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^parse_pgm_token_string_t cmd_circle_coef_show_arg = TOKEN_STRING_INITIALIZER(struct cmd_circle_coef_result, arg1, str_circle_coef_show_arg);$/;"	variable	line:264
+help_circle_coef_show	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^prog_char help_circle_coef_show[] = "Show circle coef";$/;"	variable	line:266
+cmd_circle_coef_show	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^parse_pgm_inst_t cmd_circle_coef_show = {$/;"	variable	line:267
+cmd_trajectory_result	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^struct cmd_trajectory_result$/;"	struct	line:285	file:
+arg0	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^    fixed_string_t arg0;$/;"	member	line:287	struct:cmd_trajectory_result	file:
+arg1	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^    fixed_string_t arg1;$/;"	member	line:288	struct:cmd_trajectory_result	file:
+d_win	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^    float d_win;$/;"	member	line:289	struct:cmd_trajectory_result	file:
+a_win	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^    float a_win;$/;"	member	line:290	struct:cmd_trajectory_result	file:
+a_start	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^    float a_start;$/;"	member	line:291	struct:cmd_trajectory_result	file:
+cmd_trajectory_parsed	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^static void cmd_trajectory_parsed(void * parsed_result, void * data)$/;"	function	line:295	file:	signature:(void * parsed_result, void * data)
+str_trajectory_arg0	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^prog_char str_trajectory_arg0[] = "trajectory";$/;"	variable	line:309
+cmd_trajectory_arg0	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^parse_pgm_token_string_t cmd_trajectory_arg0 = TOKEN_STRING_INITIALIZER(struct cmd_trajectory_result, arg0, str_trajectory_arg0);$/;"	variable	line:310
+str_trajectory_arg1	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^prog_char str_trajectory_arg1[] = "set";$/;"	variable	line:311
+cmd_trajectory_arg1	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^parse_pgm_token_string_t cmd_trajectory_arg1 = TOKEN_STRING_INITIALIZER(struct cmd_trajectory_result, arg1, str_trajectory_arg1);$/;"	variable	line:312
+cmd_trajectory_d	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^parse_pgm_token_num_t cmd_trajectory_d = TOKEN_NUM_INITIALIZER(struct cmd_trajectory_result, d_win, FLOAT);$/;"	variable	line:313
+cmd_trajectory_a	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^parse_pgm_token_num_t cmd_trajectory_a = TOKEN_NUM_INITIALIZER(struct cmd_trajectory_result, a_win, FLOAT);$/;"	variable	line:314
+cmd_trajectory_as	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^parse_pgm_token_num_t cmd_trajectory_as = TOKEN_NUM_INITIALIZER(struct cmd_trajectory_result, a_start, FLOAT);$/;"	variable	line:315
+help_trajectory	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^prog_char help_trajectory[] = "Set trajectory windows (distance, angle, angle_start)";$/;"	variable	line:317
+cmd_trajectory	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^parse_pgm_inst_t cmd_trajectory = {$/;"	variable	line:318
+str_trajectory_show_arg	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^prog_char str_trajectory_show_arg[] = "show";$/;"	variable	line:335
+cmd_trajectory_show_arg	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^parse_pgm_token_string_t cmd_trajectory_show_arg = TOKEN_STRING_INITIALIZER(struct cmd_trajectory_result, arg1, str_trajectory_show_arg);$/;"	variable	line:336
+help_trajectory_show	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^prog_char help_trajectory_show[] = "Show trajectory window configuration";$/;"	variable	line:338
+cmd_trajectory_show	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^parse_pgm_inst_t cmd_trajectory_show = {$/;"	variable	line:339
+cmd_rs_gains_result	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^struct cmd_rs_gains_result$/;"	struct	line:357	file:
+arg0	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^    fixed_string_t arg0;$/;"	member	line:359	struct:cmd_rs_gains_result	file:
+arg1	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^    fixed_string_t arg1;$/;"	member	line:360	struct:cmd_rs_gains_result	file:
+ed	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^    float ed;$/;"	member	line:361	struct:cmd_rs_gains_result	file:
+cmd_rs_gains_parsed	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^static void cmd_rs_gains_parsed(void * parsed_result, void * data)$/;"	function	line:365	file:	signature:(void * parsed_result, void * data)
+str_rs_gains_arg0	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^prog_char str_rs_gains_arg0[] = "rs_gains";$/;"	variable	line:390
+cmd_rs_gains_arg0	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^parse_pgm_token_string_t cmd_rs_gains_arg0 = TOKEN_STRING_INITIALIZER(struct cmd_rs_gains_result, arg0, str_rs_gains_arg0);$/;"	variable	line:391
+str_rs_gains_arg1	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^prog_char str_rs_gains_arg1[] = "set";$/;"	variable	line:392
+cmd_rs_gains_arg1	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^parse_pgm_token_string_t cmd_rs_gains_arg1 = TOKEN_STRING_INITIALIZER(struct cmd_rs_gains_result, arg1, str_rs_gains_arg1);$/;"	variable	line:393
+cmd_rs_gains_ed	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^parse_pgm_token_num_t cmd_rs_gains_ed = TOKEN_NUM_INITIALIZER(struct cmd_rs_gains_result, ed, FLOAT);$/;"	variable	line:394
+help_rs_gains	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^prog_char help_rs_gains[] = "Set rs_gains (left, right)";$/;"	variable	line:396
+cmd_rs_gains	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^parse_pgm_inst_t cmd_rs_gains = {$/;"	variable	line:397
+str_rs_gains_show_arg	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^prog_char str_rs_gains_show_arg[] = "show";$/;"	variable	line:411
+cmd_rs_gains_show_arg	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^parse_pgm_token_string_t cmd_rs_gains_show_arg = TOKEN_STRING_INITIALIZER(struct cmd_rs_gains_result, arg1, str_rs_gains_show_arg);$/;"	variable	line:412
+help_rs_gains_show	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^prog_char help_rs_gains_show[] = "Show rs_gains";$/;"	variable	line:414
+cmd_rs_gains_show	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^parse_pgm_inst_t cmd_rs_gains_show = {$/;"	variable	line:415
+cmd_track_result	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^struct cmd_track_result$/;"	struct	line:432	file:
+arg0	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^    fixed_string_t arg0;$/;"	member	line:434	struct:cmd_track_result	file:
+arg1	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^    fixed_string_t arg1;$/;"	member	line:435	struct:cmd_track_result	file:
+val	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^    float val;$/;"	member	line:436	struct:cmd_track_result	file:
+cmd_track_parsed	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^static void cmd_track_parsed(void * parsed_result, void * data)$/;"	function	line:440	file:	signature:(void * parsed_result, void * data)
+str_track_arg0	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^prog_char str_track_arg0[] = "track";$/;"	variable	line:451
+cmd_track_arg0	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^parse_pgm_token_string_t cmd_track_arg0 = TOKEN_STRING_INITIALIZER(struct cmd_track_result, arg0, str_track_arg0);$/;"	variable	line:452
+str_track_arg1	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^prog_char str_track_arg1[] = "set";$/;"	variable	line:453
+cmd_track_arg1	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^parse_pgm_token_string_t cmd_track_arg1 = TOKEN_STRING_INITIALIZER(struct cmd_track_result, arg1, str_track_arg1);$/;"	variable	line:454
+cmd_track_val	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^parse_pgm_token_num_t cmd_track_val = TOKEN_NUM_INITIALIZER(struct cmd_track_result, val, FLOAT);$/;"	variable	line:455
+help_track	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^prog_char help_track[] = "Set track in mm";$/;"	variable	line:457
+cmd_track	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^parse_pgm_inst_t cmd_track = {$/;"	variable	line:458
+str_track_show_arg	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^prog_char str_track_show_arg[] = "show";$/;"	variable	line:473
+cmd_track_show_arg	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^parse_pgm_token_string_t cmd_track_show_arg = TOKEN_STRING_INITIALIZER(struct cmd_track_result, arg1, str_track_show_arg);$/;"	variable	line:474
+help_track_show	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^prog_char help_track_show[] = "Show track";$/;"	variable	line:476
+cmd_track_show	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^parse_pgm_inst_t cmd_track_show = {$/;"	variable	line:477
+cmd_centrifugal_result	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^struct cmd_centrifugal_result$/;"	struct	line:495	file:
+arg0	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^    fixed_string_t arg0;$/;"	member	line:497	struct:cmd_centrifugal_result	file:
+arg1	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^    fixed_string_t arg1;$/;"	member	line:498	struct:cmd_centrifugal_result	file:
+val	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^    float val;$/;"	member	line:499	struct:cmd_centrifugal_result	file:
+cmd_centrifugal_parsed	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^static void cmd_centrifugal_parsed(void * parsed_result, void * data)$/;"	function	line:503	file:	signature:(void * parsed_result, void * data)
+str_centrifugal_arg0	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^prog_char str_centrifugal_arg0[] = "centrifugal";$/;"	variable	line:514
+cmd_centrifugal_arg0	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^parse_pgm_token_string_t cmd_centrifugal_arg0 = TOKEN_STRING_INITIALIZER(struct cmd_centrifugal_result, arg0, str_centrifugal_arg0);$/;"	variable	line:515
+str_centrifugal_arg1	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^prog_char str_centrifugal_arg1[] = "set";$/;"	variable	line:516
+cmd_centrifugal_arg1	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^parse_pgm_token_string_t cmd_centrifugal_arg1 = TOKEN_STRING_INITIALIZER(struct cmd_centrifugal_result, arg1, str_centrifugal_arg1);$/;"	variable	line:517
+cmd_centrifugal_val	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^parse_pgm_token_num_t cmd_centrifugal_val = TOKEN_NUM_INITIALIZER(struct cmd_centrifugal_result, val, FLOAT);$/;"	variable	line:518
+help_centrifugal	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^prog_char help_centrifugal[] = "Set centrifugal coef";$/;"	variable	line:520
+cmd_centrifugal	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^parse_pgm_inst_t cmd_centrifugal = {$/;"	variable	line:521
+str_centrifugal_show_arg	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^prog_char str_centrifugal_show_arg[] = "show";$/;"	variable	line:536
+cmd_centrifugal_show_arg	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^parse_pgm_token_string_t cmd_centrifugal_show_arg = TOKEN_STRING_INITIALIZER(struct cmd_centrifugal_result, arg1, str_centrifugal_show_arg);$/;"	variable	line:537
+help_centrifugal_show	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^prog_char help_centrifugal_show[] = "Show centrifugal";$/;"	variable	line:539
+cmd_centrifugal_show	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^parse_pgm_inst_t cmd_centrifugal_show = {$/;"	variable	line:540
+PT_LIST_SIZE	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^#define PT_LIST_SIZE /;"	macro	line:556	file:
+pt_list	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^static struct xy_point pt_list[PT_LIST_SIZE];$/;"	variable	line:557	typeref:struct:xy_point	file:
+pt_list_len	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^static uint16_t pt_list_len = 0;$/;"	variable	line:558	file:
+cmd_pt_list_result	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^struct cmd_pt_list_result$/;"	struct	line:561	file:
+arg0	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^    fixed_string_t arg0;$/;"	member	line:563	struct:cmd_pt_list_result	file:
+arg1	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^    fixed_string_t arg1;$/;"	member	line:564	struct:cmd_pt_list_result	file:
+arg2	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^    uint16_t arg2;$/;"	member	line:565	struct:cmd_pt_list_result	file:
+arg3	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^    int16_t arg3;$/;"	member	line:566	struct:cmd_pt_list_result	file:
+arg4	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^    int16_t arg4;$/;"	member	line:567	struct:cmd_pt_list_result	file:
+cmd_pt_list_parsed	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^static void cmd_pt_list_parsed(void * parsed_result, void * data)$/;"	function	line:571	file:	signature:(void * parsed_result, void * data)
+str_pt_list_arg0	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^prog_char str_pt_list_arg0[] = "pt_list";$/;"	variable	line:650
+cmd_pt_list_arg0	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^parse_pgm_token_string_t cmd_pt_list_arg0 = TOKEN_STRING_INITIALIZER(struct cmd_pt_list_result, arg0, str_pt_list_arg0);$/;"	variable	line:651
+str_pt_list_arg1	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^prog_char str_pt_list_arg1[] = "insert";$/;"	variable	line:652
+cmd_pt_list_arg1	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^parse_pgm_token_string_t cmd_pt_list_arg1 = TOKEN_STRING_INITIALIZER(struct cmd_pt_list_result, arg1, str_pt_list_arg1);$/;"	variable	line:653
+cmd_pt_list_arg2	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^parse_pgm_token_num_t cmd_pt_list_arg2 = TOKEN_NUM_INITIALIZER(struct cmd_pt_list_result, arg2, UINT16);$/;"	variable	line:654
+cmd_pt_list_arg3	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^parse_pgm_token_num_t cmd_pt_list_arg3 = TOKEN_NUM_INITIALIZER(struct cmd_pt_list_result, arg3, INT16);$/;"	variable	line:655
+cmd_pt_list_arg4	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^parse_pgm_token_num_t cmd_pt_list_arg4 = TOKEN_NUM_INITIALIZER(struct cmd_pt_list_result, arg4, INT16);$/;"	variable	line:656
+help_pt_list	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^prog_char help_pt_list[] = "Insert point in pt_list (idx,x,y)";$/;"	variable	line:658
+cmd_pt_list	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^parse_pgm_inst_t cmd_pt_list = {$/;"	variable	line:659
+str_pt_list_arg1_append	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^prog_char str_pt_list_arg1_append[] = "append";$/;"	variable	line:675
+cmd_pt_list_arg1_append	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^parse_pgm_token_string_t cmd_pt_list_arg1_append = TOKEN_STRING_INITIALIZER(struct cmd_pt_list_result, arg1, str_pt_list_arg1_append);$/;"	variable	line:676
+help_pt_list_append	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^prog_char help_pt_list_append[] = "Append point in pt_list (x,y)";$/;"	variable	line:678
+cmd_pt_list_append	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^parse_pgm_inst_t cmd_pt_list_append = {$/;"	variable	line:679
+str_pt_list_del_arg	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^prog_char str_pt_list_del_arg[] = "del";$/;"	variable	line:695
+cmd_pt_list_del_arg	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^parse_pgm_token_string_t cmd_pt_list_del_arg = TOKEN_STRING_INITIALIZER(struct cmd_pt_list_result, arg1, str_pt_list_del_arg);$/;"	variable	line:696
+help_pt_list_del	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^prog_char help_pt_list_del[] = "Del or insert point in pt_list (num)";$/;"	variable	line:698
+cmd_pt_list_del	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^parse_pgm_inst_t cmd_pt_list_del = {$/;"	variable	line:699
+str_pt_list_show_arg	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^prog_char str_pt_list_show_arg[] = "show#reset#start#avoid_start";$/;"	variable	line:713
+cmd_pt_list_show_arg	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^parse_pgm_token_string_t cmd_pt_list_show_arg = TOKEN_STRING_INITIALIZER(struct cmd_pt_list_result, arg1, str_pt_list_show_arg);$/;"	variable	line:714
+help_pt_list_show	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^prog_char help_pt_list_show[] = "Show, start or reset pt_list";$/;"	variable	line:716
+cmd_pt_list_show	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^parse_pgm_inst_t cmd_pt_list_show = {$/;"	variable	line:717
+cmd_goto_result	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^struct cmd_goto_result$/;"	struct	line:734	file:
+arg0	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^    fixed_string_t arg0;$/;"	member	line:736	struct:cmd_goto_result	file:
+arg1	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^    fixed_string_t arg1;$/;"	member	line:737	struct:cmd_goto_result	file:
+arg2	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^    int32_t arg2;$/;"	member	line:738	struct:cmd_goto_result	file:
+arg3	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^    int32_t arg3;$/;"	member	line:739	struct:cmd_goto_result	file:
+arg4	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^    int32_t arg4;$/;"	member	line:740	struct:cmd_goto_result	file:
+cmd_goto_parsed	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^static void cmd_goto_parsed(void * parsed_result, void * data)$/;"	function	line:744	file:	signature:(void * parsed_result, void * data)
+str_goto_arg0	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^prog_char str_goto_arg0[] = "goto";$/;"	variable	line:842
+cmd_goto_arg0	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^parse_pgm_token_string_t cmd_goto_arg0 = TOKEN_STRING_INITIALIZER(struct cmd_goto_result, arg0, str_goto_arg0);$/;"	variable	line:843
+str_goto_arg1_a	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^prog_char str_goto_arg1_a[] = "d_rel#a_rel#a_abs";$/;"	variable	line:844
+cmd_goto_arg1_a	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^parse_pgm_token_string_t cmd_goto_arg1_a = TOKEN_STRING_INITIALIZER(struct cmd_goto_result, arg1, str_goto_arg1_a);$/;"	variable	line:845
+cmd_goto_arg2	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^parse_pgm_token_num_t cmd_goto_arg2 = TOKEN_NUM_INITIALIZER(struct cmd_goto_result, arg2, INT32);$/;"	variable	line:846
+help_goto1	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^prog_char help_goto1[] = "Change orientation of the mainboard";$/;"	variable	line:849
+cmd_goto1	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^parse_pgm_inst_t cmd_goto1 = {$/;"	variable	line:850
+str_goto_arg1_b	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^prog_char str_goto_arg1_b[] = "xy_rel#xy_abs#xy_abs_fow#xy_abs_back#da_rel#a_to_xy#avoid#avoid_fw#avoid_bw#a_behind_xy";$/;"	variable	line:863
+cmd_goto_arg1_b	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^parse_pgm_token_string_t cmd_goto_arg1_b = TOKEN_STRING_INITIALIZER(struct cmd_goto_result, arg1, str_goto_arg1_b);$/;"	variable	line:864
+cmd_goto_arg3	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^parse_pgm_token_num_t cmd_goto_arg3 = TOKEN_NUM_INITIALIZER(struct cmd_goto_result, arg3, INT32);$/;"	variable	line:865
+help_goto2	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^prog_char help_goto2[] = "Go to a (x,y) or (d,a) position";$/;"	variable	line:868
+cmd_goto2	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^parse_pgm_inst_t cmd_goto2 = {$/;"	variable	line:869
+cmd_position_result	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^struct cmd_position_result$/;"	struct	line:887	file:
+arg0	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^    fixed_string_t arg0;$/;"	member	line:889	struct:cmd_position_result	file:
+arg1	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^    fixed_string_t arg1;$/;"	member	line:890	struct:cmd_position_result	file:
+arg2	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^    int32_t arg2;$/;"	member	line:891	struct:cmd_position_result	file:
+arg3	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^    int32_t arg3;$/;"	member	line:892	struct:cmd_position_result	file:
+arg4	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^    int32_t arg4;$/;"	member	line:893	struct:cmd_position_result	file:
+auto_position	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^void auto_position(void)$/;"	function	line:898	signature:(void)
+cmd_position_parsed	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^static void cmd_position_parsed(void * parsed_result, void * data)$/;"	function	line:948	file:	signature:(void * parsed_result, void * data)
+str_position_arg0	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^prog_char str_position_arg0[] = "position";$/;"	variable	line:979
+cmd_position_arg0	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^parse_pgm_token_string_t cmd_position_arg0 = TOKEN_STRING_INITIALIZER(struct cmd_position_result, arg0, str_position_arg0);$/;"	variable	line:980
+str_position_arg1	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^prog_char str_position_arg1[] = "show#reset#autoset_yellow#autoset_green";$/;"	variable	line:981
+cmd_position_arg1	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^parse_pgm_token_string_t cmd_position_arg1 = TOKEN_STRING_INITIALIZER(struct cmd_position_result, arg1, str_position_arg1);$/;"	variable	line:982
+help_position	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^prog_char help_position[] = "Show\/reset (x,y,a) position";$/;"	variable	line:984
+cmd_position	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^parse_pgm_inst_t cmd_position = {$/;"	variable	line:985
+str_position_arg1_set	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^prog_char str_position_arg1_set[] = "set";$/;"	variable	line:998
+cmd_position_arg1_set	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^parse_pgm_token_string_t cmd_position_arg1_set = TOKEN_STRING_INITIALIZER(struct cmd_position_result, arg1, str_position_arg1_set);$/;"	variable	line:999
+cmd_position_arg2	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^parse_pgm_token_num_t cmd_position_arg2 = TOKEN_NUM_INITIALIZER(struct cmd_position_result, arg2, INT32);$/;"	variable	line:1000
+cmd_position_arg3	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^parse_pgm_token_num_t cmd_position_arg3 = TOKEN_NUM_INITIALIZER(struct cmd_position_result, arg3, INT32);$/;"	variable	line:1001
+cmd_position_arg4	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^parse_pgm_token_num_t cmd_position_arg4 = TOKEN_NUM_INITIALIZER(struct cmd_position_result, arg4, INT32);$/;"	variable	line:1002
+help_position_set	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^prog_char help_position_set[] = "Set (x,y,a) position";$/;"	variable	line:1004
+cmd_position_set	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^parse_pgm_inst_t cmd_position_set = {$/;"	variable	line:1005
+cmd_strat_infos_result	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^struct cmd_strat_infos_result$/;"	struct	line:1026	file:
+arg0	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^    fixed_string_t arg0;$/;"	member	line:1028	struct:cmd_strat_infos_result	file:
+arg1	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^    fixed_string_t arg1;$/;"	member	line:1029	struct:cmd_strat_infos_result	file:
+cmd_strat_infos_parsed	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^static void cmd_strat_infos_parsed(void *parsed_result, void *data)$/;"	function	line:1033	file:	signature:(void *parsed_result, void *data)
+str_strat_infos_arg0	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^prog_char str_strat_infos_arg0[] = "strat_infos";$/;"	variable	line:1046
+cmd_strat_infos_arg0	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^parse_pgm_token_string_t cmd_strat_infos_arg0 = TOKEN_STRING_INITIALIZER(struct cmd_strat_infos_result, arg0, str_strat_infos_arg0);$/;"	variable	line:1047
+str_strat_infos_arg1	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^prog_char str_strat_infos_arg1[] = "show#reset";$/;"	variable	line:1048
+cmd_strat_infos_arg1	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^parse_pgm_token_string_t cmd_strat_infos_arg1 = TOKEN_STRING_INITIALIZER(struct cmd_strat_infos_result, arg1, str_strat_infos_arg1);$/;"	variable	line:1049
+help_strat_infos	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^prog_char help_strat_infos[] = "reset\/show strat infos";$/;"	variable	line:1051
+cmd_strat_infos	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^parse_pgm_inst_t cmd_strat_infos = {$/;"	variable	line:1052
+cmd_strat_conf_result	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^struct cmd_strat_conf_result$/;"	struct	line:1068	file:
+arg0	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^    fixed_string_t arg0;$/;"	member	line:1070	struct:cmd_strat_conf_result	file:
+arg1	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^    fixed_string_t arg1;$/;"	member	line:1071	struct:cmd_strat_conf_result	file:
+cmd_strat_conf_parsed	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^static void cmd_strat_conf_parsed(void *parsed_result, void *data)$/;"	function	line:1075	file:	signature:(void *parsed_result, void *data)
+str_strat_conf_arg0	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^prog_char str_strat_conf_arg0[] = "strat_conf";$/;"	variable	line:1112
+cmd_strat_conf_arg0	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^parse_pgm_token_string_t cmd_strat_conf_arg0 = TOKEN_STRING_INITIALIZER(struct cmd_strat_conf_result, arg0, str_strat_conf_arg0);$/;"	variable	line:1113
+str_strat_conf_arg1	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^prog_char str_strat_conf_arg1[] = "show#base#homologation#qualification#do_tower#do_fast_g1#do_escape";$/;"	variable	line:1114
+cmd_strat_conf_arg1	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^parse_pgm_token_string_t cmd_strat_conf_arg1 = TOKEN_STRING_INITIALIZER(struct cmd_strat_conf_result, arg1, str_strat_conf_arg1);$/;"	variable	line:1115
+help_strat_conf	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^prog_char help_strat_conf[] = "configure specific strat for a match";$/;"	variable	line:1117
+cmd_strat_conf	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^parse_pgm_inst_t cmd_strat_conf = {$/;"	variable	line:1118
+cmd_subtraj1_result	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^struct cmd_subtraj1_result$/;"	struct	line:1135	file:
+arg0	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^    fixed_string_t arg0;$/;"	member	line:1137	struct:cmd_subtraj1_result	file:
+arg1	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^    fixed_string_t arg1;$/;"	member	line:1138	struct:cmd_subtraj1_result	file:
+arg2	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^    int32_t arg2;$/;"	member	line:1139	struct:cmd_subtraj1_result	file:
+cmd_subtraj1_parsed	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^static void cmd_subtraj1_parsed(void *parsed_result, void *data)$/;"	function	line:1144	file:	signature:(void *parsed_result, void *data)
+str_subtraj1_arg0	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^prog_char str_subtraj1_arg0[] = "subtraj";$/;"	variable	line:1150
+cmd_subtraj1_arg0	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^parse_pgm_token_string_t cmd_subtraj1_arg0 = TOKEN_STRING_INITIALIZER(struct cmd_subtraj1_result, arg0, str_subtraj1_arg0);$/;"	variable	line:1151
+str_subtraj1_arg1	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^prog_char str_subtraj1_arg1[] = "";$/;"	variable	line:1152
+cmd_subtraj1_arg1	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^parse_pgm_token_string_t cmd_subtraj1_arg1 = TOKEN_STRING_INITIALIZER(struct cmd_subtraj1_result, arg1, str_subtraj1_arg1);$/;"	variable	line:1153
+help_subtraj1	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^prog_char help_subtraj1[] = "Test sub-trajectories"; \/\/" (a,b,c: specific params)";$/;"	variable	line:1156
+cmd_subtraj1	D:\Proyectos\Perenquen\Software\perenquen-board\commands_traj.c	/^parse_pgm_inst_t cmd_subtraj1 = {$/;"	variable	line:1157

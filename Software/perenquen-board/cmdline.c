@@ -55,7 +55,7 @@
 extern parse_pgm_ctx_t main_ctx[];
 
 /* Echo Enable/Disable */
-static uint8_t echo_enable = 0;
+static uint8_t echo_enable = 1;
 
 void cmdline_echo_enable (void) {
 	echo_enable = 1;
@@ -86,6 +86,11 @@ static void valid_buffer(const char *buf, uint8_t size)
 	interrupt_traj_reset();
 
 	ret = parse(main_ctx, buf);
+
+	/* if echo is OFF, returns */
+	if (!echo_enable) {
+		return;
+	}
 
 	if (ret == PARSE_AMBIGUOUS)
 		printf_P(PSTR("Ambiguous command\r\n"));

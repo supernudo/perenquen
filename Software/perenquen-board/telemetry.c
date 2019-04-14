@@ -22,6 +22,7 @@
 
 #include <stdint.h>
 
+#include <uart.h>
 #include <main.h>
 #include "telemetry.h"
 
@@ -41,7 +42,7 @@ void tm_data_init(void)
 void tm_data_send(void)
 {
 	void *pdata = (void*)&tm;
-	uint8_t data_size = sizeof(struct tm_block);
+	uint8_t data_size = sizeof(struct tm_data);
   uint8_t i;
 
 	/* timetag */

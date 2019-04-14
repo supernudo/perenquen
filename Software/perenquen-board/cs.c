@@ -62,6 +62,7 @@
 #include "robotsim.h"
 #include "strat.h"
 #include "actuator.h"
+#include "telemetry.h"
 
 
 void dump_cs(const char *name, struct cs *cs);
@@ -74,10 +75,10 @@ static void do_cs(void *dummy)
 
 	//LED1_ON();
 
+	/* read encoders */
 #ifdef HOST_VERSION
 	robotsim_update();
 #else
-	/* read encoders */
 	if (mainboard.flags & DO_ENCODERS) {
 		encoders_dspic_manage(NULL);
 	}
@@ -111,25 +112,14 @@ static void do_cs(void *dummy)
 
 		if (mainboard.distance.on)
 			cs_manage(&mainboard.distance.cs);
-
-#if 0
-		if (cs_get_consign(&mainboard.distance.cs) != cs_get_filtered_consign(&mainboard.distance.cs) || )
-		{
-			t1 = time_get_us2();
-        	dump_cs_debug("distance", &mainboard.distance.cs);
-		}
-		else if (/*t1 != 0 &&*/ (time_get_us2() - t1 < 2000000))
-		{
-        	dump_cs_debug("distance", &mainboard.distance.cs);
-		}
-#endif
 	}
 
 	/* position calculus */
-	if ((cpt & 1) && (mainboard.flags & DO_POS)) {
-
+	//if ((cpt & 1) && (mainboard.flags & DO_POS))
+	if (mainboard.flags & DO_POS)
+	{
 		/* about 1.5ms
-       		 * (worst case without centrifugal force compensation) */
+     * (worst case without centrifugal force compensation) */
 		position_manage(&mainboard.pos);
 	}
 
@@ -145,13 +135,22 @@ static void do_cs(void *dummy)
 	else
 		BRAKE_ON();
 
-	cpt++;
 
-#ifdef HOST_VERSION
-	if ((cpt & 7) == 0) {
-		robotsim_dump();
+	#ifdef HOST_VERSION
+		if ((cpt & 7) == 0) {
+			robotsim_dump();
+		}
+	#endif
+
+	/* Send telemetry data */
+	if (mainboard.flags & DO_TM_DATA) {
+		LED1_ON();
+		tm_data_send();
+		LED1_OFF();
 	}
-#endif
+
+	/* Update sub-sampling counter */
+	cpt++;
 
 	//LED1_OFF();
 }
@@ -202,30 +201,6 @@ void dump_pid(const char *name, struct pid_filter *pid)
 		 pid_get_value_I(pid) * pid_get_gain_I(pid),
 		 pid_get_value_D(pid) * pid_get_gain_D(pid),
 		 pid_get_value_out(pid));
-}
-
-void tm_data_send(void)
-{
-	void *pdata = (void*)&mainboard.tm;
-	uint8_t data_size = sizeof(struct tm_block);
-    uint8_t i;
-
-	mainboard.tm.time_ms = time_get_us2()/1000;
-	mainboard.tm.angle.consign = cs_get_consign(&mainboard.angle.cs);
-	mainboard.tm.angle.fconsign = cs_get_filtered_consign(&mainboard.angle.cs);
-	mainboard.tm.angle.error = cs_get_error(&mainboard.angle.cs);
-	mainboard.tm.angle.ffeedback = cs_get_filtered_feedback(&mainboard.angle.cs);
-	mainboard.tm.angle.out = cs_get_out(&mainboard.angle.cs);
-	mainboard.tm.distance.consign = cs_get_consign(&mainboard.distance.cs);
-	mainboard.tm.distance.fconsign = cs_get_filtered_consign(&mainboard.distance.cs);
-	mainboard.tm.distance.error = cs_get_error(&mainboard.distance.cs);
-	mainboard.tm.distance.ffeedback = cs_get_filtered_feedback(&mainboard.distance.cs);
-	mainboard.tm.distance.out = cs_get_out(&mainboard.distance.cs);
-	mainboard.tm.tail = '\n';
-
-
-	for(i=0; i<data_size; i++)
-		uart_send(0,*(char*)pdata++);
 }
 
 //void motor_pwm_set_and_save(void *pwm_gen_num, int32_t val);

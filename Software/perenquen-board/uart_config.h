@@ -1,6 +1,6 @@
-/*  
+/*
  *  Copyright Droids Corporation, Microb Technology, Eirbot (2005)
- * 
+ *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation; either version 2 of the License, or
@@ -23,9 +23,9 @@
  * config for uart module
  */
 
-/*  
- *  Copyright Javier Baliñas Santos (2018)
- *  Javier Baliñas Santos <balinas@gmail.com>
+/*
+ *  Copyright Javier Baliï¿½as Santos (2018)
+ *  Javier Baliï¿½as Santos <balinas@gmail.com>
  *
  *  Code ported to family of microcontrollers dsPIC from
  *  uart_config.h,v 1.3.10.1 2006/11/26 21:06:02 zer0 Exp.
@@ -35,16 +35,16 @@
 #define UART_CONFIG_H
 
 /*
- * STDIO redireccion (only output for the moment) 
+ * STDIO redireccion (only output for the moment)
  */
  #define STDIO_UART	0
 
 /*
- * UART0 definitions (dspic UART1) 
+ * UART0 definitions (dspic UART1)
  */
 
 /* compile uart0 fonctions, undefine it to pass compilation */
-#define UART0_COMPILE  
+#define UART0_COMPILE
 
 /* enable uart0 if == 1, disable if == 0 */
 #define UART0_ENABLED  1
@@ -58,15 +58,15 @@
 //#define UART0_BAUDRATE 460800
 #define UART0_BAUDRATE 921600
 
-/* 
- * if you enable this, the maximum baudrate you can reach is 
- * higher, but the precision is lower. 
+/*
+ * if you enable this, the maximum baudrate you can reach is
+ * higher, but the precision is lower.
  */
 //#define UART0_USE_DOUBLE_SPEED 0
 #define UART0_USE_DOUBLE_SPEED 1
 
-#define UART0_RX_FIFO_SIZE 96
-#define UART0_TX_FIFO_SIZE 96
+#define UART0_RX_FIFO_SIZE 128
+#define UART0_TX_FIFO_SIZE 128
 
 #define UART0_NBITS 8
 //#define UART0_NBITS 9
@@ -80,4 +80,3 @@
 
 
 #endif
-

@@ -67,6 +67,8 @@
 
 #include "strat.h"
 
+#include "telemetry.h"
+
 
 #define ERROUT(e) do {\
 		err = e;			 \
@@ -740,8 +742,6 @@ struct cmd_goto_result
     int32_t arg4;
 };
 
-void tm_data_send(void);
-
 /* function called when cmd_goto is parsed successfully */
 static void cmd_goto_parsed(void * parsed_result, void * data)
 {
@@ -823,14 +823,14 @@ static void cmd_goto_parsed(void * parsed_result, void * data)
 
 	while ((err = test_traj_end(TRAJ_FLAGS_NO_NEAR)) == 0 || !cmdline_keypressed())
 	{
-		if (dump == 'a') {
-			LED1_ON();
-			//dump_cs_short("a", &mainboard.angle.cs);
-			tm_data_send();
-			LED1_OFF();
-		}
-		else if(dump == 'd')
-			dump_cs_short("d", &mainboard.distance.cs);
+		//time_wait_ms(1);
+
+		///* Send telemetry data */
+		//if (mainboard.flags & DO_TM_DATA) {
+		//	LED1_ON();
+		//	tm_data_send();
+		//	LED1_OFF();
+		//}
 
 		if (err!=0 && err != END_TRAJ && err != END_NEAR) {
 			strat_hardstop();
@@ -839,7 +839,6 @@ static void cmd_goto_parsed(void * parsed_result, void * data)
   }
 
 	printf_P(PSTR("returned %s\r\n"), get_err(err));
-
 }
 
 prog_char str_goto_arg0[] = "goto";

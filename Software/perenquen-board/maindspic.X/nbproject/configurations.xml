@@ -126,6 +126,7 @@
         <itemPath>../traps.c</itemPath>
         <itemPath>../commands.c</itemPath>
         <itemPath>../actuator.c</itemPath>
+        <itemPath>../telemetry.c</itemPath>
       </logicalFolder>
       <logicalFolder name="bd" displayName="bd" projectFiles="true">
         <itemPath>../../libs/aversive4dspic/modules/devices/robot/blocking_detection_manager/blocking_detection_manager.c</itemPath>
