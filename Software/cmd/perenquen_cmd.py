@@ -19,6 +19,8 @@ from bluetooth import (
 )
 from bluetooth.btcommon import BluetoothError
 
+from struct import unpack
+
 import struct
 import numpy
 import shlex
@@ -309,8 +311,10 @@ class Interp(cmd.Cmd):
 
         if name == "d":
             self.ser.write("gain distance %d %d %d\n"%(gain_p, gain_i, gain_d))
-            time.sleep(1)
-            print self.ser.read()
+            time.sleep(0.1)
+            self.ser.write("echo off\n")
+            #time.sleep(2)
+            #print self.ser.read()
 
             print("goto d_rel %d\n"%(cons))
 
@@ -321,8 +325,10 @@ class Interp(cmd.Cmd):
 
         elif name == "a":
             self.ser.write("gain angle %d %d %d\n"%(gain_p, gain_i, gain_d))
-            time.sleep(1)
-            print self.ser.read()
+            time.sleep(0.1)
+            self.ser.write("echo off\n")
+            #time.sleep(2)
+            #print self.ser.read()
 
             print("goto d_rel %d\n"%(cons))
 
@@ -335,20 +341,70 @@ class Interp(cmd.Cmd):
             print("unknow cs name")
             return
 
-        # Wait log time
-        time.sleep(tlog/1000)
-        self.ser.write("event tm off\n")
-        tm_data = self.ser.read(5000)
+        # Telemetry reading
+        tm_data = ''
+        t1 = time.time()
+        self.ser.flushInput()
+        while True:
+          tm_data += self.ser.read()
 
-        tm_packets = tm_data.split("TMDT")
-        print(tm_packets)
+          # Break after test time
+          t2 = time.time()
+          if tlog and (t2 - t1) >= tlog:
+            tlog = 0
+            self.ser.write("\n\r")
+            time.sleep(0.1)
+            self.ser.write("event tm off\n")
+            self.ser.write("echo on\n")
+            time.sleep(2)
+            self.ser.flushInput()
+            time.sleep(2)
+            self.ser.flushInput()
+            break
 
-        # Telemetry stuff
+
+        # Telemetry parser
         i = 0
         time_ms = np.zeros(0)
         cons = f_cons = err = feedback = out = np.zeros(0)
         v_cons = v_feedback = np.zeros(1)
         a_cons = a_feedback = a_cons = a_feedback = np.zeros(2)
+
+        TM_HEAD_BYTE_0 = '\xFB'
+        TM_HEAD_BYTE_1 = '\xBF'
+        TM_TAIL_BYTE_0 = '\xED'
+        TM_SIZE = 48
+        TM_STRUCT = 'IiiiiiiiiiiBB'
+
+        head = TM_HEAD_BYTE_0 + TM_HEAD_BYTE_1
+        tm_packets = tm_data.split(head)
+        #print(tm_packets)
+
+        for data in tm_packets:
+            if data[-1] == TM_TAIL_BYTE_0 and len(data) == (TM_SIZE-2):
+                tm_data = unpack(TM_STRUCT, data)
+                #print(tm_data, type(tm_data))
+
+                time_ms = np.append(time_ms, tm_data[0])
+                cons = np.append(cons, tm_data[1])
+                f_cons = np.append(f_cons, tm_data[2])
+                err = np.append(err, tm_data[3])
+                feedback = np.append(feedback, tm_data[4])
+                out = np.append(out, tm_data[5])
+
+                if i>0:
+                    v_cons = np.append(v_cons, (f_cons[i] - f_cons[i-1])/(time_ms[i]-time_ms[i-1]))
+                    v_feedback = np.append(v_feedback, (feedback[i] - feedback[i-1])/(time_ms[i]-time_ms[i-1]))
+
+                if i>1:
+                    a_cons = np.append(a_cons, (v_cons[i] - v_cons[i-1])/(time_ms[i]-time_ms[i-1]))
+                    a_feedback = np.append(a_feedback, (v_feedback[i] - v_feedback[i-1])/(time_ms[i]-time_ms[i-1]))
+
+                i += 1
+
+
+        # Telemetry stuff
+
         """
         # Telemetry parsing
         t1 = time.time()
@@ -403,59 +459,57 @@ class Interp(cmd.Cmd):
           m = re.match("returned", line)
           if m:
             print line.rstrip()
-            time_ms = time_ms - time_ms[0]
 
-            plt.figure(1)
-            plt.subplot(311)
-            plt.plot(time_ms,v_cons,'.-', label="consigna")
-            plt.plot(time_ms,v_feedback,'.-', label="feedback")
-            plt.ylabel('v (pulsos/Ts)')
-            plt.grid(True)
-            plt.legend()
-            plt.title('%s kp=%s, ki=%d, kd=%d'%(name, gain_p, gain_i, gain_d))
+         """
 
-            plt.subplot(312)
-            plt.plot(time_ms,a_cons,'.-', label="consigna")
-            plt.plot(time_ms,a_feedback,'.-', label="feedback")
-            plt.ylabel('a (pulsos/Ts^2)')
-            plt.grid(True)
-            plt.legend()
+        time_ms = time_ms - time_ms[0]
 
-            plt.subplot(313)
-            plt.plot(time_ms,out,'.-')
-            plt.xlabel('t (ms)')
-            plt.ylabel('u (cuentas)')
-            plt.grid(True)
+        plt.figure(1)
+        plt.subplot(311)
+        plt.plot(time_ms,v_cons,'.-', label="consigna")
+        plt.plot(time_ms,v_feedback,'.-', label="feedback")
+        plt.ylabel('v (pulsos/Ts)')
+        plt.grid(True)
+        plt.legend()
+        plt.title('%s kp=%s, ki=%d, kd=%d'%(name, gain_p, gain_i, gain_d))
 
+        plt.subplot(312)
+        plt.plot(time_ms,a_cons,'.-', label="consigna")
+        plt.plot(time_ms,a_feedback,'.-', label="feedback")
+        plt.ylabel('a (pulsos/Ts^2)')
+        plt.grid(True)
+        plt.legend()
 
-            plt.figure(2)
-            plt.subplot(311)
-            plt.plot(time_ms,f_cons-feedback[0], '.-', label="consigna")
-            plt.plot(time_ms,feedback-feedback[0], '.-', label="feedback")
-            plt.ylabel('posicion (pulsos)')
-            plt.grid(True)
-            plt.legend()
-            plt.title('%s kp=%s, ki=%d, kd=%d'%(name, gain_p, gain_i, gain_d))
-
-            plt.subplot(312)
-            plt.plot(time_ms,err, '.-')
-            plt.xlabel('t (ms)')
-            plt.ylabel('error (pulsos)')
-            plt.grid(True)
+        plt.subplot(313)
+        plt.plot(time_ms,out,'.-')
+        plt.xlabel('t (ms)')
+        plt.ylabel('u (cuentas)')
+        plt.grid(True)
 
 
-            plt.subplot(313)
-            plt.plot(time_ms,out,'.-')
-            plt.xlabel('t (ms)')
-            plt.ylabel('u (cuentas)')
-            plt.grid(True)
+        plt.figure(2)
+        plt.subplot(311)
+        plt.plot(time_ms,f_cons-feedback[0], '.-', label="consigna")
+        plt.plot(time_ms,feedback-feedback[0], '.-', label="feedback")
+        plt.ylabel('posicion (pulsos)')
+        plt.grid(True)
+        plt.legend()
+        plt.title('%s kp=%s, ki=%d, kd=%d'%(name, gain_p, gain_i, gain_d))
 
-            plt.show()
-            break
+        plt.subplot(312)
+        plt.plot(time_ms,err, '.-')
+        plt.xlabel('t (ms)')
+        plt.ylabel('error (pulsos)')
+        plt.grid(True)
 
-        # print unknow strigs
-        print line.rstrip()
-        """
+
+        plt.subplot(313)
+        plt.plot(time_ms,out,'.-')
+        plt.xlabel('t (ms)')
+        plt.ylabel('u (cuentas)')
+        plt.grid(True)
+
+        plt.show()
 
 if __name__ == "__main__":
     try:

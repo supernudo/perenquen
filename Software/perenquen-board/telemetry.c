@@ -32,10 +32,9 @@ struct tm_data tm;
 /* Initialize header of telemetry packet */
 void tm_data_init(void)
 {
-	tm.header[0] = TM_HEADER_BYTE_0;
-	tm.header[1] = TM_HEADER_BYTE_1;
-	tm.header[2] = TM_HEADER_BYTE_2;
-	tm.header[3] = TM_HEADER_BYTE_3;
+	tm.header[0] = TM_HEAD_BYTE_0;
+	tm.header[1] = TM_HEAD_BYTE_1;
+	tm.tail = TM_TAIL_BYTE_0;
 }
 
 /* Update telemetry packet and send it thru UART */

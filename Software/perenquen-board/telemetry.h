@@ -42,16 +42,24 @@ struct tm_cs_data
 /* Telemetry data packet */
 struct tm_data
 {
-	#define TM_HEADER_BYTE_0 'T'
-	#define TM_HEADER_BYTE_1 'M'
-	#define TM_HEADER_BYTE_2 'D'
-	#define TM_HEADER_BYTE_3 'T'
-	
-	uint8_t header[4];						// 4 bytes
+	//#define TM_HEADER_BYTE_0 'T'
+	//#define TM_HEADER_BYTE_1 'M'
+	//#define TM_HEADER_BYTE_2 'D'
+	//#define TM_HEADER_BYTE_3 'T'
+
+	#define TM_HEAD_BYTE_0 0xFB
+	#define TM_HEAD_BYTE_1 0xBF
+	#define TM_TAIL_BYTE_0 0xED
+
+
+	uint8_t header[2];						// 2 bytes
 	uint32_t time_ms;							// 4 bytes
 	struct tm_cs_data angle;			// 20 bytes
 	struct tm_cs_data distance;		// 20 bytes
-																// 48 bytes total
+	uint8_t foo;
+	uint8_t tail;									// 1  bytes
+
+	// 48 bytes total_bytes
 
 	// wall sensors: 4 x 2 = 8 bytes
 	// gyro: 								 2 bytes
