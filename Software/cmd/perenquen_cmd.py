@@ -61,7 +61,7 @@ class SerialLogger:
 
 class Interp(cmd.Cmd):
     prompt = "balitronics > "
-    def __init__(self, tty=None, baudrate=921600, addr='98:D3:31:70:13:AB', port=1):
+    def __init__(self, tty=None, baudrate=38400, addr='98:D3:31:70:13:AB', port=1):
         cmd.Cmd.__init__(self)
         self.escape  = "\x01" # C-a
         self.quitraw = "\x02" # C-b
@@ -103,7 +103,7 @@ class Interp(cmd.Cmd):
                 self.default_in_log_file = files[0]
                 self.default_out_log_file = files[1]
             else:
-                print "Can't parse arguments"
+                print("Can't parse arguments")
 
             self.ser = SerialLogger(self.ser, *files)
             log.info("Starting serial logging to %s and %s" % (self.ser.filein,
@@ -169,10 +169,55 @@ class Interp(cmd.Cmd):
                             else:
                                 self.ser.write(c)
                     elif x == self.ser:
-                        os.write(stdout,self.ser.read())
+                        os.write(stdout,self.ser.read(1))
         finally:
             termios.tcsetattr(stdin, termios.TCSADRAIN, stdin_termios)
             log.info("Back to normal mode")
+
+    def do_tm_rfcomm(self, args):
+        self.rfcomm.settimeout(1.)
+        self.rfcomm.send("event power off\n\r")
+        time.sleep(0.1)
+        self.rfcomm.send("event tm on\n\r")
+
+        t1 = t2 = time.time()
+        self.rfcomm.settimeout(0.01)
+        received = self.rfcomm.recv(1)
+        while t2 - t1 < 1:
+            try:
+                self.rfcomm.settimeout(0.01)
+                #received.append(self.rfcomm.recv(1024))
+                received += self.rfcomm.recv(1024)
+            except BluetoothError as error:
+                if str(error) != 'timed out':
+                    raise
+            t2 = time.time()
+
+        self.rfcomm.send("event tm on\n\r")
+        time.sleep(0.1)
+
+        print(received)
+
+    def do_tm_test(self, args):
+        self.rfcomm.settimeout(1.)
+        self.rfcomm.send("\n\revent tm on\n\r")
+        self.rfcomm.settimeout(0.1)
+        #self.rfcomm.settimeout(None) # set blocking True
+        #self.rfcomm.settimeout(0.0) # set blocking False
+        time.sleep(5)
+        t1 = time.time()
+        while time.time() - t1 < 10:
+            try:
+                received = self.rfcomm.recv(4096)
+                print("rx", len(received))
+                received = 0
+            #except BluetoothError as error:
+            except:
+                raise
+                #if str(error) != 'timed out':
+                #    raise
+                #if str(error) != 'Resource temporarily unavailable':
+                #    raise
 
     def do_raw_rfcomm(self, args):
         "Switch to RAW mode"
@@ -201,6 +246,7 @@ class Interp(cmd.Cmd):
                                 termios.IEXTEN);
 
             termios.tcsetattr(stdin, termios.TCSADRAIN, raw_termios)
+            #i = 0
 
             mode = "normal"
             while True:
@@ -226,14 +272,28 @@ class Interp(cmd.Cmd):
                             if c == self.escape:
                                 mode = "escape"
                             else:
+                                #time.sleep(0.1)
                                 #self.ser.write(c)
                                 self.rfcomm.settimeout(1.)
                                 self.rfcomm.send(c)
+
                     #elif x == self.ser:
                     elif x == self.rfcomm:
                         #os.write(stdout,self.ser.read())
-                        self.rfcomm.settimeout(0.01)
-                        os.write(stdout,self.rfcomm.recv(1))
+                        #self.rfcomm.settimeout(0.01)
+                        #os.write(stdout,self.rfcomm.recv(1022))
+
+                        try:
+                            self.rfcomm.settimeout(0.0) # set blocking False
+                            received = self.rfcomm.recv(4096)
+                            os.write(stdout,received)
+                        except:
+                            pass
+                        #except BluetoothError as error:
+                        #    if str(error) != 'timed out':
+                        #        raise
+
+
         finally:
             termios.tcsetattr(stdin, termios.TCSADRAIN, stdin_termios)
             log.info("Back to normal mode")
@@ -243,9 +303,9 @@ class Interp(cmd.Cmd):
         try:
             sa, sd, aa, ad = [int(x) for x in shlex.shlex(args)]
         except:
-            print "args: speed_a, speed_d, acc_a, acc_d"
+            print("args: speed_a, speed_d, acc_a, acc_d")
             return
-        print sa, sd, aa, ad
+        print(sa, sd, aa, ad)
         time.sleep(10)
         self.ser.write("traj_speed angle %d\n"%(sa))
         time.sleep(0.1)
@@ -260,39 +320,57 @@ class Interp(cmd.Cmd):
         self.ser.flushInput()
         self.ser.write("position show\n")
         time.sleep(1)
-        print self.ser.read()
+        print(self.ser.read())
 
     def do_traj_acc(self, args):
         try:
             name, acc = [x for x in shlex.shlex(args)]
         except:
-            print "args: cs_name acc"
+            print("args: cs_name acc")
             return
 
         acc = int(acc)
         self.ser.flushInput()
         self.ser.write("quadramp %s %d %d 0 0\n"%(name, acc, acc))
         time.sleep(1)
-        print self.ser.read()
+        print(self.ser.read())
 
     def do_traj_speed(self, args):
         try:
             name, speed = [x for x in shlex.shlex(args)]
         except:
-            print "args: cs_name speed"
+            print("args: cs_name speed")
             return
 
         speed = int(speed)
         self.ser.flushInput()
         self.ser.write("traj_speed %s %d\n"%(name, speed))
         time.sleep(1)
-        print self.ser.read()
+        print(self.ser.read())
+
+    def do_hc05_stress(self, args):
+        #self.ser.flushInput()
+        #self.ser.flushInput()
+        for i in range(1000):
+            for j in range(9):
+                self.rfcomm.settimeout(1.)
+                self.rfcomm.send(str(j))
+                #print(str(i)+'\n'))
+
+        data = ''
+        for i in range(1000):
+            for j in range(9):
+                data += self.rfcomm.recv(1)
+
+        for i in range(1000):
+            for j in range(9):
+                print(data[i])
 
     def do_tune(self, args):
         try:
             name, tlog, cons, gain_p, gain_i, gain_d = [x for x in shlex.shlex(args)]
         except:
-            print "args: cs_name, time_ms, consigne, gain_p, gain_i, gain_d"
+            print("args: cs_name, time_ms, consigne, gain_p, gain_i, gain_d")
             return
 
         # Test parameters
@@ -301,7 +379,7 @@ class Interp(cmd.Cmd):
         gain_p = int(gain_p)
         gain_i = int(gain_i)
         gain_d = int(gain_d)
-        #print name, cons, gain_p, gain_i, gain_d
+        #print(name, cons, gain_p, gain_i, gain_d)
 
 
         # Set position, gains, set tm on and goto consign
@@ -314,7 +392,7 @@ class Interp(cmd.Cmd):
             time.sleep(0.1)
             self.ser.write("echo off\n")
             #time.sleep(2)
-            #print self.ser.read()
+            #print(self.ser.read())
 
             print("goto d_rel %d\n"%(cons))
 
@@ -328,7 +406,7 @@ class Interp(cmd.Cmd):
             time.sleep(0.1)
             self.ser.write("echo off\n")
             #time.sleep(2)
-            #print self.ser.read()
+            #print(self.ser.read())
 
             print("goto d_rel %d\n"%(cons))
 
@@ -378,19 +456,25 @@ class Interp(cmd.Cmd):
 
         head = TM_HEAD_BYTE_0 + TM_HEAD_BYTE_1
         tm_packets = tm_data.split(head)
-        #print(tm_packets)
+        #print(tm_packets))
 
         for data in tm_packets:
             if data[-1] == TM_TAIL_BYTE_0 and len(data) == (TM_SIZE-2):
                 tm_data = unpack(TM_STRUCT, data)
-                #print(tm_data, type(tm_data))
+                #print(tm_data, type(tm_data)))
 
                 time_ms = np.append(time_ms, tm_data[0])
-                cons = np.append(cons, tm_data[1])
-                f_cons = np.append(f_cons, tm_data[2])
-                err = np.append(err, tm_data[3])
-                feedback = np.append(feedback, tm_data[4])
-                out = np.append(out, tm_data[5])
+                #cons = np.append(cons, tm_data[1])
+                #f_cons = np.append(f_cons, tm_data[2])
+                #err = np.append(err, tm_data[3])
+                #feedback = np.append(feedback, tm_data[4])
+                #out = np.append(out, tm_data[5])
+                cons = np.append(cons, tm_data[6])
+                f_cons = np.append(f_cons, tm_data[7])
+                err = np.append(err, tm_data[8])
+                feedback = np.append(feedback, tm_data[9])
+                out = np.append(out, tm_data[10])
+
 
                 if i>0:
                     v_cons = np.append(v_cons, (f_cons[i] - f_cons[i-1])/(time_ms[i]-time_ms[i-1]))
@@ -434,8 +518,8 @@ class Interp(cmd.Cmd):
 
           # data logging
           if m:
-            #print line
-            #print m.groups()
+            #print(line)
+            #print(m.groups())
             t = np.append(t, i*TS)
             time_ms = np.append(time_ms, int(m.groups()[0]))
             cons = np.append(cons, int(m.groups()[1]))
@@ -458,7 +542,7 @@ class Interp(cmd.Cmd):
           # trajectory end
           m = re.match("returned", line)
           if m:
-            print line.rstrip()
+            print(line.rstrip())
 
          """
 
@@ -511,6 +595,8 @@ class Interp(cmd.Cmd):
 
         plt.show()
 
+
+
 if __name__ == "__main__":
     try:
         import readline,atexit
@@ -527,13 +613,14 @@ if __name__ == "__main__":
     device = None
     if len(sys.argv) > 1:
         device = sys.argv[1]
-    interp = Interp(device)
+    interp = Interp(device) # HC-05 blue
+    #interp = Interp(device, addr='98:D3:31:F6:1C:51') # HC-05 white
     while 1:
         try:
             interp.cmdloop()
         except KeyboardInterrupt:
             print
-        except Exception,e:
+        except Exception as e:
             l = str(e).strip()
             if l:
                 log.exception("%s" % l.splitlines()[-1])
