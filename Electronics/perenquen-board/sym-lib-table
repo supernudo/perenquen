@@ -1,0 +1,3 @@
+(sym_lib_table
+  (lib (name perenquen-rescue)(type Legacy)(uri ${KIPRJMOD}/perenquen-rescue.lib)(options "")(descr ""))
+)
