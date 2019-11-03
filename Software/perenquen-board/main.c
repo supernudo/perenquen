@@ -81,6 +81,18 @@ void do_led_blink(void *dummy)
 	//LED3_TOGGLE();
 	LED4_TOGGLE();
 
+	/* Battery check */
+	sensor_adc_do_read(S_ADC_BATTERY);
+	if (3*sensor_adc_get_value_mv(S_ADC_BATTERY) <= 7000)	{
+		while(1) {
+			LED1_TOGGLE();
+			//LED2_TOGGLE();
+			LED3_TOGGLE();
+			LED4_TOGGLE();
+			wait_ms(100);
+		}
+	}
+
 }
 
 static void main_timer_interrupt(void)
@@ -191,7 +203,7 @@ void io_pins_init(void)
 	/* bluetooth */
 	_TRISB13 = 1;	/* BT-STATE */
 	_TRISB12 = 0;	/* BT-EN */
-	_LATB12  = 1;
+	_LATB12  = 0;
 
 	/* uart, U1 is for cmdline */
 	_U1RXR  = 101;
@@ -202,6 +214,7 @@ void io_pins_init(void)
 #endif /* !HOST_VERSION */
 
 void hc05_programming(void) {
+
 
 	/* enable interrupts */
 	sei();
@@ -315,17 +328,7 @@ int main(void)
 	/* sensors, will also init hardware adc */
 	sensor_init();
 
-	/* Battery check */
-	sensor_adc_do_read(S_ADC_BATTERY);
-	if (3*sensor_adc_get_value_mv(S_ADC_BATTERY) <= 6300)	{
-		while(1) {
-			LED1_TOGGLE();
-			//LED2_TOGGLE();
-			LED3_TOGGLE();
-			LED4_TOGGLE();
-			wait_ms(100);
-		}
-	}
+
 
 	/* strat-related event */
 	// TODO scheduler_add_periodical_event_priority(strat_event, NULL,
@@ -371,6 +374,13 @@ int main(void)
 
 	/* init telemetry */
 	tm_data_init();
+
+	//while(1){
+	//	LED1_ON();
+	//	tm_data_send();
+	//	LED1_OFF();
+	//	tm_data_send();
+	//}
 
 	/* process commands, never returns */
 	cmdline_interact();

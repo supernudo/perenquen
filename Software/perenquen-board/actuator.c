@@ -143,7 +143,7 @@ void motor_pwm_set_and_save(void *pwm_gen_num, int32_t val)
 	/* set value */
 #ifdef HOST_VERSION
 	robotsim_pwm(pwm_gen_num, val);
-#else
-	hspwm_set_pwm(pwm_gen_num, val);
+//#else
+	//hspwm_set_pwm(pwm_gen_num, val);
 #endif
 }
