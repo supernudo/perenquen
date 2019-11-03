@@ -84,6 +84,8 @@ void do_led_blink(void *dummy)
 	/* Battery check */
 	sensor_adc_do_read(S_ADC_BATTERY);
 	if (3*sensor_adc_get_value_mv(S_ADC_BATTERY) <= 7000)	{
+		/* Disable BT and PWMs */
+		_LATB12  = 1;
 		hspwm_set_pwm(MOTOR_LEFT, 0);
 		hspwm_set_pwm(MOTOR_RIGHT, 0);
 		while(1) {
