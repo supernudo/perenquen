@@ -84,6 +84,8 @@ void do_led_blink(void *dummy)
 	/* Battery check */
 	sensor_adc_do_read(S_ADC_BATTERY);
 	if (3*sensor_adc_get_value_mv(S_ADC_BATTERY) <= 7000)	{
+		hspwm_set_pwm(MOTOR_LEFT, 0);
+		hspwm_set_pwm(MOTOR_RIGHT, 0);
 		while(1) {
 			LED1_TOGGLE();
 			//LED2_TOGGLE();
@@ -203,7 +205,7 @@ void io_pins_init(void)
 	/* bluetooth */
 	_TRISB13 = 1;	/* BT-STATE */
 	_TRISB12 = 0;	/* BT-EN */
-	_LATB12  = 0;
+	_LATB12  = 1;
 
 	/* uart, U1 is for cmdline */
 	_U1RXR  = 101;
@@ -277,7 +279,7 @@ int main(void)
 	memset(&mainboard, 0, sizeof(mainboard));
 
 	/* init flags */
-    mainboard.flags = DO_ENCODERS | DO_RS | DO_POS | DO_POWER | DO_CS; //| DO_BD;
+    mainboard.flags = DO_ENCODERS | DO_RS | DO_POS | DO_POWER;// | DO_CS; //| DO_BD;
 
 #ifndef HOST_VERSION
 	/* UART */

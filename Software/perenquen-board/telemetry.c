@@ -29,8 +29,10 @@
 /* Telemetry data packet */
 struct tm_data tm;
 
+#ifdef BT_TEST
 #define TM_TEST_SIZE 30
 uint8_t tm_test[TM_TEST_SIZE];
+#endif
 
 /* Initialize header of telemetry packet */
 void tm_data_init(void)
@@ -41,10 +43,12 @@ void tm_data_init(void)
 	tm.header[1] = TM_HEAD_BYTE_1;
 	tm.tail = TM_TAIL_BYTE_0;
 
+#ifdef BT_TEST
 	for(i=0; i<TM_TEST_SIZE; i++)
 		tm_test[i] = 0x50 + i;
 
 	tm_test[TM_TEST_SIZE-1] = '\n';
+#endif
 }
 
 /* Update telemetry packet and send it thru UART */
@@ -52,9 +56,12 @@ void tm_data_send(void)
 {
 	void *pdata = (void*)&tm;
 	uint8_t data_size = sizeof(struct tm_data);
-  uint8_t i;
+
+#ifndef BT_TEST
+	uint8_t i;
 	uint8_t state = 0;
 	static uint32_t bytes_count = 0;
+#endif
 
 	/* timetag */
 	tm.time_ms = time_get_us2()/1000;
@@ -75,10 +82,12 @@ void tm_data_send(void)
 
 	/* TODO: add more data */
 
-	/* send data */
-	//for(i=0; i<data_size; i++)
-	//	uart_send(0,*(char*)pdata++);
 
+#ifndef BT_TEST
+	/* send data */
+	for(i=0; i<data_size; i++)
+		uart_send(0,*(char*)pdata++);
+#else
 	for(i=0; i<TM_TEST_SIZE; i++)
 		uart_send(0,tm_test[i]);
 
@@ -95,4 +104,5 @@ void tm_data_send(void)
 	//		state = 0;
 	//		break;
 	//}
+#endif
 }

@@ -65,17 +65,17 @@ void hspwm_init(void)
 	SDC2 = 0;
 
 	/* Set Dead Time Values */
-	DTR1 = DTR2 = DTR3 = 0;
-	ALTDTR1 = ALTDTR2 = ALTDTR3 = 0;
+	DTR1 = DTR2 = 0;
+	ALTDTR1 = ALTDTR2 = 0;
 
-	/* Set PWM Mode to Independent */
-	IOCON1 = IOCON2 = IOCON3 = 0xCC00;
+	/* Set PWM Mode to Independant */
+	IOCON1 = IOCON2 = 0xCC00;
 
 	/* Set Primary Time Base, Edge-Aligned Mode and Independent Duty Cycles */
-	PWMCON1 = PWMCON2 = PWMCON3 = 0x0000;
+	PWMCON1 = PWMCON2 = 0x0000;
 
-	/* Configure Faults */
-	FCLCON1 = FCLCON2 = FCLCON3 = 0x0003;
+	/* Configure Faults (disabled) */
+	FCLCON1 = FCLCON2 = 0x0003;
 
 	/* 1:1 Prescaler */
 	PTCON2 = 0x0000;
@@ -88,16 +88,14 @@ void hspwm_set_pwm(void* gen_num, int16_t val) {
 
 	switch ((int)gen_num) {
 		case 1:
-			/* HACK: same sign for both motors */
-			//if (val >= 0) {	PDC1 = val;	SDC1 = 0; }
-			//else 					{ PDC1 = 0; 	SDC1 = -val; }
-			if (val >= 0) {	SDC1 = val;	PDC1 = 0; }
-			else 					{ SDC1 = 0; 	PDC1 = -val; }
+			/* XXX: same sign for both motors */
+			if (val >= 0) {	SDC1 = 0;			PDC1 = val; }
+			else 					{ SDC1 = -val; 	PDC1 = 0; 	}
 			break;
 
 		case 2:
-			if (val >= 0) {	PDC2 = val;	SDC2 = 0; }
-			else 					{ PDC2 = 0; 	SDC2 = -val; }
+			if (val >= 0) {	SDC2 = 0; 		PDC2 = val;	}
+			else 					{ SDC2 = -val; 	PDC2 = 0; 	}
       break;
 
 		default:
@@ -143,7 +141,7 @@ void motor_pwm_set_and_save(void *pwm_gen_num, int32_t val)
 	/* set value */
 #ifdef HOST_VERSION
 	robotsim_pwm(pwm_gen_num, val);
-//#else
-	//hspwm_set_pwm(pwm_gen_num, val);
+#else
+	hspwm_set_pwm(pwm_gen_num, val);
 #endif
 }

@@ -144,9 +144,11 @@ static void do_cs(void *dummy)
 
 	/* Send telemetry data */
 	if (mainboard.flags & DO_TM_DATA) {
-		LED1_ON();
-		tm_data_send();
-		LED1_OFF();
+		if ((cpt & 3) == 2) {
+			LED1_ON();
+			tm_data_send();
+			LED1_OFF();
+		}
 	}
 
 	/* Update sub-sampling counter */
