@@ -68,8 +68,8 @@ void hspwm_init(void)
 	DTR1 = DTR2 = 0;
 	ALTDTR1 = ALTDTR2 = 0;
 
-	/* Set PWM Mode to Independant */
-	IOCON1 = IOCON2 = 0xCC00;
+	/* Set PWM Mode to Independant and polarity inverted */
+	IOCON1 = IOCON2 = 0xFC00;
 
 	/* Set Primary Time Base, Edge-Aligned Mode and Independent Duty Cycles */
 	PWMCON1 = PWMCON2 = 0x0000;
