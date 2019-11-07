@@ -68,8 +68,8 @@ void hspwm_init(void)
 	DTR1 = DTR2 = 0;
 	ALTDTR1 = ALTDTR2 = 0;
 
-	/* Set PWM Mode to Independant */
-	IOCON1 = IOCON2 = 0xCC00;
+	/* Set PWM Mode to Independant and polarity inverted */
+	IOCON1 = IOCON2 = 0xFC00;
 
 	/* Set Primary Time Base, Edge-Aligned Mode and Independent Duty Cycles */
 	PWMCON1 = PWMCON2 = 0x0000;
@@ -86,16 +86,18 @@ void hspwm_init(void)
 
 void hspwm_set_pwm(void* gen_num, int16_t val) {
 
+	#define DUTY_MAX 6000
+
 	switch ((int)gen_num) {
 		case 1:
 			/* XXX: same sign for both motors */
-			if (val >= 0) {	SDC1 = 0;			PDC1 = val; }
-			else 					{ SDC1 = -val; 	PDC1 = 0; 	}
+			if (val >= 0) {	SDC1 = val;	PDC1 = 0; }
+			else 					{ SDC1 = 0; 	PDC1 = -val; 	}
 			break;
 
 		case 2:
-			if (val >= 0) {	SDC2 = 0; 		PDC2 = val;	}
-			else 					{ SDC2 = -val; 	PDC2 = 0; 	}
+			if (val >= 0) {	SDC2 = val; PDC2 = 0;	}
+			else 					{ SDC2 = 0; 	PDC2 = -val; 	}
       break;
 
 		default:

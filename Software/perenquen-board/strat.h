@@ -93,21 +93,21 @@
 #define ACC_DIST  70
 #define ACC_ANGLE 60
 #else
-#define ACC_DIST  40
-#define ACC_ANGLE 25
+#define ACC_DIST  3
+#define ACC_ANGLE 3
 #endif
 
 /* default speeds */
-#define SPEED_DIST_VERY_FAST 	1000
-#define SPEED_DIST_FAST 		  1000
-#define SPEED_ANGLE_VERY_FAST 10000
-#define SPEED_ANGLE_FAST 		  10000
+#define SPEED_DIST_VERY_FAST 	600
+#define SPEED_DIST_FAST 		  600
+#define SPEED_ANGLE_VERY_FAST 600
+#define SPEED_ANGLE_FAST 		  600
 
 //Do not change
-#define SPEED_DIST_SLOW 		   1000
-#define SPEED_ANGLE_SLOW 		   10000
-#define SPEED_DIST_VERY_SLOW 	 1000
-#define SPEED_ANGLE_VERY_SLOW  10000
+#define SPEED_DIST_SLOW 		   600
+#define SPEED_ANGLE_SLOW 		   600
+#define SPEED_DIST_VERY_SLOW 	 600
+#define SPEED_ANGLE_VERY_SLOW  600
 
 #ifdef HOST_VERSION
 #define ACC_DIST  72

@@ -74,6 +74,7 @@ struct mainboard mainboard;
 #ifndef HOST_VERSION
 void do_led_blink(void *dummy)
 {
+	static uint8_t i=0;
 
 	/* simple blink */
 	//LED1_TOGGLE();
@@ -84,17 +85,23 @@ void do_led_blink(void *dummy)
 	/* Battery check */
 	sensor_adc_do_read(S_ADC_BATTERY);
 	if (3*sensor_adc_get_value_mv(S_ADC_BATTERY) <= 7000)	{
-		/* Disable BT and PWMs */
-		_LATB12  = 1;
-		hspwm_set_pwm(MOTOR_LEFT, 0);
-		hspwm_set_pwm(MOTOR_RIGHT, 0);
-		while(1) {
-			LED1_TOGGLE();
-			//LED2_TOGGLE();
-			LED3_TOGGLE();
-			LED4_TOGGLE();
-			wait_ms(100);
+		i++;
+		if(i>5) {
+			/* Disable BT and PWMs */
+			_LATB12  = 1;
+			hspwm_set_pwm(MOTOR_LEFT, 0);
+			hspwm_set_pwm(MOTOR_RIGHT, 0);
+			while(1) {
+				LED1_TOGGLE();
+				//LED2_TOGGLE();
+				LED3_TOGGLE();
+				LED4_TOGGLE();
+				wait_ms(100);
+			}
 		}
+	}
+	else {
+		i = 0;
 	}
 
 }

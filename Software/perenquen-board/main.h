@@ -126,7 +126,7 @@
 
 /* distance between encoders weels,
  * decrease track to decrease angle */
-#define EXT_TRACK_MM      67.0
+#define EXT_TRACK_MM      66.0
 #define VIRTUAL_TRACK_MM  EXT_TRACK_MM
 
 /* XXX keep synchronized with maindspic/strat.c */

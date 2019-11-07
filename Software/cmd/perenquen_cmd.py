@@ -613,8 +613,9 @@ if __name__ == "__main__":
     device = None
     if len(sys.argv) > 1:
         device = sys.argv[1]
-    interp = Interp(device) # HC-05 blue
+    #interp = Interp(device) # HC-05 blue
     #interp = Interp(device, addr='98:D3:31:F6:1C:51') # HC-05 white
+    interp = Interp(device, addr='00:18:E5:03:F5:99') # HC-05 BRICOGEEK
     while 1:
         try:
             interp.cmdloop()

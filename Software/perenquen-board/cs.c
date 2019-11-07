@@ -256,7 +256,7 @@ void maindspic_cs_init(void)
 	/* PID */
 	pid_init(&mainboard.angle.pid);
 #ifndef HOST_VERSION
-	pid_set_gains(&mainboard.angle.pid, 1400, 0, 200); // real
+	pid_set_gains(&mainboard.angle.pid, 900, 0, 3000); //1400, 0, 200); // real
 #else
 //	pid_set_gains(&mainboard.angle.pid, 40, 0, 1200); // robotsim tunning
 //	pid_set_gains(&mainboard.angle.pid, 300, 0, 3500); // robotsim tunning
@@ -288,7 +288,7 @@ void maindspic_cs_init(void)
 	/* PID */
 	pid_init(&mainboard.distance.pid);
 #ifndef HOST_VERSION
-	pid_set_gains(&mainboard.distance.pid, 1400, 0, 400); // real
+	pid_set_gains(&mainboard.distance.pid, 900, 0, 3000); //1400, 0, 400); // real
 #else
 //	pid_set_gains(&mainboard.distance.pid, 40, 0, 1200); // robotsim tunning
 //	pid_set_gains(&mainboard.distance.pid, 300, 0, 3500); // robotsim tunning
