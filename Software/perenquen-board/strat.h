@@ -98,10 +98,10 @@
 #endif
 
 /* default speeds */
-#define SPEED_DIST_VERY_FAST 	600
-#define SPEED_DIST_FAST 		  600
-#define SPEED_ANGLE_VERY_FAST 600
-#define SPEED_ANGLE_FAST 		  600
+#define SPEED_DIST_VERY_FAST 	400
+#define SPEED_DIST_FAST 		  400
+#define SPEED_ANGLE_VERY_FAST 400
+#define SPEED_ANGLE_FAST 		  400
 
 //Do not change
 #define SPEED_DIST_SLOW 		   600

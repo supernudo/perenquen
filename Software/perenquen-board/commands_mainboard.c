@@ -81,7 +81,7 @@
 
 uint8_t strat_obstacle(void)
 {
-  #define S_FRONT_OBSTACLE_VALUE 500
+  #define S_FRONT_OBSTACLE_VALUE 350
   sensor_adc_do_read(S_ADC_FRONT_LEFT);
   sensor_adc_do_read(S_ADC_FRONT_RIGHT);
   return (sensor_adc_get_value(S_ADC_FRONT_LEFT) > S_FRONT_OBSTACLE_VALUE &&
@@ -101,12 +101,20 @@ void strat_follow_wall(uint8_t side, int32_t gain)
   #define S_FRONT_END_TURN_VALUE  150
 
   uint8_t state = STATE_CALIB;
-  uint16_t calib_diag_left=0, calib_diag_right=0;
+  int16_t calib_diag_left=0, calib_diag_right=0;
   int16_t error;
   float angle = 0.0;
   uint8_t err;
   uint8_t running = 1;
   uint8_t sensor;
+
+
+  double coef;
+  #define RADIOUS_mm  80.0
+	coef = 2. * RADIOUS_mm / EXT_TRACK_MM;
+  trajectory_set_speed(&mainboard.traj, mainboard.traj.d_speed, mainboard.traj.d_speed/coef);
+
+  DEBUG(E_USER_STRAT, "coef %f, speed d = %d, a = %d\n\r", coef, mainboard.traj.d_speed, mainboard.traj.a_speed);
 
 
   interrupt_traj_reset();
@@ -161,7 +169,11 @@ void strat_follow_wall(uint8_t side, int32_t gain)
           sensor_adc_do_read(S_ADC_DIAG_LEFT);
 
           error = calib_diag_left - sensor_adc_get_value(S_ADC_DIAG_LEFT);
-          angle = error*gain/1024;
+
+          if (error >  (calib_diag_left/3))
+            angle = 180;
+          else
+            angle = error*gain/1024;
           DEBUG(E_USER_STRAT, "LEFT error %d, angle %f\n\r", error, angle);
 
           trajectory_only_a_rel(&mainboard.traj, (int32_t)angle);
@@ -170,7 +182,12 @@ void strat_follow_wall(uint8_t side, int32_t gain)
           sensor_adc_do_read(S_ADC_DIAG_RIGHT);
 
           error = calib_diag_right - sensor_adc_get_value(S_ADC_DIAG_RIGHT);
-          angle = -error*gain/1024;
+
+          if (error >  (calib_diag_right/3))
+            angle = -180;
+          else
+            angle = -error*gain/1024;
+
           DEBUG(E_USER_STRAT, "RIGHT error %d, angle %f\n\r", error, angle);
 
           trajectory_only_a_rel(&mainboard.traj, (int32_t)angle);

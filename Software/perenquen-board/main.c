@@ -288,7 +288,7 @@ int main(void)
 	memset(&mainboard, 0, sizeof(mainboard));
 
 	/* init flags */
-    mainboard.flags = DO_ENCODERS | DO_RS | DO_POS | DO_POWER;// | DO_CS; //| DO_BD;
+    mainboard.flags = DO_ENCODERS | DO_RS | DO_POS | DO_POWER | DO_CS; //| DO_BD;
 
 #ifndef HOST_VERSION
 	/* UART */
