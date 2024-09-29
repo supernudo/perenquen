@@ -20,4 +20,8 @@
  */
 
 /** precision of the time processor, in us */
-#define TIME_PRECISION 250l
+#ifdef HOST_VERSION
+#define TIME_PRECISION 10000l
+#else
+#define TIME_PRECISION 10000l
+#endif

@@ -79,6 +79,10 @@
 
 #include "strat_utils.h"
 
+#ifdef HOST_VERSION
+#define COMPILE_COMMANDS_MAINBOARD_OPTIONALS
+#endif
+
 uint8_t strat_obstacle(void)
 {
   #define S_FRONT_OBSTACLE_VALUE 350

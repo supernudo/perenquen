@@ -21,18 +21,11 @@
 
 extern uint8_t robotsim_blocking;
 
-int8_t robotsim_i2c(uint8_t addr, uint8_t *buf, uint8_t size);
 void robotsim_update(void);
 void robotsim_pwm(void *arg, int32_t val);
 int32_t robotsim_encoder_get(void *arg);
 int robotsim_init(void);
 void robotsim_dump(void);
-int8_t robotsim_i2c_cobboard_set_mode(uint8_t mode);
-int8_t robotsim_i2c_cobboard_set_spickles(uint8_t side, uint8_t flags);
 
-/* BT UART received char */
-int16_t robotsim_uart_recv_BT(void);
 
-/* BT UART send char */
-int16_t robotsim_uart_send_BT(char c);
 

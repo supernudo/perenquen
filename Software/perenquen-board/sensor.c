@@ -42,6 +42,8 @@
 
 /************ ADC SENSORS *****************************************************/
 
+#ifndef HOST_VERSION
+
 /* config init */
 static void adc_init(void)
 {
@@ -188,17 +190,29 @@ static struct adc_sensor adc_sensors[S_ADC_MAX] = {
 	[S_ADC_FLASH] 			= { .adc_channel = 2, .enable_port = NULL,  .enable_pin = NULL, 	.delay_us = 1},
 };
 
+#endif /* !HOST_VERSION */
+
 void sensor_adc_do_read (uint8_t num) {
+#ifndef HOST_VERSION
 	do_adc_sensor_read(&adc_sensors[num]);
+#endif
 }
 
 uint16_t sensor_adc_get_value(uint8_t num) {
+#ifndef HOST_VERSION
 	return adc_sensors[num].value;
+#else
+	return 0;
+#endif
 }
 
 uint16_t sensor_adc_get_value_mv(uint8_t num) {
 #define K_MILIVOLTS_ADC_COUNTS	(3300.0/1024)
+#ifndef HOST_VERSION
 	return (uint16_t)(adc_sensors[num].value*K_MILIVOLTS_ADC_COUNTS);
+#else
+	return 0;
+#endif
 }
 
 void sensor_init(void)

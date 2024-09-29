@@ -224,6 +224,12 @@ void io_pins_init(void)
 }
 #endif /* !HOST_VERSION */
 
+void print_hello(void *dummy)
+{
+	//printf("hello\n");
+	DEBUG(E_USER_SENSOR, "hello");
+}
+
 void hc05_programming(void) {
 
 
@@ -324,12 +330,6 @@ int main(void)
 	robotsim_init();
 #endif
 
-	/* EVENTS OR INIT MODULES THAT INCLUDE EVENTS */
-#ifndef HOST_VERSION
-	scheduler_add_periodical_event_priority(do_led_blink, NULL,
-						EVENT_PERIOD_LED / SCHEDULER_UNIT, EVENT_PRIORITY_LED);
-#endif
-
 	/* time */
 	time_init(EVENT_PRIORITY_TIME);
 
@@ -340,6 +340,14 @@ int main(void)
 	sensor_init();
 
 
+	/* EVENTS OR INIT MODULES THAT INCLUDE EVENTS */
+#ifndef HOST_VERSION
+	scheduler_add_periodical_event_priority(do_led_blink, NULL,
+						EVENT_PERIOD_LED / SCHEDULER_UNIT, EVENT_PRIORITY_LED);
+#else
+	scheduler_add_periodical_event_priority(print_hello, NULL,
+						EVENT_PERIOD_LED / SCHEDULER_UNIT, EVENT_PRIORITY_LED);
+#endif
 
 	/* strat-related event */
 	// TODO scheduler_add_periodical_event_priority(strat_event, NULL,
@@ -360,7 +368,15 @@ int main(void)
 	printf("Hi there!! I'm Perenquen Robot :) \r\n");
 	printf("Battery voltage: %d mV\n\r", 3*sensor_adc_get_value_mv(S_ADC_BATTERY));
 	printf("\r\n");
+
+	#ifndef HOST_VERSION
 	printf("M=%d\n\r", (int)M);
+	#endif
+
+	//DEBUG(E_USER_STRAT, "tic");
+	//time_wait_ms(1000);
+	//DEBUG(E_USER_STRAT, "toc");
+	
 
 	#if 0
 	while (1) {

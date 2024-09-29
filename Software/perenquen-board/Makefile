@@ -4,13 +4,12 @@ TARGET = main
 AVERSIVE_DIR = ../libs/aversive4dspic
 #AVERSIVE_DIR = ../libs/microb_2010
 
-SRC  = $(TARGET).c cmdline.c commands_gen.c
+SRC  = $(TARGET).c 
+SRC += cmdline.c commands_gen.c
 SRC += commands_cs.c commands_mainboard.c commands_traj.c commands.c
-SRC += i2c_mem.c i2c_protocol.c sensor.c actuator.c cs.c
-SRC += strat_utils.c strat_base.c strat_avoid.c strat.c wt11.c
-SRC += bt_protocol.c
-SRC += strat_main.c strat_begin.c strat_spotlight.c strat_popcorn.c strat_strategies.c
-SRC += strat_capperboard.c
+SRC += actuator.c cs.c sensor.c strat.c strat_base.c strat_utils.c
+SRC += telemetry.c
+
 ifeq ($(H),1)
 SRC += robotsim.c
 endif

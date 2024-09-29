@@ -29,6 +29,7 @@
 #include "main.h"
 #include "robotsim.h"
 
+#ifndef HOST_VERSION
 void hspwm_init(void)
 {
 	/* Use PWM generators 1 and 2.
@@ -104,6 +105,7 @@ void hspwm_set_pwm(void* gen_num, int16_t val) {
 			break;
 	}
 }
+#endif /* !HOST_VERSION */
 
 void motor_pwm_set_and_save(void *pwm_gen_num, int32_t val)
 {
