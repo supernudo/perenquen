@@ -14,3 +14,4 @@ built
 *.d
 *.o
 Wiki
+.venv

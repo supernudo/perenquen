@@ -3,30 +3,42 @@ import math, sys, time, os, random, re
 from vpython import *
 from functools import reduce
 
+# Regex parsing
 FLOAT = '([-+]?[0-9]*.?[0-9]+)'
 INT = '([-+]?[0-9][0-9]*)'
 
-AREA_X = 3000.
-AREA_Y = 2000.
+# Dimensions
+MAZE_CELLS_X = 16.
+MAZE_CELLS_Y = 16.
+MAZE_CELL_SIZE = 180.
+MAZE_COLUMM_SIZE = 12.
+MAZE_WALL_THINKNESS = 12.
+MAZE_WALL_HEIGHT = 50.
+MAZE_WALL_LENGTH = MAZE_CELL_SIZE - MAZE_COLUMM_SIZE
 
-ROBOT_HEIGHT = 350.0
-WALL_HEIGHT = 70.0
+AREA_X = MAZE_CELLS_X * MAZE_CELL_SIZE
+AREA_Y = AREA_X
 
-ROBOT_WIDTH  = 330.0
-ROBOT_LENGTH = 288.5
-#ROBOT_LENGTH = 210.0 #105.0*2.0
-#ROBOT_X_OFFSET = ROBOT_LENGTH/2.0 - 121.5
+ROBOT_LENGTH            = 101.
+ROBOT_WIDTH             = 75.5
+ROBOT_CENTER_TO_FRONT   = 55.5
+ROBOT_CENTER_TO_BACK    = (ROBOT_LENGTH - ROBOT_CENTER_TO_FRONT)
 
-area = [ (0.0, 0.0, -0.2), (3000.0, 2000.0, 0.2) ]
-areasize = reduce(lambda x,y:tuple([abs(x[i])+abs(y[i]) for i in range(len(x))]) , area)
-area_box = box(size=vec(*areasize), color=vec(0.09, 0.38, 0.671))
+ROBOT_HEIGHT = 25
+
+# Playground area
+area = box(length=AREA_X, width=AREA_Y)
+
+#area = [ (0.0, 0.0, -0.2), (3000.0, 2000.0, 0.2) ]
+#areasize = reduce(lambda x,y:tuple([abs(x[i])+abs(y[i]) for i in range(len(x))]) , area)
+#area_box = box(size=vec(*areasize), color=vec(0.09, 0.38, 0.671))
 
 scene.autoscale = 1
 
 # all positions of robot every 5ms
 save_pos = []
 
-robot = box(color=vec(1.0, 1.0, 1.0))
+robot = box(color=vec(1.0, 1.0, 1.0), make_trail=True)
 robot.opacity = 0.5
 
 opp = box(color=vec(0.7, 0.2, 0.2))
