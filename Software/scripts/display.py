@@ -1,0 +1,355 @@
+import math, sys, time, os, random, re
+from vpython import *
+from functools import reduce
+
+from common import Client
+from client_simple import Simple
+from client_lefwall import LeftWall
+from client_floodfill import FloodFill
+
+from itertools import product
+
+# Regex parsing
+FLOAT = '([-+]?[0-9]*.?[0-9]+)'
+INT = '([-+]?[0-9][0-9]*)'
+
+# Dimensions
+MAZE_CELLS_X = 16
+MAZE_CELLS_Y = 16
+MAZE_CELL_SIZE = 180.
+MAZE_COLUMM_SIZE = 12.
+MAZE_WALL_THINKNESS = 12.
+MAZE_WALL_HEIGHT = 50.
+MAZE_WALL_LENGTH = MAZE_CELL_SIZE - MAZE_COLUMM_SIZE
+
+AREA_X = MAZE_CELLS_X * MAZE_CELL_SIZE
+AREA_Y = AREA_X
+
+ROBOT_LENGTH            = 101.
+ROBOT_WIDTH             = 75.5
+ROBOT_CENTER_TO_FRONT   = 55.5
+ROBOT_CENTER_TO_BACK    = (ROBOT_LENGTH - ROBOT_CENTER_TO_FRONT)
+
+ROBOT_HEIGHT = 25
+
+# Scene
+scene.autoscale = True
+scene.background = vec(100.0, 100.0, 100.0)
+scene.height = 1000
+scene.width = 1000
+
+# Playground area
+area = box(pos=vector(0, 0, -12), size=vector(AREA_X+MAZE_CELL_SIZE, AREA_Y+MAZE_CELL_SIZE, 12), color=color.black)
+
+# Maze
+colums = [[box(pos=vector(x*MAZE_CELL_SIZE - AREA_X/2, y*MAZE_CELL_SIZE - AREA_Y/2, MAZE_WALL_HEIGHT/2), 
+               size=vector(MAZE_COLUMM_SIZE, MAZE_COLUMM_SIZE, MAZE_WALL_HEIGHT), color=color.red) 
+           for y in range(MAZE_CELLS_Y+1)] for x in range(MAZE_CELLS_X+1)]
+
+walls_x = [[box(pos=vector(x*MAZE_CELL_SIZE + MAZE_CELL_SIZE/2 - AREA_X/2 , y*MAZE_CELL_SIZE - AREA_Y/2, MAZE_WALL_HEIGHT/2), 
+                size=vector(MAZE_WALL_LENGTH, MAZE_WALL_THINKNESS, MAZE_WALL_HEIGHT), color=color.white)
+            for y in range(MAZE_CELLS_Y+1)] for x in range(MAZE_CELLS_X)]
+
+walls_y = [[box(pos=vector(x*MAZE_CELL_SIZE - AREA_X/2 , y*MAZE_CELL_SIZE + MAZE_CELL_SIZE/2 - AREA_Y/2, MAZE_WALL_HEIGHT/2), 
+                size=vector(MAZE_WALL_THINKNESS, MAZE_WALL_LENGTH, MAZE_WALL_HEIGHT), color=color.white)
+            for y in range(MAZE_CELLS_Y)] for x in range(MAZE_CELLS_X+1)]
+
+def set_walls_all(value):
+    """Show or hide all wall objects."""
+    [setattr(wall, 'visible', value) for walls in walls_x for wall in walls]
+    [setattr(wall, 'visible', value) for walls in walls_y for wall in walls]
+
+def set_walls(x, y, orientation, left, front, right, attr='visible', attr_value=1):
+    """Set walls visible depending on the maze cell position and orientation."""
+    #if orientation == 'N':
+    #    walls_y[x][y].visible = True if left else False
+    #    walls_x[x][y+1].visible = True if front else False
+    #    walls_y[x+1][y].visible = True if right else False
+#
+    #elif orientation == 'S':
+    #    walls_y[x+1][y].visible = True if left else False
+    #    walls_x[x][y].visible = True if front else False
+    #    walls_y[x][y].visible = True if right else False
+    #
+    #elif orientation == 'E':
+    #    walls_x[x][y+1].visible = True if left else False
+    #    walls_y[x+1][y].visible = True if front else False
+    #    walls_x[x][y].visible = True if right else False
+    #
+    #elif orientation == 'W':
+    #    walls_x[x][y].visible = True if left else False
+    #    walls_y[x][y].visible = True if front else False
+    #    walls_x[x][y+1].visible = True if right else False
+
+    if orientation == 'N':
+        setattr(walls_y[x][y], attr, attr_value if left else 0)
+        setattr(walls_x[x][y+1], attr, attr_value if front else 0)
+        setattr(walls_y[x+1][y], attr, attr_value if right else 0)
+
+    elif orientation == 'S':
+        setattr(walls_y[x+1][y], attr, attr_value if left else 0)
+        setattr(walls_x[x][y], attr, attr_value if front else 0)
+        setattr(walls_y[x][y], attr, attr_value if right else 0)
+    
+    elif orientation == 'E':
+        setattr(walls_x[x][y+1], attr, attr_value if left else 0)
+        setattr(walls_y[x+1][y], attr, attr_value if front else 0)
+        setattr(walls_x[x][y], attr, attr_value if right else 0)
+    
+    elif orientation == 'W':
+        setattr(walls_x[x][y], attr, attr_value if left else 0)
+        setattr(walls_y[x][y], attr, attr_value if front else 0)
+        setattr(walls_x[x][y+1], attr, attr_value if right else 0)
+ 
+    else:
+        raise ValueError(f"Invalid orientation: {orientation}")
+
+class DisplaySim(FloodFill):
+    """Simulate algorithm and display"""
+
+    def set_walls(self, left, front, right, attr='visible', attr_value=1):
+        x = self.position[0]
+        y = self.position[1]
+        direction = self.direction[0].upper()
+        set_walls(x, y, direction, left, front, right, attr, attr_value)
+    
+    def init_walls(self, client):
+        for x, y in product(range(self.size), range(self.size)):
+            self.position = (x, y)
+            self.direction = 'north'
+            left, front, right = client.read_walls(self)
+            self.set_walls(left, front, right)
+            self.set_walls(left, front, right, 'opacity', 0.25)
+            if (y == 0):
+                self.direction = 'south'
+                left, front, right = client.read_walls(self)
+                self.set_walls(left, front, right)
+                self.set_walls(left, front, right, 'opacity', 0.25)
+
+        self.position = (0, 0)
+        self.direction = 'north'
+    
+    
+    def run(self):
+        client = Client()
+        client.reset()
+
+        self.init_walls(client)
+
+        for _ in range(1000):        
+            left, front, right = client.read_walls(self)
+            self.set_walls(left, front, right, 'opacity', 1)
+            self.update_walls(left, front, right)
+            self.calculate_distances()
+            client.send_state(self)
+            if self.position in self.goals:
+                break
+            self.move(self.best_step())
+
+set_walls_all(False)
+simulator = DisplaySim(16, goals=[(7, 7), (7, 8), (8, 7), (8, 8)])
+simulator.run()
+
+"""
+#area = [ (0.0, 0.0, -0.2), (3000.0, 2000.0, 0.2) ]
+#areasize = reduce(lambda x,y:tuple([abs(x[i])+abs(y[i]) for i in range(len(x))]) , area)
+#area_box = box(size=vec(*areasize), color=vec(0.09, 0.38, 0.671))
+
+# all positions of robot every 5ms
+save_pos = []
+
+robot = box(color=vec(1.0, 1.0, 1.0), make_trail=True)
+robot.opacity = 0.5
+
+opp = box(color=vec(0.7, 0.2, 0.2))
+opp.opacity = 0.7
+
+last_pos = (0.,0.,0.)
+
+hcenter_line = curve(pos=[vec(-AREA_X/2, 0., 0.3), vec(AREA_X/2, 0., 0.3)]) 
+vcenter_line = curve(pos=[vec(0., -AREA_Y/2, 0.3), vec(0., AREA_Y/2, 0.3)])
+
+wallx = [ (0.0, 0.0, -0.5), (AREA_X+44, 22, WALL_HEIGHT) ]
+wallxsize = reduce(lambda x,y:tuple([abs(x[i])+abs(y[i]) for i in range(len(x))]) , wallx)
+wallx1_box = box(pos=vec(0,-AREA_Y/2-11, WALL_HEIGHT/2), size=vec(*wallxsize), color=vec(0.78, 0.09, 0.071))
+wallx2_box = box(pos=vec(0,AREA_Y/2+11, WALL_HEIGHT/2), size=vec(*wallxsize), color=vec(0.78, 0.09, 0.071))
+
+wally = [ (0.0, 0.0, -0.5), (22, AREA_Y+44, WALL_HEIGHT) ]
+wallysize = reduce(lambda x,y:tuple([abs(x[i])+abs(y[i]) for i in range(len(x))]) , wally)
+wally1_box = box(pos=vec(-AREA_X/2-11, 0, WALL_HEIGHT/2), size=vec(*wallysize), color=vec(0.78, 0.09, 0.071))
+wally2_box = box(pos=vec(AREA_X/2+11, 0, WALL_HEIGHT/2), size=vec(*wallysize), color=vec(0.78, 0.09, 0.071))
+
+
+YELLOW = 0
+GREEN = 1
+color = YELLOW
+
+def square(sz):
+    sq = curve(pos = [vec(-sz, -sz, 0.3),
+              vec(-sz, sz, 0.3),
+              vec(sz, sz, 0.3),
+              vec(sz, -sz, 0.3),
+              vec(-sz, -sz, 0.3),])
+    return sq
+
+sq1 = square(250)
+sq2 = square(500)
+
+robot_x = 0.
+robot_y = 0.
+robot_a = 0.
+
+robot_trail = curve()
+robot_trail_list = []
+max_trail = 500
+
+area_objects = []
+
+set_opp_nb = 1
+
+def toggle_obj_disp():
+    global area_objects
+    if area_objects == []:
+        return
+    else:
+        for o in area_objects:
+            if o.visible:
+                o.visible = 0
+            else:
+                o.visible = 1
+				
+def toggle_color():
+    global color
+    global GREEN, YELLOW
+    if color == YELLOW:
+        color = GREEN
+    else:
+        color = YELLOW
+
+
+def set_robot():
+    global robot, last_pos, robot_trail, robot_trail_list
+    global save_pos, robot_x, robot_y, robot_a
+
+    if color == YELLOW:
+        tmp_x = robot_x - AREA_X/2
+        tmp_y = robot_y - AREA_Y/2
+        tmp_a = robot_a
+    else:
+        tmp_x = -robot_x + AREA_X/2
+        tmp_y = -robot_y + AREA_Y/2
+        tmp_a = robot_a
+
+	
+    robot.pos = vec(tmp_x, tmp_y, ROBOT_HEIGHT/2)
+    axis = vec(math.cos(tmp_a*math.pi/180),
+            math.sin(tmp_a*math.pi/180),
+            0)
+
+    robot.axis = axis
+    robot.size = vec(ROBOT_LENGTH, ROBOT_WIDTH, ROBOT_HEIGHT)
+	
+    # save position
+    save_pos.append((robot.pos.x, robot.pos.y, tmp_a))
+
+    pos = vector(robot.pos.x, robot.pos.y, 0.3)
+    if pos != last_pos:
+        robot_trail_list.append(pos)
+        last_pos = pos
+    robot_trail_l = len(robot_trail_list)
+    if robot_trail_l > max_trail:
+        robot_trail_list = robot_trail_list[robot_trail_l - max_trail:]
+    #robot_trail.append(pos=robot_trail_list)
+
+def set_opp(x, y):
+    opp.size = vector(300, 300, ROBOT_HEIGHT)
+    opp.pos = vector(x, y, ROBOT_HEIGHT/2)
+
+def graph():
+    pass
+
+def save():
+    f = open("/tmp/robot_save", "w")
+    for p in save_pos:
+        f.write("%f %f %f\n"%(p[0], p[1], p[2]))
+    f.close()
+
+def silent_mkfifo(f):
+    try:
+        os.mkfifo(f)
+    except:
+        pass
+
+toggle_obj_disp()
+set_robot()
+
+while True:
+
+    silent_mkfifo("./robot_sim2dis")
+    silent_mkfifo("./robot_dis2sim")
+
+    while True:
+        fr = open("./robot_sim2dis", "r")
+        fw = open("./robot_dis2sim", "w")
+
+        while True:
+            # MAIN ROBOT MSGS
+            m = None
+            l = fr. readline()
+
+            # parse position
+            if not m:
+                m = re.match("pos=%s,%s,%s"%(INT,INT,INT), l)
+                if m:
+                    robot_x = int(m.groups()[0])
+                    robot_y = int(m.groups()[1])
+                    robot_a = int(m.groups()[2])                  
+                    set_robot()
+                    
+            # DISPLAY EVENTS
+            
+            #mpos = scene.mouse.project(normal=vector(0,0,1))
+            #print(mpos)
+            #if mpos != None:
+            #    #set_opp(oppx, oppy)
+            #    try:
+            #        if color == YELLOW:
+            #            fw.write("opp_1 %d %d"%(int(oppx + 1500), int(oppy + 1050)))
+            #        else:
+            #            fw.write("opp_1 %d %d"%(int(1500 - oppx), int(1050 - oppy)))
+            #    except:
+            #        print("not connected")
+            
+            #k = keysdown()
+#
+            ##elif k == "l":
+            ##    fw.write("l")
+            ##elif k == "r":
+            ##    fw.write("r")
+            ##elif k == "b":
+            ##    fw.write("b")
+            #if k == "c":
+            #    robot_trail_list = []
+            #    robot2_trail_list = []
+            #elif k == "x":
+            #    save_pos = []
+            #elif k == "g":
+            #    graph()
+            #elif k == "s":
+            #    save()
+            #elif k == "h":
+            #    toggle_obj_disp()
+            #elif k == "i":
+            #    toggle_color()
+            #else:
+            #    print(k)
+
+            # EOF
+            if l == "":
+                break
+
+        fr.close()
+        fw.close()
+
+
+"""
