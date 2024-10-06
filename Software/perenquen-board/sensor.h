@@ -20,19 +20,15 @@
  */
 
 /* synchronize with sensor.c */
-#define S_ADC_FRONT_LEFT	  		0
-#define S_ADC_FRONT_LEFT_OFF		1
-#define S_ADC_FRONT_RIGHT		   	2
-#define S_ADC_FRONT_RIGHT_OFF   3
-#define S_ADC_DIAG_LEFT		     	  4
-#define S_ADC_DIAG_LEFT_OFF        5
-#define S_ADC_DIAG_RIGHT    		    6
-#define S_ADC_DIAG_RIGHT_OFF        7
-#define S_ADC_BATTERY       		8
-#define S_ADC_GYRO          		9
-#define S_ADC_GYRO_REF      		10
-#define S_ADC_FLASH         		11
-#define S_ADC_MAX   						12
+#define S_ADC_FRONT_LEFT    0   
+#define S_ADC_FRONT_RIGHT	1    
+#define S_ADC_DIAG_LEFT		2
+#define S_ADC_DIAG_RIGHT    3
+#define S_ADC_GYRO_REF      4
+#define S_ADC_GYRO          5
+#define S_ADC_BATTERY       6
+#define S_ADC_FLASH         7
+#define S_ADC_MAX   		8
 
 void sensor_init(void);
 void sensor_adc_do_read (uint8_t num);

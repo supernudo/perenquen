@@ -84,8 +84,8 @@ static void adc_init(void)
 	00000000 = TP • (ADCS<7:0> + 1) = 1 • TCY = TAD
 	*/
 	/* TCY = 1/FCY = 1/60MhZ = 16,67ns
-		 TADmin@10bits = 76ns
-		 ADCS = 76ns/16,67ns = 5 --> TAD = 83,335ns */
+	   TADmin@10bits = 76ns
+	   ADCS = 76ns/16,67ns = 5 --> TAD = 83,335ns */
 	#define ADC_TAD_ns 	(83.335)
 	AD1CON3bits.ADCS = 5;
 
@@ -115,14 +115,26 @@ static void adc_init(void)
 	AD1CON1bits.ADON = 1;
 }
 
+/* ADC sensor structure */
 struct adc_sensor {
 	uint16_t adc_channel;
-	uint16_t value;
+	uint16_t value_on;
+	uint16_t value_off;
 	volatile uint16_t *enable_port;
 	volatile uint8_t enable_pin;
-	uint16_t delay_us;
 };
 
+/* ADC sensor configuration */
+static struct adc_sensor adc_sensors[S_ADC_MAX] = {
+	[S_ADC_FRONT_LEFT] 		= { .adc_channel = 1, .enable_port = &LATD, .enable_pin = 5, 	},
+	[S_ADC_FRONT_RIGHT] 	= { .adc_channel = 5, .enable_port = &LATD, .enable_pin = 2, 	},
+	[S_ADC_DIAG_LEFT] 		= { .adc_channel = 3, .enable_port = &LATD, .enable_pin = 4, 	},
+	[S_ADC_DIAG_RIGHT] 		= { .adc_channel = 4, .enable_port = &LATD, .enable_pin = 4, 	},
+	[S_ADC_GYRO_REF] 		= { .adc_channel = 29,.enable_port = NULL,  .enable_pin = NULL, },
+	[S_ADC_GYRO] 			= { .adc_channel = 30,.enable_port = NULL,  .enable_pin = NULL, },
+	[S_ADC_BATTERY] 		= { .adc_channel = 0, .enable_port = NULL,  .enable_pin = NULL, },
+	[S_ADC_FLASH] 			= { .adc_channel = 2, .enable_port = NULL,  .enable_pin = NULL, },
+};
 
 static void __delay_us(uint16_t delay) {
 	uint16_t i;
@@ -132,7 +144,89 @@ static void __delay_us(uint16_t delay) {
 	}
 }
 
-void do_adc_sensor_read(struct adc_sensor *adcs)
+/* Sequential read of all wall sensors. On and off values */
+static void do_adc_sensor_sequence(void)
+{
+	#define STATE_SENSOR_ON_OFF 1
+	#define STATE_SENSOR_ON		2
+
+	static uint8_t state = STATE_SENSOR_ON_OFF;
+	static uint8_t index = S_ADC_FRONT_LEFT;
+	struct adc_sensor *adcs;
+
+	/* Get current sensor */
+	adcs = &adc_sensors[index];
+
+	switch (state) 
+	{
+		case STATE_SENSOR_ON_OFF: 
+			/* Stop sampling and start conversion (aprox. 84ns) */
+			AD1CON1bits.SAMP = 0;
+
+			/* Wait for ADC conversion end */
+			while (!AD1CON1bits.DONE);
+		
+			/* Turn off the sensor */
+			if (adcs->enable_port)
+				*adcs->enable_port &= ~(1 << adcs->enable_pin);
+
+			/* Read sensor value */
+			adcs->value_on = ADC1BUF0;
+
+			/* Start ADC sampling */
+			AD1CON1bits.SAMP = 1;
+
+			state = 2;
+			break;
+
+		case STATE_SENSOR_ON:
+			/* Stop sampling and start conversion (aprox. 84ns) */
+			AD1CON1bits.SAMP = 0;
+
+			/* Wait for ADC conversion end */
+			while (!AD1CON1bits.DONE);
+
+			/* Read sensor value */
+			if (adcs_next->enable_port)
+				adcs->value_off = ADC1BUF0;
+			else
+				adcs->value_on = ADC1BUF0;
+
+			/* Next sensor */
+			if (index == S_ADC_FLASH) {
+				index = S_ADC_FRONT_LEFT;
+			}
+			else {
+				index++;
+			}
+
+			/* Update current sensor */
+			adcs = &adc_sensors[index];
+
+			/* Turn on the sensor */
+			if (adcs->enable_port)
+				*adcs->enable_port |= (1 << adcs_next->enable_pin);
+
+			/* Set ADC channel */
+			AD1CHS0bits.CH0SA = adcs->adc_channel;
+
+			/* Start ADC sampling */
+			AD1CON1bits.SAMP = 1;
+
+			if (adcs_next->enable_port)
+				state = STATE_SENSOR_ON_OFF;
+			else
+				state = STATE_SENSOR_ON;
+
+			break;
+
+		default:
+			break;
+	}
+}
+
+#if 0
+void do_adc_wall_sensor(struct adc_sensor *adcs)
 {
 	uint8_t flags;
 
@@ -172,23 +266,7 @@ void do_adc_sensor_read(struct adc_sensor *adcs)
 
 	IRQ_UNLOCK(flags);
 }
-
-/* define wall sensors read, see in sensor.h */
-#define WALL_SENSORS_DELAY_US 50
-static struct adc_sensor adc_sensors[S_ADC_MAX] = {
-	[S_ADC_FRONT_LEFT] 		= { .adc_channel = 1, .enable_port = &LATD, .enable_pin = 5, 		.delay_us = WALL_SENSORS_DELAY_US},
-	[S_ADC_FRONT_LEFT_OFF] 	= { .adc_channel = 1, .enable_port = NULL,  .enable_pin = NULL, 	.delay_us = 1},
-	[S_ADC_FRONT_RIGHT] 	= { .adc_channel = 5, .enable_port = &LATD, .enable_pin = 2, 		.delay_us = WALL_SENSORS_DELAY_US},
-	[S_ADC_FRONT_RIGHT_OFF] = { .adc_channel = 5, .enable_port = NULL,  .enable_pin = NULL, 	.delay_us = 1},
-	[S_ADC_DIAG_LEFT] 		= { .adc_channel = 3, .enable_port = &LATD, .enable_pin = 4, 		.delay_us = WALL_SENSORS_DELAY_US},
-	[S_ADC_DIAG_LEFT_OFF] 	= { .adc_channel = 3, .enable_port = NULL,  .enable_pin = NULL, 	.delay_us = 1},
-	[S_ADC_DIAG_RIGHT] 		= { .adc_channel = 4, .enable_port = &LATD, .enable_pin = 4, 		.delay_us = WALL_SENSORS_DELAY_US},
-	[S_ADC_DIAG_RIGHT_OFF] 	= { .adc_channel = 4, .enable_port = NULL,  .enable_pin = NULL, 	.delay_us = 1},
-	[S_ADC_BATTERY] 		= { .adc_channel = 0, .enable_port = NULL,  .enable_pin = NULL, 	.delay_us = 1},
-	[S_ADC_GYRO] 			= { .adc_channel = 30,.enable_port = NULL,  .enable_pin = NULL, 	.delay_us = 1},
-	[S_ADC_GYRO_REF] 		= { .adc_channel = 29,.enable_port = NULL,  .enable_pin = NULL, 	.delay_us = 1},
-	[S_ADC_FLASH] 			= { .adc_channel = 2, .enable_port = NULL,  .enable_pin = NULL, 	.delay_us = 1},
-};
+#endif
 
 #endif /* !HOST_VERSION */
 
