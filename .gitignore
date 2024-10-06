@@ -16,3 +16,5 @@ built
 Wiki
 .venv
 __pycache__
+perenquen-backups
+*.lck

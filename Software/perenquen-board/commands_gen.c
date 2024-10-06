@@ -249,42 +249,25 @@ static void cmd_sensors_parsed(void *parsed_result, void *data)
 	printf("not implemented\n");
 #else
 	struct cmd_sensors_result *res = parsed_result;
-	//uint8_t i;
+	uint8_t i;
     uint8_t loop = 0;
-
+    
 	if (!strcmp_P(res->arg1, PSTR("loop_show")))
 		loop = 1;
 
 	do {
 
-		/* Read sensor */
-		sensor_adc_do_read(S_ADC_FRONT_LEFT_OFF);
-		sensor_adc_do_read(S_ADC_FRONT_RIGHT_OFF);
-		sensor_adc_do_read(S_ADC_DIAG_LEFT_OFF);
-		sensor_adc_do_read(S_ADC_DIAG_RIGHT_OFF);
+		/* Print values */
+		printf("FL %.4d %.4d ", sensor_adc_get_value_off(S_ADC_FRONT_LEFT),
+								sensor_adc_get_value_on(S_ADC_FRONT_LEFT));
+		printf("FR %.4d %.4d ", sensor_adc_get_value_off(S_ADC_FRONT_RIGHT),
+								sensor_adc_get_value_on(S_ADC_FRONT_RIGHT));
+		printf("DL %.4d %.4d ", sensor_adc_get_value_off(S_ADC_DIAG_LEFT),
+								sensor_adc_get_value_on(S_ADC_DIAG_LEFT));
+		printf("DR %.4d %.4d ", sensor_adc_get_value_off(S_ADC_DIAG_RIGHT),
+								sensor_adc_get_value_on(S_ADC_DIAG_RIGHT));
 
-		sensor_adc_do_read(S_ADC_FRONT_LEFT);
-		sensor_adc_do_read(S_ADC_FRONT_RIGHT);
-		sensor_adc_do_read(S_ADC_DIAG_LEFT);
-		sensor_adc_do_read(S_ADC_DIAG_RIGHT);
-
-		sensor_adc_do_read(S_ADC_BATTERY);
-		sensor_adc_do_read(S_ADC_GYRO);
-		sensor_adc_do_read(S_ADC_GYRO_REF);
-		sensor_adc_do_read(S_ADC_FLASH);
-
-
-		/* Print value */
-		printf("FL %.4d %.4d ", sensor_adc_get_value(S_ADC_FRONT_LEFT_OFF),
-											 			sensor_adc_get_value(S_ADC_FRONT_LEFT));
-		printf("FR %.4d %.4d ", sensor_adc_get_value(S_ADC_FRONT_RIGHT_OFF),
-														sensor_adc_get_value(S_ADC_FRONT_RIGHT));
-		printf("DL %.4d %.4d ", sensor_adc_get_value(S_ADC_DIAG_LEFT_OFF),
-														sensor_adc_get_value(S_ADC_DIAG_LEFT));
-		printf("DR %.4d %.4d ", sensor_adc_get_value(S_ADC_DIAG_RIGHT_OFF),
-														sensor_adc_get_value(S_ADC_DIAG_RIGHT));
-
-		printf("BAT %.4d ", 3*sensor_adc_get_value_mv(S_ADC_BATTERY));
+		printf("BAT %.4d ", sensor_get_battery_mv());
 		printf("G %.4d ", sensor_adc_get_value_mv(S_ADC_GYRO));
 		printf("GREF %.4d ", sensor_adc_get_value_mv(S_ADC_GYRO_REF));
 		printf("FLSH %.4d ", sensor_adc_get_value_mv(S_ADC_FLASH));

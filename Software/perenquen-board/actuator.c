@@ -115,34 +115,30 @@ void motor_pwm_set_and_save(void *pwm_gen_num, int32_t val)
 #define MOTOR_RIGHT_MAX		(HSPWM_DUTY_MAX-MOTOR_LEFT_OFFSET)
 #define MOTOR_LEFT_MAX		(HSPWM_DUTY_MAX-MOTOR_RIGHT_OFFSET)
 
-	if (pwm_gen_num == MOTOR_LEFT) {
-		/* apply offset */
-		//val = val > 0? (val + MOTOR_LEFT_OFFSET):(val - MOTOR_LEFT_OFFSET);
-
-		/* we need to do the saturation here, before saving the value */
+	if (pwm_gen_num == MOTOR_LEFT)
+	{
+		/* Do the saturation here, before saving the value */
 		if (val > MOTOR_LEFT_MAX)
 			val = MOTOR_LEFT_MAX;
 		if (val < -MOTOR_LEFT_MAX)
 			val = -MOTOR_LEFT_MAX;
 
-		/* save value */
+		/* Save value */
 		mainboard.motor_pwm_left = val;
 	}
-	else if (pwm_gen_num == MOTOR_RIGHT){
-		/* apply offset */
-		//val = val > 0? (val + MOTOR_RIGHT_OFFSET):(val - MOTOR_RIGHT_OFFSET);
-
-		/* we need to do the saturation here, before saving the value */
+	else if (pwm_gen_num == MOTOR_RIGHT)
+	{
+		/* Do the saturation here, before saving the value */
 		if (val > MOTOR_RIGHT_MAX)
 			val = MOTOR_RIGHT_MAX;
 		if (val < -MOTOR_RIGHT_MAX)
 			val = -MOTOR_RIGHT_MAX;
 
-		/* save value */
+		/* Save value */
 		mainboard.motor_pwm_right = val;
 	}
 
-	/* set value */
+	/* Set value */
 #ifdef HOST_VERSION
 	robotsim_pwm(pwm_gen_num, val);
 #else

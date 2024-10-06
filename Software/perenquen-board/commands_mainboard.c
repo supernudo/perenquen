@@ -88,8 +88,8 @@ uint8_t strat_obstacle(void)
   #define S_FRONT_OBSTACLE_VALUE 350
   sensor_adc_do_read(S_ADC_FRONT_LEFT);
   sensor_adc_do_read(S_ADC_FRONT_RIGHT);
-  return (sensor_adc_get_value(S_ADC_FRONT_LEFT) > S_FRONT_OBSTACLE_VALUE &&
-          sensor_adc_get_value(S_ADC_FRONT_RIGHT) > S_FRONT_OBSTACLE_VALUE);
+  return (sensor_adc_get_value_on(S_ADC_FRONT_LEFT) > S_FRONT_OBSTACLE_VALUE &&
+          sensor_adc_get_value_on(S_ADC_FRONT_RIGHT) > S_FRONT_OBSTACLE_VALUE);
 }
 
 void strat_follow_wall(uint8_t side, int32_t gain)
@@ -129,8 +129,8 @@ void strat_follow_wall(uint8_t side, int32_t gain)
       case STATE_CALIB:
         sensor_adc_do_read(S_ADC_DIAG_LEFT);
         sensor_adc_do_read(S_ADC_DIAG_RIGHT);
-        calib_diag_left = sensor_adc_get_value(S_ADC_DIAG_LEFT);
-        calib_diag_right = sensor_adc_get_value(S_ADC_DIAG_RIGHT);
+        calib_diag_left = sensor_adc_get_value_on(S_ADC_DIAG_LEFT);
+        calib_diag_right = sensor_adc_get_value_on(S_ADC_DIAG_RIGHT);
         DEBUG(E_USER_STRAT, "calib left %d\n\r", calib_diag_left);
         DEBUG(E_USER_STRAT, "calib right %d\n\r", calib_diag_right);
         state = STATE_WAITING_START;
@@ -140,15 +140,15 @@ void strat_follow_wall(uint8_t side, int32_t gain)
         sensor_adc_do_read(S_ADC_FRONT_LEFT);
         sensor_adc_do_read(S_ADC_FRONT_RIGHT);
         DEBUG(E_USER_STRAT, "Waiting START...\n\r");
-        while(sensor_adc_get_value(S_ADC_FRONT_LEFT) < S_FRONT_START_VALUE &&
-              sensor_adc_get_value(S_ADC_FRONT_RIGHT) < S_FRONT_START_VALUE)
+        while(sensor_adc_get_value_on(S_ADC_FRONT_LEFT) < S_FRONT_START_VALUE &&
+              sensor_adc_get_value_on(S_ADC_FRONT_RIGHT) < S_FRONT_START_VALUE)
         {
           sensor_adc_do_read(S_ADC_FRONT_LEFT);
           sensor_adc_do_read(S_ADC_FRONT_RIGHT);
           time_wait_ms(100);
         }
-        while(sensor_adc_get_value(S_ADC_FRONT_LEFT) > S_FRONT_START_VALUE ||
-              sensor_adc_get_value(S_ADC_FRONT_RIGHT) > S_FRONT_START_VALUE)
+        while(sensor_adc_get_value_on(S_ADC_FRONT_LEFT) > S_FRONT_START_VALUE ||
+              sensor_adc_get_value_on(S_ADC_FRONT_RIGHT) > S_FRONT_START_VALUE)
         {
           sensor_adc_do_read(S_ADC_FRONT_LEFT);
           sensor_adc_do_read(S_ADC_FRONT_RIGHT);
@@ -172,7 +172,7 @@ void strat_follow_wall(uint8_t side, int32_t gain)
         if (side == SIDE_LEFT) {
           sensor_adc_do_read(S_ADC_DIAG_LEFT);
 
-          error = calib_diag_left - sensor_adc_get_value(S_ADC_DIAG_LEFT);
+          error = calib_diag_left - sensor_adc_get_value_on(S_ADC_DIAG_LEFT);
 
           if (error >  (calib_diag_left/3))
             angle = 180;
@@ -185,7 +185,7 @@ void strat_follow_wall(uint8_t side, int32_t gain)
         else {
           sensor_adc_do_read(S_ADC_DIAG_RIGHT);
 
-          error = calib_diag_right - sensor_adc_get_value(S_ADC_DIAG_RIGHT);
+          error = calib_diag_right - sensor_adc_get_value_on(S_ADC_DIAG_RIGHT);
 
           if (error >  (calib_diag_right/3))
             angle = -180;
@@ -225,7 +225,7 @@ void strat_follow_wall(uint8_t side, int32_t gain)
         sensor = (side==SIDE_LEFT? S_ADC_FRONT_LEFT : S_ADC_FRONT_RIGHT);
         sensor_adc_do_read(sensor);
         err = 0;
-        while(sensor_adc_get_value(sensor) > S_FRONT_END_TURN_VALUE && err == 0) {
+        while(sensor_adc_get_value_on(sensor) > S_FRONT_END_TURN_VALUE && err == 0) {
           sensor_adc_do_read(sensor);
           err = test_traj_end(END_TRAJ);
         }

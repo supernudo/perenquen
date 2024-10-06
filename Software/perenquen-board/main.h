@@ -1,5 +1,5 @@
 /*
- *  Copyright Robotics Association of Coslada, Eurobotics Engineering (2010)
+ *  Copyright Javier Baliñas Santos (2024)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -19,7 +19,6 @@
  *
  *  Javier Baliñas Santos <balinas@gmail.com>
  */
-
 
 #ifndef _MAIN_H_
 #define _MAIN_H_
@@ -41,182 +40,89 @@
 #include <position_manager.h>
 #include <trajectory_manager.h>
 
+/** Robot dimensions */
+#define ROBOT_LENGTH            101.1
+#define ROBOT_WIDTH             75.75
+#define ROBOT_CENTER_TO_BACK    45.8
+#define ROBOT_CENTER_TO_FRONT   (ROBOT_LENGTH - ROBOT_CENTER_TO_BACK) // 55.3
 
-/* SOME USEFUL MACROS AND VALUES  *********************************************/
-
-/* uart 0 is for cmds and uart 1 is
- * multiplexed between beacon and slavedspic */
-#define CMDLINE_UART 	0
-
-/* generic led toggle macro */
-#define LED_TOGGLE(port, bit) do {		\
-		if (port & _BV(bit))		    \
-			port &= ~_BV(bit);	        \
-		else				            \
-			port |= _BV(bit);	        \
-	} while(0)
-
-#ifdef HOST_VERSION
-#define LED1_ON()
-#define LED1_OFF()
-#define LED1_TOGGLE()
-
-#define LED2_ON()
-#define LED2_OFF()
-#define LED2_TOGGLE()
-
-#define LED3_ON()
-#define LED3_OFF()
-#define LED3_TOGGLE()
-
-#define LED4_ON()
-#define LED4_OFF()
-#define LED4_TOGGLE()
-
-#define BRAKE_DDR()
-#define BRAKE_ON()
-#define BRAKE_OFF()
-
-#else
-
-/* leds manage */
-
-/* leds */
-// _TRISG3 = 0; /* MAIN_LED1 */
-// _TRISF6 = 0; /* MAIN_LED2 */
-// _TRISF2 = 0; /* MAIN_LED3 */
-// _TRISF3 = 0; /* MAIN_LED4 */
-
-#define LED1_ON() 		sbi(LATG, 3)
-#define LED1_OFF() 		cbi(LATG, 3)
-#define LED1_TOGGLE() LED_TOGGLE(LATG, 3)
-
-//#define LED2_ON() 		sbi(LATF, 6)
-//#define LED2_OFF() 		cbi(LATF, 6)
-//#define LED2_TOGGLE() LED_TOGGLE(LATF, 6)
-
-#define LED3_ON() 		sbi(LATF, 2)
-#define LED3_OFF() 		cbi(LATF, 2)
-#define LED3_TOGGLE() LED_TOGGLE(LATF, 2)
-
-#define LED4_ON() 		sbi(LATF, 3)
-#define LED4_OFF() 		cbi(LATF, 3)
-#define LED4_TOGGLE() LED_TOGGLE(LATF, 3)
-
-
-/* brake motors */
-// _TRISE3 = 0; /* PWM2H/RE3 MOTOR-L-INB */
-// _LATE3	= 0;
-// _TRISE2 = 0; /* PWM2L/RE2 MOTOR-L-INA */
-// _LATE2	= 0;
-// _TRISE1 = 0; /* PWM1H/RE1 MOTOR-R-INB */
-// _LATE1	= 0;
-// _TRISE0 = 0; /* PWM1L/RE0 MOTOR-R-INA */
-// _LATE0	= 0;
-
-// TODO: apply brake thru PWM module
-#define BRAKE_ON()      do {	hspwm_set_pwm(MOTOR_LEFT, 0); hspwm_set_pwm(MOTOR_RIGHT, 0);\
-															_LATE0 = 0; _LATE1 = 0; _LATE2 = 0; _LATE3 = 0; } while(0)
-#define BRAKE_OFF()     do {} while(0)
-
-#endif /* !HOST_VERSION */
-
-
-/* ROBOT PARAMETERS *************************************************/
-
-/* distance between encoders weels,
- * decrease track to decrease angle */
-#define EXT_TRACK_MM      66.0
-#define VIRTUAL_TRACK_MM  EXT_TRACK_MM
-
-/* XXX keep synchronized with maindspic/strat.c */
-
-/* robot dimensions */
-#define ROBOT_LENGTH            101.0
-#define ROBOT_WIDTH             75.5
-#define ROBOT_CENTER_TO_FRONT   55.5
-#define ROBOT_CENTER_TO_BACK    (ROBOT_LENGTH - ROBOT_CENTER_TO_FRONT)
 #define ROBOT_HALF_LENGTH_FRONT ROBOT_CENTER_TO_FRONT
 #define ROBOT_HALF_LENGTH_REAR  ROBOT_CENTER_TO_BACK
 
-/* Some calculus:
- * it is a 1024 imps -> 4096 because we see 1/4 period
- * and diameter: 25.5mm -> perimeter 80.11mm
- * 4096/88.11 -> 51,129 imps/mm */
+/** Robot encoders and wheels */
 
-/* increase it to go further */
-#define IMP_ENCODERS 		    1024.0
-#define WHEEL_DIAMETER_MM 	25.5
+/** Distance between encoders weels, decrease track to decrease angle */
+#define EXT_TRACK_MM      70.0
+#define VIRTUAL_TRACK_MM  EXT_TRACK_MM
+
+/* Distance conversion factor. Increase it to go further */
+
+/*  It is a 1024 imps 		--> 4096 because we see 1/4 period
+   	Wheel diameter: 25.5mm 	--> perimeter 80.11mm
+   	Distance coeficient 	--> 4096/88.11 = 51,129 imps/mm 
+ */
+#define IMP_ENCODERS 		1024.0
+#define WHEEL_DIAMETER_MM 	25.5 // XXX: Rear wheels. Maybe 25.55 or 25.6 is OK
 #define WHEEL_PERIM_MM 	    (WHEEL_DIAMETER_MM * M_PI)
-#define IMP_COEF 			    	10.0
-#define DIST_IMP_MM 		    (((IMP_ENCODERS*4) / WHEEL_PERIM_MM) * IMP_COEF)
+#define IMP_COEF 			10.0
+#define DIST_IMP_MM 		(((IMP_ENCODERS*4) / WHEEL_PERIM_MM) * IMP_COEF)
 
-/** ERROR NUMS */
-#define E_USER_STRAT        194
-#define E_USER_SENSOR       196
-#define E_USER_CS           197
+/** End of robot parameters ***************************************************/
 
+/** Scheduler events priorities and periods */
 
-/* EVENTS PRIORITIES */
-#define EVENT_PRIORITY_LED 	   170
+/* XXX: These are the initial events, but tthers SW modules may add more 
+		events on demand, like the trajectory manager
+ */
+
+#define EVENT_PRIORITY_BATTERY 170
 #define EVENT_PRIORITY_TIME    160
 #define EVENT_PRIORITY_CS      150
-#define EVENT_PRIORITY_SENSORS 120
-#define EVENT_PRIORITY_STRAT   80
 
-/* EVENTS PERIODS */
-#define EVENT_PERIOD_LED 			1000000L
-#define EVENT_PERIOD_STRAT		25000L
-#define EVENT_PERIOD_SENSORS	10000L
-#define EVENT_PERIOD_CS 			1000L
+#define EVENT_PERIOD_BATTERY 	1000000L
+#define EVENT_PERIOD_TIME		TIME_PRECISION
+#define EVENT_PERIOD_CS 		1000L
 
-#define CS_PERIOD   ((EVENT_PERIOD_CS/SCHEDULER_UNIT)*SCHEDULER_UNIT) /* in microsecond */
-#define CS_HZ       (1000000. / CS_PERIOD)
 
-/* dynamic logs */
-#define NB_LOGS 10
-
-/* MAIN DATA STRUCTURES **************************************/
-
-/* cs data */
+/* Control system block structure */
 struct cs_block {
 	uint8_t on;
 	struct cs cs;
-  struct pid_filter pid;
+  	struct pid_filter pid;
 	struct quadramp_filter qr;
 	struct blocking_detection bd;
 };
 
-/* genboard */
+/* General data structure */
 struct genboard
 {
-	/* command line interface */
+	/* Command line interface */
 	struct rdline rdl;
 	char prompt[RDLINE_PROMPT_SIZE];
 
-	/* encoders */
+	/* Encoders */
 	#define ENCODER_LEFT  ((void*)2)
 	#define ENCODER_RIGHT ((void*)1)
 
-	/* motors */
+	/* Motors */
 	#define MOTOR_LEFT    ((void*)2)
 	#define MOTOR_RIGHT   ((void*)1)
 
-	/* TODO battery */
+	/* Logging and debug */
+	#define E_USER_STRAT        194
+	#define E_USER_SENSOR       196
+	#define E_USER_CS           197
 
-	/* TODO wall-sensors */
-
-	/* log */
+	#define NB_LOGS 10
 	uint8_t logs[NB_LOGS+1];
 	uint8_t log_level;
 	uint8_t debug;
 };
 
-/* maindspic */
+/* Robot data structure */
 struct mainboard
 {
-	/* events flags */
-	uint16_t flags;
+	/* Events flags */
 #define DO_ENCODERS   1
 #define DO_CS         2
 #define DO_RS         4
@@ -224,28 +130,27 @@ struct mainboard
 #define DO_BD         16
 #define DO_TIMER      32
 #define DO_POWER      64
-#define DO_TM_DATA		128
+#define DO_TM_DATA	  128
+	uint16_t flags;
 
-	uint8_t our_color;
-	#define I2C_COLOR_YELLOW	0
-	#define AREA_X 10
-	#define AREA_Y 10
-  #define OBS_CLERANCE 1
-
-	/* control systems */
+	/* Control systems */
 	struct cs_block angle;
 	struct cs_block distance;
 
-	/* x,y positionning and traj*/
+	/* Robot system */
 	struct robot_system rs;
+
+	/* Robot position */
 	struct robot_position pos;
-  struct trajectory traj;
 
-	/* TODO review */
-	volatile int16_t speed_a;  /* current angle speed */
-	volatile int16_t speed_d;  /* current dist speed */
+	/* Robot trajectories */
+  	struct trajectory traj;
 
-	/* current motors pwm */
+	/* Current speeds */
+	volatile int16_t speed_a;
+	volatile int16_t speed_d;
+
+	/* Current motors PWM */
 	int32_t motor_pwm_left;
 	int32_t motor_pwm_right;
 
@@ -254,7 +159,7 @@ struct mainboard
 extern struct genboard gen;
 extern struct mainboard mainboard;
 
-
+/* Useful macro for wait a condition or a timeout */
 #define WAIT_COND_OR_TIMEOUT(cond, timeout)                   \
 ({                                                            \
         microseconds __us = time_get_us2();                   \

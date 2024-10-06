@@ -25,12 +25,20 @@
 
 #include <stdint.h>
 
+/* Brake motors macros */
+#define BRAKE_ON()      do {\
+							hspwm_set_pwm(MOTOR_LEFT, 0);\
+							hspwm_set_pwm(MOTOR_RIGHT, 0);\
+							_LATE0 = 0; _LATE1 = 0; _LATE2 = 0; _LATE3 = 0;\
+						} while(0)
+#define BRAKE_OFF()     do {} while(0)
+
 /* High Speed PWM module driver */
 #define HSPWM_DUTY_MAX 6000
 void hspwm_init(void);
 void hspwm_set_pwm(void* gen_num, int16_t val) ;
 
-/* used by cs, correct offset and save values */
+/* Used by cs, correct offset and save values */
 void motor_pwm_set_and_save(void *pwm_gen_num, int32_t val);
 
 

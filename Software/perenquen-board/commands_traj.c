@@ -960,16 +960,6 @@ static void cmd_position_parsed(void * parsed_result, void * data)
     {
         position_set(&mainboard.pos, res->arg2, res->arg3, res->arg4);
     }
-    else if (!strcmp_P(res->arg1, PSTR("autoset_yellow")))
-    {
-        //mainboard.our_color = I2C_COLOR_YELLOW;
-        //auto_position();
-    }
-    else if (!strcmp_P(res->arg1, PSTR("autoset_green")))
-    {
-        //mainboard.our_color = I2C_COLOR_GREEN;
-        //auto_position();
-    }
 
     /* else it's just a "show" */
     printf_P(PSTR("x=%.2f y=%.2f a=%.2f\r\n"),
@@ -980,7 +970,7 @@ static void cmd_position_parsed(void * parsed_result, void * data)
 
 prog_char str_position_arg0[] = "position";
 parse_pgm_token_string_t cmd_position_arg0 = TOKEN_STRING_INITIALIZER(struct cmd_position_result, arg0, str_position_arg0);
-prog_char str_position_arg1[] = "show#reset#autoset_yellow#autoset_green";
+prog_char str_position_arg1[] = "show#reset";
 parse_pgm_token_string_t cmd_position_arg1 = TOKEN_STRING_INITIALIZER(struct cmd_position_result, arg1, str_position_arg1);
 
 prog_char help_position[] = "Show/reset (x,y,a) position";

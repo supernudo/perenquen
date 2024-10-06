@@ -1,6 +1,6 @@
-/*  
- *  Copyright Droids Corporation, Microb Technology, Eirbot (2005)
- * 
+/*
+ *  Copyright Javier Baliñas Santos (2024)
+ *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation; either version 2 of the License, or
@@ -15,13 +15,14 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- *  Revision : $Id: time_config.h,v 1.2.6.1 2006-11-26 21:06:01 zer0 Exp $
+ *  Revision : $Id$
  *
+ *  Javier Baliñas Santos <balinas@gmail.com>
  */
 
-/** precision of the time processor, in us */
-#ifdef HOST_VERSION
-#define TIME_PRECISION 10000l
-#else
-#define TIME_PRECISION 10000l
-#endif
+#ifndef _BATTERY_H_
+#define _BATTERY_H_
+
+void do_battery_check(void *dummy);
+
+#endif /* _BATTERY_H_ */

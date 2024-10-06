@@ -63,6 +63,7 @@
 #include "strat.h"
 #include "actuator.h"
 #include "telemetry.h"
+#include "leds.h"
 
 
 void dump_cs(const char *name, struct cs *cs);

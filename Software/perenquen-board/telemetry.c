@@ -37,7 +37,9 @@ uint8_t tm_test[TM_TEST_SIZE];
 /* Initialize header of telemetry packet */
 void tm_data_init(void)
 {
+#ifdef BT_TEST
 	uint8_t i;
+#endif
 
 	tm.header[0] = TM_HEAD_BYTE_0;
 	tm.header[1] = TM_HEAD_BYTE_1;
@@ -59,6 +61,7 @@ void tm_data_send(void)
 
 #ifndef BT_TEST
 	uint8_t i;
+#else
 	uint8_t state = 0;
 	static uint32_t bytes_count = 0;
 #endif

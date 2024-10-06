@@ -27,22 +27,16 @@
  #include <clock_time.h>
 #endif
 
+
+#define AREA_X 10
+#define AREA_Y 10
+#define OBS_CLERANCE 1
+
 /* compilation flavours */
-//#define HOMOLOGATION
-
-/* convert coords according to our color */
-#define COLOR_Y(y)     (y)
-#define COLOR_X(x)     ((mainboard.our_color==I2C_COLOR_YELLOW)? (x) : (AREA_X-(x)))
-
-#define COLOR_A_REL(a) ((mainboard.our_color==I2C_COLOR_YELLOW)? (a) : (-a))
-#define COLOR_A_ABS(a) ((mainboard.our_color==I2C_COLOR_YELLOW)? (a) : (180-a))
-
-#define COLOR_SIGN(x)  ((mainboard.our_color==I2C_COLOR_YELLOW)? (x) : (-x))
-#define COLOR_INVERT(x)((mainboard.our_color==I2C_COLOR_YELLOW)? (x) : (!x))
 
 #define START_X 200
-#define START_Y COLOR_Y(200)
-#define START_A COLOR_A(45)
+#define START_Y 200
+#define START_A 45
 
 #define CENTER_X 1500
 #define CENTER_Y 1000

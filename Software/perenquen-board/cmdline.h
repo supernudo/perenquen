@@ -31,6 +31,9 @@
 #ifndef _CMDLINE_H_
 #define _CMDLINE_H_
 
+/* UART 0 is for commands */
+#define CMDLINE_UART 	0
+
 /* uart rx callback for reset() */
 void emergency(char c);
 

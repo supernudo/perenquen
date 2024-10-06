@@ -262,18 +262,10 @@ uint8_t x_is_more_than(int16_t x)
 	int16_t posx;
 
 	posx = position_get_x_s16(&mainboard.pos);
-	if (mainboard.our_color == I2C_COLOR_YELLOW) {
-		if (posx > x)
-			return 1;
-		else
-			return 0;
-	}
-	else {
-		if (posx < (AREA_X-x))
-			return 1;
-		else
-			return 0;
-	}
+	if (posx > x)
+		return 1;
+	else
+		return 0;
 }
 
 int16_t sin_table[] = {

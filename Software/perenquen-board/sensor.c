@@ -38,85 +38,17 @@
 #include "sensor.h"
 #include "strat.h"
 #include "strat_utils.h"
+#include "mcu_setup.h"
 
 
 /************ ADC SENSORS *****************************************************/
 
-#ifndef HOST_VERSION
-
-/* config init */
-static void adc_init(void)
-{
-	/* Use ADC1 for allow simultaneous sampling */
-
-	/* Set default config */
-	AD1CON1 = 0;
-	AD1CON2 = 0;
-	AD1CON3 = 0;
-	AD1CON4 = 0;
-
-	/* Clearing the Sample bit (SAMP) ends sampling and starts conversion (Manual mode) */
-	AD1CON1bits.SSRC = 0;
-
-	/* Channel Select bits
-			1x = Converts CH0, CH1, CH2 and CH3
-			01 = Converts CH0 and CH1
-			00 = Converts CH0
-	*/
-	AD1CON2bits.CHPS = 0;
-
-	/* Increment Rate bits
-			01111 = Generates interrupt after completion of every 16th sample/conversion operation
-			01110 = Generates interrupt after completion of every 15th sample/conversion operation
-			•
-			00001 = Generates interrupt after completion of every 2nd sample/conversion operation
-			00000 = Generates interrupt after completion of every sample/conversion operation
-	*/
-	AD1CON2bits.SMPI = 0;
-
-	/* ADC Conversion Clock Select bits
-	11111111 = TP • (ADCS<7:0> + 1) = 256 • TCY = TAD
-	•
-	•
-	•
-	00000010 = TP • (ADCS<7:0> + 1) = 3 • TCY = TAD
-	00000001 = TP • (ADCS<7:0> + 1) = 2 • TCY = TAD
-	00000000 = TP • (ADCS<7:0> + 1) = 1 • TCY = TAD
-	*/
-	/* TCY = 1/FCY = 1/60MhZ = 16,67ns
-	   TADmin@10bits = 76ns
-	   ADCS = 76ns/16,67ns = 5 --> TAD = 83,335ns */
-	#define ADC_TAD_ns 	(83.335)
-	AD1CON3bits.ADCS = 5;
-
-	/* Auto-Sample Time bits
-			11111 = 31 TAD
-			•
-			00001 = 1 TAD
-			00000 = 0 TAD
-	*/
-	//AD1CON3bits.SAMC = 2;
-
-
-	/* Channel 1, 2, 3 Positive Input Select for Sample A bit
-			1 = CH1 positive input is AN3, CH2 positive input is AN4, CH3 positive input is AN5
-			0 = CH1 positive input is AN0, CH2 positive input is AN1, CH3 positive input is AN2
-	*/
-	AD1CHS123bits.CH123SA = 1;
-
-	/* Channel 0 Positive Input Select for Sample A bits */
-	AD1CHS0bits.CH0SA = 0;
-
-	/* interrupt */
-	//_AD1IF = 0;
-	//_AD1IE = 1;
-
-	/* ADC module is operating */
-	AD1CON1bits.ADON = 1;
-}
-
 /* ADC sensor structure */
-struct adc_sensor {
+struct adc_sensor 
+{
+	/* The parameter enable_port determines if sensor needs to measure 
+	   the value_off. Value_on is measured otherwise */
+
 	uint16_t adc_channel;
 	uint16_t value_on;
 	uint16_t value_off;
@@ -136,16 +68,35 @@ static struct adc_sensor adc_sensors[S_ADC_MAX] = {
 	[S_ADC_FLASH] 			= { .adc_channel = 2, .enable_port = NULL,  .enable_pin = NULL, },
 };
 
-static void __delay_us(uint16_t delay) {
-	uint16_t i;
-	for (i = 0; i < delay; i++) {
-		__asm__ volatile ("repeat #39");
-		__asm__ volatile ("nop");
-	}
+/* Sensors setup. Includes ADC 1 setup */
+void sensor_init(void)
+{
+#ifndef HOST_VERSION
+	adc1_setup();
+	sensor_init_adc_read_sequence();
+	timer2_setup();
+#endif
 }
 
-/* Sequential read of all wall sensors. On and off values */
-static void do_adc_sensor_sequence(void)
+/* Lauch the first ADC reading */
+void sensor_init_adc_read_sequence(void) 
+{
+	/* First sensor */
+	struct adc_sensor *adcs = &adc_sensors[S_ADC_FRONT_LEFT];
+
+	/* Turn on the sensor */
+	if (adcs->enable_port)
+		*adcs->enable_port |= (1 << adcs->enable_pin);
+
+	/* Set ADC channel */
+	AD1CHS0bits.CH0SA = adcs->adc_channel;
+
+	/* Start ADC sampling */
+	AD1CON1bits.SAMP = 1;
+}
+
+/* Sequential read of all ADC sensors */
+void sensor_do_adc_read_sequence(void)
 {
 	#define STATE_SENSOR_ON_OFF 1
 	#define STATE_SENSOR_ON		2
@@ -187,13 +138,13 @@ static void do_adc_sensor_sequence(void)
 			while (!AD1CON1bits.DONE);
 
 			/* Read sensor value */
-			if (adcs_next->enable_port)
+			if (adcs->enable_port)
 				adcs->value_off = ADC1BUF0;
 			else
 				adcs->value_on = ADC1BUF0;
 
 			/* Next sensor */
-			if (index == S_ADC_FLASH) {
+			if (index == S_ADC_BATTERY) {
 				index = S_ADC_FRONT_LEFT;
 			}
 			else {
@@ -205,7 +156,7 @@ static void do_adc_sensor_sequence(void)
 
 			/* Turn on the sensor */
 			if (adcs->enable_port)
-				*adcs->enable_port |= (1 << adcs_next->enable_pin);
+				*adcs->enable_port |= (1 << adcs->enable_pin);
 
 			/* Set ADC channel */
 			AD1CHS0bits.CH0SA = adcs->adc_channel;
@@ -213,7 +164,7 @@ static void do_adc_sensor_sequence(void)
 			/* Start ADC sampling */
 			AD1CON1bits.SAMP = 1;
 
-			if (adcs_next->enable_port)
+			if (adcs->enable_port)
 				state = STATE_SENSOR_ON_OFF;
 			else
 				state = STATE_SENSOR_ON;
@@ -225,7 +176,54 @@ static void do_adc_sensor_sequence(void)
 	}
 }
 
+/* Returns the ADC value with the sensor enabled */
+uint16_t sensor_adc_get_value_on(uint8_t num) {
+#ifndef HOST_VERSION
+	return adc_sensors[num].value_on;
+#else
+	return 0;
+#endif
+}
+
+/* Return the ACD value with the sensor disabled */
+uint16_t sensor_adc_get_value_off(uint8_t num) {
+#ifndef HOST_VERSION
+	return adc_sensors[num].value_off;
+#else
+	return 0;
+#endif
+}
+
+/* Return the ADC value_on in mV */
+uint16_t sensor_adc_get_value_mv(uint8_t num) {
+#define K_MILIVOLTS_ADC_COUNTS	(3300.0/1024)
+#ifndef HOST_VERSION
+	return (uint16_t)(adc_sensors[num].value_on*K_MILIVOLTS_ADC_COUNTS);
+#else
+	return 0;
+#endif
+}
+
+/* Returns the battery voltage in mV */
+uint16_t sensor_get_battery_mv(void) {
+#define K_BATT_RDIV	(3)
+#ifndef HOST_VERSION
+	return K_BATT_RDIV * sensor_adc_get_value_mv(S_ADC_BATTERY);
+#else
+	return 0;
+#endif
+}
+
+
 #if 0
+static void __delay_us(uint16_t delay) {
+	uint16_t i;
+	for (i = 0; i < delay; i++) {
+		__asm__ volatile ("repeat #39");
+		__asm__ volatile ("nop");
+	}
+}
+
 void do_adc_wall_sensor(struct adc_sensor *adcs)
 {
 	uint8_t flags;
@@ -266,36 +264,35 @@ void do_adc_wall_sensor(struct adc_sensor *adcs)
 
 	IRQ_UNLOCK(flags);
 }
+
+//void sensor_adc_do_read (uint8_t num) {
+//#ifndef HOST_VERSION
+//	do_adc_sensor_read(&adc_sensors[num]);
+//#endif
+//}
+
+
+	#if 0
+	while (1) {
+		uint8_t flags;
+
+		/* Wall-sensors test */
+		_LATD5  = 0;
+		_LATD2  = 0;
+		_LATD4  = 0;
+		_LATD3  = 0;
+		wait_us(900);
+
+		IRQ_LOCK(flags);
+		_LATD5  = 1;
+		_LATD2  = 1;
+		_LATD4  = 1;
+		//_LATD3  = 1;
+		wait_us(50);
+		IRQ_UNLOCK(flags);
+	}
+	#endif
+
 #endif
 
-#endif /* !HOST_VERSION */
 
-void sensor_adc_do_read (uint8_t num) {
-#ifndef HOST_VERSION
-	do_adc_sensor_read(&adc_sensors[num]);
-#endif
-}
-
-uint16_t sensor_adc_get_value(uint8_t num) {
-#ifndef HOST_VERSION
-	return adc_sensors[num].value;
-#else
-	return 0;
-#endif
-}
-
-uint16_t sensor_adc_get_value_mv(uint8_t num) {
-#define K_MILIVOLTS_ADC_COUNTS	(3300.0/1024)
-#ifndef HOST_VERSION
-	return (uint16_t)(adc_sensors[num].value*K_MILIVOLTS_ADC_COUNTS);
-#else
-	return 0;
-#endif
-}
-
-void sensor_init(void)
-{
-#ifndef HOST_VERSION
-	adc_init();
-#endif
-}

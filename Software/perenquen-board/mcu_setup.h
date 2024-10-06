@@ -1,6 +1,7 @@
-/*  
- *  Copyright Droids Corporation, Microb Technology, Eirbot (2005)
- * 
+
+/*
+ *  Copyright Javier Baliñas Santos (2024)
+ *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation; either version 2 of the License, or
@@ -15,13 +16,35 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- *  Revision : $Id: time_config.h,v 1.2.6.1 2006-11-26 21:06:01 zer0 Exp $
+ *  Revision : $Id$
  *
+ *  Javier Baliñas Santos <balinas@gmail.com>
  */
 
-/** precision of the time processor, in us */
-#ifdef HOST_VERSION
-#define TIME_PRECISION 10000l
-#else
-#define TIME_PRECISION 10000l
-#endif
+#include <stdio.h>
+#include <string.h>
+
+#include <aversive.h>
+#include <aversive/pgmspace.h>
+#include <aversive/wait.h>
+#include <aversive/error.h>
+
+#include <scheduler.h>
+#include <oscillator.h>
+
+#include "main.h"
+#include "sensor.h"
+
+#ifndef __MCU_SETUP_H__
+#define __MCU_SETUP_H__
+
+#ifndef HOST_VERSION
+
+void io_setup(void);
+void adc1_setup(void);
+void timer1_setup(void);
+void timer2_setup(void);
+
+#endif /* !HOST_VERSION */
+
+#endif /* __MCU_SETUP_H__*/

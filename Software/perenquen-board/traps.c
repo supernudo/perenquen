@@ -62,7 +62,7 @@
 
 #endif
 
-#include "main.h"
+#include "leds.h"
 
 #define _trapISR __attribute__((interrupt,no_auto_psv))
 
@@ -80,7 +80,7 @@ void _trapISR _OscillatorFail(void)
 
 void _trapISR _AddressError(void)
 {
-        //LED2_ON();
+        LED2_ON();
         LED3_OFF();
         LED4_OFF();
         INTCON1bits.ADDRERR = 0;
@@ -89,7 +89,7 @@ void _trapISR _AddressError(void)
 
 void _trapISR _StackError(void)
 {
-        //LED2_OFF();
+        LED2_OFF();
         LED3_ON();
         LED4_OFF();
         INTCON1bits.STKERR = 0;
@@ -98,7 +98,7 @@ void _trapISR _StackError(void)
 
 void _trapISR _MathError(void)
 {
-        //LED2_OFF();
+        LED2_OFF();
         LED3_OFF();
         LED4_ON();
         INTCON1bits.MATHERR = 0;

@@ -107,6 +107,11 @@
         <itemPath>../../libs/aversive4dspic/modules/ihm/vt100/vt100.h</itemPath>
       </logicalFolder>
     </logicalFolder>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="true">
+      <itemPath>Makefile</itemPath>
+    </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
                    projectFiles="true">
@@ -127,6 +132,9 @@
         <itemPath>../commands.c</itemPath>
         <itemPath>../actuator.c</itemPath>
         <itemPath>../telemetry.c</itemPath>
+        <itemPath>../battery.c</itemPath>
+        <itemPath>../hc05.c</itemPath>
+        <itemPath>../mcu_setup.c</itemPath>
       </logicalFolder>
       <logicalFolder name="bd" displayName="bd" projectFiles="true">
         <itemPath>../../libs/aversive4dspic/modules/devices/robot/blocking_detection_manager/blocking_detection_manager.c</itemPath>
@@ -232,11 +240,6 @@
         <itemPath>../../libs/aversive4dspic/modules/ihm/vt100/vt100.c</itemPath>
       </logicalFolder>
     </logicalFolder>
-    <logicalFolder name="ExternalFiles"
-                   displayName="Important Files"
-                   projectFiles="false">
-      <itemPath>Makefile</itemPath>
-    </logicalFolder>
     <logicalFolder name="OtherFiles" displayName="Other Files" projectFiles="false">
       <itemPath>../commands_cs.c</itemPath>
       <itemPath>../commands_gen.c</itemPath>
@@ -259,14 +262,16 @@
         <targetDevice>dsPIC33EP512MC806</targetDevice>
         <targetHeader></targetHeader>
         <targetPluginBoard></targetPluginBoard>
-        <platformTool>ICD3PlatformTool</platformTool>
+        <platformTool>noID</platformTool>
         <languageToolchain>C30</languageToolchain>
         <languageToolchainVersion>3_31</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <packs>
-        <pack name="dsPIC33E-GM-GP-MC-GU-MU_DFP" vendor="Microchip" version="1.0.23"/>
+        <pack name="dsPIC33E-GM-GP-MC-GU-MU_DFP" vendor="Microchip" version="1.5.258"/>
       </packs>
+      <ScriptingSettings>
+      </ScriptingSettings>
       <compileType>
         <linkerTool>
           <linkerLibItems>
@@ -284,6 +289,7 @@
       </compileType>
       <makeCustomizationType>
         <makeCustomizationPreStepEnabled>false</makeCustomizationPreStepEnabled>
+        <makeUseCleanTarget>false</makeUseCleanTarget>
         <makeCustomizationPreStep></makeCustomizationPreStep>
         <makeCustomizationPostStepEnabled>false</makeCustomizationPostStepEnabled>
         <makeCustomizationPostStep></makeCustomizationPostStep>
@@ -437,7 +443,7 @@
         <property key="extra-include-directories"
                   value="..;../../libs/aversive4dspic/include;../../libs/aversive4dspic/include/aversive;../../libs/aversive4dspic/include/aversive/dspic;../../libs/aversive4dspic/modules/base/cirbuf;../../libs/aversive4dspic/modules/base/scheduler;../../libs/aversive4dspic/modules/base/math/fixed_point;../../libs/aversive4dspic/modules/base/math/geometry;../../libs/aversive4dspic/modules/base/math/vect2;../../libs/aversive4dspic/modules/base/time;../../libs/aversive4dspic/modules/debug;../../libs/aversive4dspic/modules/debug/error;../../libs/aversive4dspic/modules/debug/diagnostic;../../libs/aversive4dspic/modules/comm/dspic/uart;../../libs/aversive4dspic/modules/ihm/parse;../../libs/aversive4dspic/modules/ihm/rdline;../../libs/aversive4dspic/modules/ihm/vt100;../../libs/aversive4dspic/modules/hardware/dspic/oscillator;../../libs/aversive4dspic/modules/devices/control_system/filters/pid;../../libs/aversive4dspic/modules/devices/encoders/dspic/encoders_dspic;../../libs/aversive4dspic/modules/devices/control_system/filters/quadramp;../../libs/aversive4dspic/modules/devices/control_system/control_system_manager;../../libs/aversive4dspic/modules/devices/robot/robot_system;../../libs/aversive4dspic/modules/devices/robot/trajectory_manager;../../libs/aversive4dspic/modules/devices/robot/position_manager;../../libs/aversive4dspic/modules/devices/robot/blocking_detection_manager;../../common;."/>
         <property key="isolate-each-function" value="false"/>
-        <property key="optimization-level" value="s"/>
+        <property key="optimization-level" value="3"/>
         <property key="post-instruction-scheduling" value="default"/>
         <property key="pre-instruction-scheduling" value="default"/>
         <property key="preprocessor-macros" value=""/>
@@ -563,8 +569,14 @@
         <property key="UART 2" value="true"/>
         <property key="UART 3" value="true"/>
         <property key="UART 4" value="true"/>
+        <property key="debugoptions.debug-startup" value="Use system settings"/>
+        <property key="debugoptions.reset-behaviour" value="Use system settings"/>
         <property key="debugoptions.useswbreakpoints" value="false"/>
+        <property key="event.recorder.debugger.behavior" value="Running"/>
+        <property key="event.recorder.enabled" value="false"/>
+        <property key="event.recorder.scvd.files" value=""/>
         <property key="hwtoolclock.frcindebug" value="false"/>
+        <property key="lastid" value=""/>
         <property key="memories.aux" value="false"/>
         <property key="memories.bootflash" value="false"/>
         <property key="memories.configurationmemory" value="true"/>
@@ -595,6 +607,110 @@
         <property key="programoptions.uselvpprogramming" value="false"/>
         <property key="voltagevalue" value="3.25"/>
       </ICD3PlatformTool>
+      <Tool>
+        <property key="ADC 1" value="true"/>
+        <property key="ADC 2" value="true"/>
+        <property key="AutoSelectMemRanges" value="auto"/>
+        <property key="COMPARATOR" value="true"/>
+        <property key="CRC" value="true"/>
+        <property key="DCI" value="true"/>
+        <property key="Freeze All Other Peripherals" value="true"/>
+        <property key="I2C1" value="true"/>
+        <property key="I2C2" value="true"/>
+        <property key="INPUT CAPTURE 1" value="true"/>
+        <property key="INPUT CAPTURE 10" value="true"/>
+        <property key="INPUT CAPTURE 11" value="true"/>
+        <property key="INPUT CAPTURE 12" value="true"/>
+        <property key="INPUT CAPTURE 13" value="true"/>
+        <property key="INPUT CAPTURE 14" value="true"/>
+        <property key="INPUT CAPTURE 15" value="true"/>
+        <property key="INPUT CAPTURE 16" value="true"/>
+        <property key="INPUT CAPTURE 2" value="true"/>
+        <property key="INPUT CAPTURE 3" value="true"/>
+        <property key="INPUT CAPTURE 4" value="true"/>
+        <property key="INPUT CAPTURE 5" value="true"/>
+        <property key="INPUT CAPTURE 6" value="true"/>
+        <property key="INPUT CAPTURE 7" value="true"/>
+        <property key="INPUT CAPTURE 8" value="true"/>
+        <property key="INPUT CAPTURE 9" value="true"/>
+        <property key="OUTPUT COMPARE 1" value="true"/>
+        <property key="OUTPUT COMPARE 10" value="true"/>
+        <property key="OUTPUT COMPARE 11" value="true"/>
+        <property key="OUTPUT COMPARE 12" value="true"/>
+        <property key="OUTPUT COMPARE 13" value="true"/>
+        <property key="OUTPUT COMPARE 14" value="true"/>
+        <property key="OUTPUT COMPARE 15" value="true"/>
+        <property key="OUTPUT COMPARE 16" value="true"/>
+        <property key="OUTPUT COMPARE 2" value="true"/>
+        <property key="OUTPUT COMPARE 3" value="true"/>
+        <property key="OUTPUT COMPARE 4" value="true"/>
+        <property key="OUTPUT COMPARE 5" value="true"/>
+        <property key="OUTPUT COMPARE 6" value="true"/>
+        <property key="OUTPUT COMPARE 7" value="true"/>
+        <property key="OUTPUT COMPARE 8" value="true"/>
+        <property key="OUTPUT COMPARE 9" value="true"/>
+        <property key="PARALLEL MASTER/SLAVE PORT" value="true"/>
+        <property key="PWM" value="true"/>
+        <property key="REAL TIME CLOCK AND CALENDAR" value="true"/>
+        <property key="SPI 1" value="true"/>
+        <property key="SPI 2" value="true"/>
+        <property key="SPI 3" value="true"/>
+        <property key="SPI 4" value="true"/>
+        <property key="SecureSegment.SegmentProgramming" value="FullChipProgramming"/>
+        <property key="TIMER1" value="true"/>
+        <property key="TIMER2" value="true"/>
+        <property key="TIMER3" value="true"/>
+        <property key="TIMER4" value="true"/>
+        <property key="TIMER5" value="true"/>
+        <property key="TIMER6" value="true"/>
+        <property key="TIMER7" value="true"/>
+        <property key="TIMER8" value="true"/>
+        <property key="TIMER9" value="true"/>
+        <property key="ToolFirmwareFilePath"
+                  value="Press to browse for a specific firmware version"/>
+        <property key="ToolFirmwareOption.UseLatestFirmware" value="true"/>
+        <property key="UART 1" value="true"/>
+        <property key="UART 2" value="true"/>
+        <property key="UART 3" value="true"/>
+        <property key="UART 4" value="true"/>
+        <property key="debugoptions.debug-startup" value="Use system settings"/>
+        <property key="debugoptions.reset-behaviour" value="Use system settings"/>
+        <property key="debugoptions.useswbreakpoints" value="false"/>
+        <property key="event.recorder.debugger.behavior" value="Running"/>
+        <property key="event.recorder.enabled" value="false"/>
+        <property key="event.recorder.scvd.files" value=""/>
+        <property key="hwtoolclock.frcindebug" value="false"/>
+        <property key="lastid" value=""/>
+        <property key="memories.aux" value="false"/>
+        <property key="memories.bootflash" value="false"/>
+        <property key="memories.configurationmemory" value="true"/>
+        <property key="memories.configurationmemory2" value="true"/>
+        <property key="memories.dataflash" value="true"/>
+        <property key="memories.eeprom" value="true"/>
+        <property key="memories.flashdata" value="true"/>
+        <property key="memories.id" value="true"/>
+        <property key="memories.instruction.ram" value="true"/>
+        <property key="memories.instruction.ram.ranges"
+                  value="${memories.instruction.ram.ranges}"/>
+        <property key="memories.programmemory" value="true"/>
+        <property key="memories.programmemory.ranges" value="0-157ff"/>
+        <property key="poweroptions.powerenable" value="false"/>
+        <property key="programoptions.donoteraseauxmem" value="false"/>
+        <property key="programoptions.eraseb4program" value="true"/>
+        <property key="programoptions.preservedataflash" value="false"/>
+        <property key="programoptions.preservedataflash.ranges" value=""/>
+        <property key="programoptions.preserveeeprom" value="false"/>
+        <property key="programoptions.preserveeeprom.ranges" value=""/>
+        <property key="programoptions.preserveprogram.ranges" value=""/>
+        <property key="programoptions.preserveprogramrange" value="false"/>
+        <property key="programoptions.preserveuserid" value="false"/>
+        <property key="programoptions.programcalmem" value="false"/>
+        <property key="programoptions.programuserotp" value="false"/>
+        <property key="programoptions.testmodeentrymethod" value="VPPFirst"/>
+        <property key="programoptions.usehighvoltageonmclr" value="false"/>
+        <property key="programoptions.uselvpprogramming" value="false"/>
+        <property key="voltagevalue" value="3.25"/>
+      </Tool>
     </conf>
   </confs>
 </configurationDescriptor>
